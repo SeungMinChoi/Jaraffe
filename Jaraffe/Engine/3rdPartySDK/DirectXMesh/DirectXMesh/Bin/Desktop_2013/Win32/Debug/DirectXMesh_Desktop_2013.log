@@ -1,0 +1,35 @@
+﻿빌드 시작: 2015-06-20 오후 3:57:03
+     1>3 노드의 "C:\Users\Seungmin\Downloads\FBXLoader2015forDX11-master\DirectXMesh\DirectXMesh\DirectXMesh_Desktop_2013.vcxproj" 프로젝트(Build 대상)입니다.
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oi /Oy- /D WIN32 /D _DEBUG /D DEBUG /D PROFILE /D _WINDOWS /D _LIB /D _WIN32_WINNT=0x0600 /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /arch:SSE2 /fp:fast /Zc:wchar_t /Zc:forScope /openmp- /Yc"DirectXMeshP.h" /Fp"Bin\Desktop_2013\Win32\Debug\DirectXMesh.pch" /Fo"Bin\Desktop_2013\Win32\Debug\\" /Fd"Bin\Desktop_2013\Win32\Debug\DirectXMesh.pdb" /Gd /TP /analyze- /errorReport:prompt  DirectXMeshUtil.cpp
+         DirectXMeshUtil.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oi /Oy- /D WIN32 /D _DEBUG /D DEBUG /D PROFILE /D _WINDOWS /D _LIB /D _WIN32_WINNT=0x0600 /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /arch:SSE2 /fp:fast /Zc:wchar_t /Zc:forScope /openmp- /Yu"DirectXMeshP.h" /Fp"Bin\Desktop_2013\Win32\Debug\DirectXMesh.pch" /Fo"Bin\Desktop_2013\Win32\Debug\\" /Fd"Bin\Desktop_2013\Win32\Debug\DirectXMesh.pdb" /Gd /TP /analyze- /errorReport:prompt  DirectXMeshAdjacency.cpp DirectXMeshClean.cpp DirectXMeshGSAdjacency.cpp DirectXMeshNormals.cpp DirectXMeshOptimize.cpp DirectXMeshRemap.cpp DirectXMeshTangentFrame.cpp DirectXMeshValidate.cpp DirectXMeshVBReader.cpp DirectXMeshVBWriter.cpp
+         DirectXMeshAdjacency.cpp
+         DirectXMeshClean.cpp
+         DirectXMeshGSAdjacency.cpp
+         DirectXMeshNormals.cpp
+         DirectXMeshOptimize.cpp
+         DirectXMeshRemap.cpp
+         DirectXMeshTangentFrame.cpp
+         DirectXMeshValidate.cpp
+         DirectXMeshVBReader.cpp
+         DirectXMeshVBWriter.cpp
+         코드를 생성하고 있습니다...
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"Bin\Desktop_2013\Win32\Debug\DirectXMesh.lib" /NOLOGO Bin\Desktop_2013\Win32\Debug\DirectXMeshAdjacency.obj
+         Bin\Desktop_2013\Win32\Debug\DirectXMeshClean.obj
+         Bin\Desktop_2013\Win32\Debug\DirectXMeshGSAdjacency.obj
+         Bin\Desktop_2013\Win32\Debug\DirectXMeshNormals.obj
+         Bin\Desktop_2013\Win32\Debug\DirectXMeshOptimize.obj
+         Bin\Desktop_2013\Win32\Debug\DirectXMeshRemap.obj
+         Bin\Desktop_2013\Win32\Debug\DirectXMeshTangentFrame.obj
+         Bin\Desktop_2013\Win32\Debug\DirectXMeshUtil.obj
+         Bin\Desktop_2013\Win32\Debug\DirectXMeshValidate.obj
+         Bin\Desktop_2013\Win32\Debug\DirectXMeshVBReader.obj
+         Bin\Desktop_2013\Win32\Debug\DirectXMeshVBWriter.obj
+         DirectXMesh_Desktop_2013.vcxproj -> C:\Users\Seungmin\Downloads\FBXLoader2015forDX11-master\DirectXMesh\DirectXMesh\Bin\Desktop_2013\Win32\Debug\DirectXMesh.lib
+     1>"C:\Users\Seungmin\Downloads\FBXLoader2015forDX11-master\DirectXMesh\DirectXMesh\DirectXMesh_Desktop_2013.vcxproj" 프로젝트를 빌드했습니다(Build 대상).
+
+빌드했습니다.
+
+경과 시간: 00:00:04.07
