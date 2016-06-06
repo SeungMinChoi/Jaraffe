@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\RHI\D3D11\D3DDevice.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="App\Main_Win.cpp" />
+    <ClCompile Include="Source\Scene\Scene.cpp" />
+    <ClCompile Include="Source\Utils\GameTimer.cpp" />
+    <ClCompile Include="Source\D3D11\Vertex.cpp" />
+    <ClCompile Include="Source\D3D11\Effect.cpp" />
+    <ClCompile Include="Source\Utils\D3DUtil.cpp" />
+    <ClCompile Include="Source\D3D11\LightHelper.cpp" />
+    <ClCompile Include="Source\D3D11\RenderStates.cpp" />
+    <ClCompile Include="Source\Core\Object\GameObject.cpp" />
+    <ClCompile Include="Source\Core\Object\BaseComponent.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\Transform.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\Camera.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\Mesh.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\RHI\D3D11\D3DDevice.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Common\Defines.h" />
+    <ClInclude Include="Source\Scene\Scene.h" />
+    <ClInclude Include="Source\Interface\IObject.h" />
+    <ClInclude Include="Common\ForwardDeclaration.h" />
+    <ClInclude Include="Source\Utils\GameTimer.h" />
+    <ClInclude Include="Source\D3D11\Vertex.h" />
+    <ClInclude Include="Source\D3D11\Effect.h" />
+    <ClInclude Include="Source\Utils\D3DUtil.h" />
+    <ClInclude Include="Source\D3D11\LightHelper.h" />
+    <ClInclude Include="Source\D3D11\RenderStates.h" />
+    <ClInclude Include="Source\Core\Object\GameObject.h" />
+    <ClInclude Include="Source\Core\Object\BaseComponent.h" />
+    <ClInclude Include="Source\Core\Object\Component\Transform.h" />
+    <ClInclude Include="Source\Core\Object\CommonComponent.h" />
+    <ClInclude Include="Source\Core\Object\Component\Camera.h" />
+    <ClInclude Include="Source\Core\Object\Component\Mesh.h" />
+    <ClInclude Include="Source\Core\GenericPlatform\GenericPlatform.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Source\Shader\Basic.fx" />
+    <CustomBuild Include="Source\Shader\Color.fx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Source\Shader\LightHelper.fx" />
+  </ItemGroup>
+</Project>
