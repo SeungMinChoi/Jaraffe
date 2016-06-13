@@ -1,14 +1,18 @@
 #pragma once
 
-namespace Jaraffe 
+namespace Jaraffe
 {
-
 namespace Component
 {
 
-// TODO: Temp Setting
+// TODO : Init Temp Setting
 class Mesh : public BaseComponent
 {
+// ****************************************************************************
+// friend class
+// ----------------------------------------------------------------------------
+	friend class MeshRenderer;
+
 // ****************************************************************************
 // Constructor/Destructor)
 // ----------------------------------------------------------------------------
@@ -26,21 +30,37 @@ public:
 // override) 
 // ----------------------------------------------------------------------------
 public:
-	virtual void	Init();
-	virtual void	Update();
-	virtual void	Render();
-	virtual void	Release();
+	virtual void Init();
+	virtual void Release();
+	virtual void Receve();
 
-	virtual void	Receve();
+// ****************************************************************************
+// protected Functions) 
+// ----------------------------------------------------------------------------
+public:
+	void SetVertexType(Jaraffe::Vertex::VertexType p_VertexType);
+	
+	ID3D11InputLayout*	GetInputLayout()	{ return m_pInputLayout; }
+	UINT				GetStride()			{ return m_Stride; }
 
+	ID3D11Buffer*		GetVB()				{ return m_pVB; }
+	ID3D11Buffer*		GetIB()				{ return m_pIB; }
+
+// ****************************************************************************
+// protected Members) 
+// ----------------------------------------------------------------------------
 protected:
-	ID3D11Buffer*		m_VB;				// Vertex Buffer
-	ID3D11Buffer*		m_IB;				// Index Buffer
+	Jaraffe::Vertex::VertexType					m_VertexType;
+	ID3D11InputLayout*							m_pInputLayout;
+	UINT										m_Stride;
+	UINT										m_IndexCount;
 
-	std::vector<Jaraffe::Vertex::Simple>	m_pVertices;
-	std::vector<UINT>						m_pIndices;
+	std::vector<Jaraffe::Vertex::PosNormal>		m_pVertices;
+	std::vector<UINT>							m_pIndices;
+
+	ID3D11Buffer*								m_pVB;			// Vertex Buffer
+	ID3D11Buffer*								m_pIB;			// Index Buffer
 };
 
 }
-
 }

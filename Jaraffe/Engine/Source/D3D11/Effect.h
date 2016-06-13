@@ -55,8 +55,8 @@ public:
 	void SetWorld(CXMMATRIX m) { m_fxWorld->SetMatrix(reinterpret_cast<const float*>(&m)); }
 	void SetWorldInvTranspose(CXMMATRIX m) { m_fxWorldInvTranspose->SetMatrix(reinterpret_cast<const float*>(&m)); }
 	void SetEyePosW(const XMFLOAT3& v) { m_fxEyePosW->SetRawValue(&v, 0, sizeof(XMFLOAT3)); }
-	void SetDirLights(const DirectionalLight* lights) { m_fxDirLight->SetRawValue(lights, 0, 3 * sizeof(DirectionalLight)); }
-	void SetMaterial(const Material& mat) { m_fxMaterial->SetRawValue(&mat, 0, sizeof(Material)); }
+	void SetDirLights(const Jaraffe::Light::DirectionalLight* lights) { m_fxDirLight->SetRawValue(lights, 0, sizeof(Jaraffe::Light::DirectionalLight)); }
+	void SetMaterial(const Jaraffe::Light::Material& mat) { m_fxMaterial->SetRawValue(&mat, 0, sizeof(Jaraffe::Light::Material)); }
 
 	// Techniques
 	ID3DX11EffectTechnique*			LightTech;

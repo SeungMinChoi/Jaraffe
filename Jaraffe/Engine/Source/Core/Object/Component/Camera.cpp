@@ -96,6 +96,11 @@ XMMATRIX Jaraffe::Component::Camera::GetViewProj() const
 	return XMMatrixMultiply(GetView(), GetProj());
 }
 
+XMFLOAT3 Jaraffe::Component::Camera::GetEyePos() const
+{
+	return m_vEye;
+}
+
 void Jaraffe::Component::Camera::SetMainCamera(Camera* p_pCamera)
 {
 	Jaraffe::Component::Camera::g_pMainCamera = p_pCamera;

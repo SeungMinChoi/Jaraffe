@@ -22,13 +22,17 @@ namespace Jaraffe
 	{
 		class Transform;
 		class Camera;
+		class Renderer;
 		class Mesh;
+		class Light;
+		class Material;
 	}
 
 	namespace Util
 	{
 		class CGameTimer;
 		class MyDirectUtil;
+		class MathHelper;
 	}
 
 	namespace Geometry

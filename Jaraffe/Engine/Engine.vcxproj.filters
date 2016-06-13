@@ -17,11 +17,16 @@
     <ClCompile Include="Source\Utils\D3DUtil.cpp" />
     <ClCompile Include="Source\D3D11\LightHelper.cpp" />
     <ClCompile Include="Source\D3D11\RenderStates.cpp" />
-    <ClCompile Include="Source\Core\Object\GameObject.cpp" />
-    <ClCompile Include="Source\Core\Object\BaseComponent.cpp" />
     <ClCompile Include="Source\Core\Object\Component\Transform.cpp" />
     <ClCompile Include="Source\Core\Object\Component\Camera.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\Renderer.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\MeshRenderer.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\Light.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\Interface\BaseComponent.cpp" />
+    <ClCompile Include="Source\Core\Object\GameObject\GameObject.cpp" />
     <ClCompile Include="Source\Core\Object\Component\Mesh.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\Material.cpp" />
+    <ClCompile Include="Source\Utils\MathHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\RHI\D3D11\D3DDevice.h" />
@@ -36,17 +41,23 @@
     <ClInclude Include="Source\Utils\D3DUtil.h" />
     <ClInclude Include="Source\D3D11\LightHelper.h" />
     <ClInclude Include="Source\D3D11\RenderStates.h" />
-    <ClInclude Include="Source\Core\Object\GameObject.h" />
-    <ClInclude Include="Source\Core\Object\BaseComponent.h" />
     <ClInclude Include="Source\Core\Object\Component\Transform.h" />
-    <ClInclude Include="Source\Core\Object\CommonComponent.h" />
     <ClInclude Include="Source\Core\Object\Component\Camera.h" />
-    <ClInclude Include="Source\Core\Object\Component\Mesh.h" />
     <ClInclude Include="Source\Core\GenericPlatform\GenericPlatform.h" />
+    <ClInclude Include="Source\Core\Object\Component\Renderer.h" />
+    <ClInclude Include="Source\Core\Object\Component\MeshRenderer.h" />
+    <ClInclude Include="Source\Core\Object\Component\Light.h" />
+    <ClInclude Include="Source\Core\Object\Component\Interface\BaseComponent.h" />
+    <ClInclude Include="Source\Core\Object\Component\Interface\CommonComponent.h" />
+    <ClInclude Include="Source\Core\Object\GameObject\GameObject.h" />
+    <ClInclude Include="Source\Core\Object\Component\Mesh.h" />
+    <ClInclude Include="Source\Core\Object\Component\Material.h" />
+    <ClInclude Include="Source\Utils\MathHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Source\Shader\Basic.fx" />
     <CustomBuild Include="Source\Shader\Color.fx" />
+    <CustomBuild Include="Source\Shader\Lighting.fx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\LightHelper.fx" />

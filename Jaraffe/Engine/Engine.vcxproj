@@ -148,9 +148,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App\Main_Win.cpp" />
-    <ClCompile Include="Source\Core\Object\BaseComponent.cpp" />
-    <ClCompile Include="Source\Core\Object\GameObject.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\Material.cpp" />
     <ClCompile Include="Source\Core\Object\Component\Mesh.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\Light.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\Renderer.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\Interface\BaseComponent.cpp" />
+    <ClCompile Include="Source\Core\Object\GameObject\GameObject.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\MeshRenderer.cpp" />
     <ClCompile Include="Source\D3D11\RenderStates.cpp" />
     <ClCompile Include="Source\D3D11\Effect.cpp" />
     <ClCompile Include="Source\Core\Object\Component\Camera.cpp" />
@@ -161,6 +165,7 @@
     <ClCompile Include="Source\RHI\D3D11\D3DDevice.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Utils\MathHelper.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -168,11 +173,15 @@
     <ClCompile Include="Source\Core\Object\Component\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Core\GenericPlatform\GenericPlatform.h" />
-    <ClInclude Include="Source\Core\Object\CommonComponent.h" />
-    <ClInclude Include="Source\Core\Object\BaseComponent.h" />
-    <ClInclude Include="Source\Core\Object\GameObject.h" />
+    <ClInclude Include="Source\Core\Object\Component\Material.h" />
     <ClInclude Include="Source\Core\Object\Component\Mesh.h" />
+    <ClInclude Include="Source\Core\Object\Component\Light.h" />
+    <ClInclude Include="Source\Core\Object\Component\Renderer.h" />
+    <ClInclude Include="Source\Core\GenericPlatform\GenericPlatform.h" />
+    <ClInclude Include="Source\Core\Object\Component\Interface\CommonComponent.h" />
+    <ClInclude Include="Source\Core\Object\Component\Interface\BaseComponent.h" />
+    <ClInclude Include="Source\Core\Object\GameObject\GameObject.h" />
+    <ClInclude Include="Source\Core\Object\Component\MeshRenderer.h" />
     <ClInclude Include="Source\D3D11\RenderStates.h" />
     <ClInclude Include="Source\D3D11\Effect.h" />
     <ClInclude Include="Source\Core\Object\Component\Camera.h" />
@@ -184,6 +193,7 @@
     <ClInclude Include="Source\Interface\IObject.h" />
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\RHI\D3D11\D3DDevice.h" />
+    <ClInclude Include="Source\Utils\MathHelper.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Source\D3D11\Vertex.h" />
     <ClInclude Include="Source\Core\Object\Component\Transform.h" />
@@ -205,7 +215,18 @@
   <ItemGroup>
     <None Include="Source\Shader\LightHelper.fx">
       <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc compile for release : %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)\%(FileName).fxo</Outputs>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Source\Shader\Lighting.fx">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc compile for release : %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)\%(FileName).fxo</Outputs>
+    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

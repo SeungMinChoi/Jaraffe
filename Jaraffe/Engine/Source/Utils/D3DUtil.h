@@ -22,8 +22,7 @@ namespace Colors
 
 namespace Mesh
 {
-	template<typename Vertex>
-	static void CreateVertexBuffer(Vertex* p_pVertices, int p_nCount, ID3D11Buffer** p_pVB)
+	static void CreateVertexBuffer(void* p_pVertices, UINT p_ByteWidth, ID3D11Buffer** p_pVB)
 	{
 		// Check
 		assert(p_pVertices != nullptr);
@@ -31,7 +30,7 @@ namespace Mesh
 		//
 		D3D11_BUFFER_DESC vbd;
 		vbd.Usage				= D3D11_USAGE_IMMUTABLE;
-		vbd.ByteWidth			= sizeof(Vertex) * p_nCount;
+		vbd.ByteWidth			= p_ByteWidth;
 		vbd.BindFlags			= D3D11_BIND_VERTEX_BUFFER;
 		vbd.CPUAccessFlags		= 0;
 		vbd.MiscFlags			= 0;
@@ -44,14 +43,13 @@ namespace Mesh
 		HR(gRENDERER->GetDevice()->CreateBuffer(&vbd, &vinitData, p_pVB));
 	}
 
-	template<typename Index>
-	static void CreateIndexBuffer(Index* p_pIndices, int p_nCount, ID3D11Buffer** p_pIB)
+	static void CreateIndexBuffer(void* p_pIndices, UINT p_ByteWidth, ID3D11Buffer** p_pIB)
 	{
 		assert(p_pIndices != nullptr);
 
 		D3D11_BUFFER_DESC vbd;
 		vbd.Usage				= D3D11_USAGE_IMMUTABLE;
-		vbd.ByteWidth			= sizeof(Index) * p_nCount;
+		vbd.ByteWidth			= p_ByteWidth;
 		vbd.BindFlags			= D3D11_BIND_INDEX_BUFFER;
 		vbd.CPUAccessFlags		= 0;
 		vbd.MiscFlags			= 0;

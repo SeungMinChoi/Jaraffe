@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Scene.h"
 
-using namespace Jaraffe;
 using namespace Jaraffe::Component;
 
 Jaraffe::CScene::CScene()
@@ -24,11 +23,29 @@ HRESULT Jaraffe::CScene::Init()
 
 	m_pMainCamera->Init();
 
+	// 2) Create Directional Light
+	Jaraffe::Component::Light* pMainLight = new Jaraffe::Component::Light();
+	auto plight = pMainLight->SetLightType(Jaraffe::Light::LightType::Directional);
+	if (plight != nullptr)
+	{
+		auto cast = (Jaraffe::Light::DirectionalLight*)plight;
+		cast->Ambient	= XMFLOAT4(0.2f, 0.5f, 0.7f, 1.0f);
+		cast->Diffuse	= XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+		cast->Specular	= XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+		cast->Direction = XMFLOAT3(6.57735f, -0.57735f, 0.57735f);
+	}
+
+	GameObject* m_DirectionalLight = GameObject::Create();
+	m_DirectionalLight->InsertComponent(new Transform);
+	m_DirectionalLight->InsertComponent(pMainLight);
+
 	//---- T E S T ----
 
 	GameObject* m_pTestModel = GameObject::Create();
 	m_pTestModel->InsertComponent(new Transform);
+	m_pTestModel->InsertComponent(new MeshRenderer);
 	m_pTestModel->InsertComponent(new Mesh);
+	m_pTestModel->InsertComponent(new Jaraffe::Component::Material);
 
 	m_ObjectList.push_back(m_pTestModel);
 
@@ -66,14 +83,10 @@ void Jaraffe::CScene::Render()
 	// 3) View Matrix Calculation.
 	Camera::g_pMainCamera->UpdateViewMatrix();
 
-	// 4) All Renderer Render TODO : 구조잡기전 임시. 
+	// 4) All Renderer Render
 	for (size_t i = 0; i < m_ObjectList.size(); i++)
 	{
-		auto model = m_ObjectList[i]->GetComponent<Jaraffe::Component::Mesh>();
-		if(model == nullptr)
-			continue;
-
-		model->Render();
+		m_ObjectList[i]->Render();
 	}
 
 	// Final) Back Buffer Screen Present.

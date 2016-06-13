@@ -28,9 +28,9 @@
 #include <vector>
 #include <map>
 #include <unordered_map>
-
+#include <float.h>
+#include <cmath>
 // Boost
-#include <boost/any.hpp>
 
 // Defines
 #include "Common/Defines.h"
@@ -50,6 +50,7 @@
 // Utils
 #include "Source/Utils/GameTimer.h"
 #include "Source/Utils/D3DUtil.h"
+#include "Source/Utils/MathHelper.h"
 
 // 
 #include "Source/D3D11/LightHelper.h"
@@ -58,13 +59,17 @@
 #include "Source/D3D11/RenderStates.h"
 
 // Component Basic
-#include "Source/Core/Object/CommonComponent.h"
-#include "Source/Core/Object/BaseComponent.h"
-#include "Source/Core/Object/GameObject.h"
+#include "Source/Core/Object/Component/Interface/CommonComponent.h"
+#include "Source/Core/Object/Component/Interface/BaseComponent.h"
+#include "Source/Core/Object/GameObject/GameObject.h"
 
 // Components
 #include "Source/Core/Object/Component/Transform.h"
 #include "Source/Core/Object/Component/Camera.h"
+#include "Source/Core/Object/Component/Renderer.h"
+#include "Source/Core/Object/Component/MeshRenderer.h"
+#include "Source/Core/Object/Component/Light.h"
 #include "Source/Core/Object/Component/Mesh.h"
+#include "Source/Core/Object/Component/Material.h"
 
 // Geometry
