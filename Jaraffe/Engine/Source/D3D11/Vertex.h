@@ -7,8 +7,7 @@ namespace Vertex
 	enum class VertexType
 	{
 		PosColor,
-		PosNormal,
-		PorNormalTex,
+		PosNormalTex,
 	};
 
 	struct BasicVertex
@@ -30,23 +29,10 @@ namespace Vertex
 		XMFLOAT4 Color;
 	};
 
-	struct PosNormal : BasicVertex
-	{
-		PosNormal(XMFLOAT3 pos, XMFLOAT3 normal)
-			: BasicVertex()
-		{
-			Pos		= pos;
-			Normal	= normal;
-		}
-
-		XMFLOAT3 Pos;
-		XMFLOAT3 Normal;
-	};
-
 	// Basic 32Byte Struct
-	struct PorNormalTex : BasicVertex
+	struct PosNormalTex : BasicVertex
 	{
-		PorNormalTex(XMFLOAT3 pos, XMFLOAT3 normal, XMFLOAT3 tex)
+		PosNormalTex(XMFLOAT3 pos, XMFLOAT3 normal, XMFLOAT2 tex)
 			: BasicVertex()
 		{
 			Pos		= pos;
@@ -56,7 +42,7 @@ namespace Vertex
 
 		XMFLOAT3 Pos;
 		XMFLOAT3 Normal;
-		XMFLOAT3 Tex;
+		XMFLOAT2 Tex;
 	};
 }
 
@@ -64,7 +50,7 @@ class InputLayoutDesc
 {
 public:
 	static const D3D11_INPUT_ELEMENT_DESC PosColor[2];
-	static const D3D11_INPUT_ELEMENT_DESC PosNormal[2];
+	static const D3D11_INPUT_ELEMENT_DESC PosNormalTex[3];
 };
 
 class InputLayouts
@@ -74,7 +60,7 @@ public:
 	static void DestroyAll();
 
 	static ID3D11InputLayout* PosColor;
-	static ID3D11InputLayout* PosNormal;
+	static ID3D11InputLayout* PosNormalTex;
 };
 
 }

@@ -29,10 +29,10 @@ HRESULT Jaraffe::CScene::Init()
 	if (plight != nullptr)
 	{
 		auto cast = (Jaraffe::Light::DirectionalLight*)plight;
-		cast->Ambient	= XMFLOAT4(0.2f, 0.5f, 0.7f, 1.0f);
-		cast->Diffuse	= XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+		cast->Ambient	= XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+		cast->Diffuse	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		cast->Specular	= XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-		cast->Direction = XMFLOAT3(6.57735f, -0.57735f, 0.57735f);
+		cast->Direction = XMFLOAT3(-0.707f, 0.0f, 0.707f);
 	}
 
 	GameObject* m_DirectionalLight = GameObject::Create();
@@ -62,12 +62,22 @@ HRESULT Jaraffe::CScene::Init()
 
 void Jaraffe::CScene::Update(float t)
 {
+	// TODO : Test Tick
+	static float fTestTime = 0;
+	fTestTime += t;
+
 	// 1) Camera Update.
 	Camera::g_pMainCamera->Update();
 
 	// 2) All GameObject Update
 	for (size_t i = 0; i < m_ObjectList.size(); i++)
 	{
+		auto* transform = m_ObjectList[i]->GetComponent<Jaraffe::Component::Transform>();
+		if (transform != nullptr)
+		{
+			transform->SetRotation(0.0f, fTestTime, 0.0f);
+		}
+
 		m_ObjectList[i]->Update();
 	}
 }

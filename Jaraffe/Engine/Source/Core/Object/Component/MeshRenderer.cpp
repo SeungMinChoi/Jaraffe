@@ -18,6 +18,7 @@ void Jaraffe::Component::MeshRenderer::Init()
 
 void Jaraffe::Component::MeshRenderer::Update()
 {
+
 }
 
 void Jaraffe::Component::MeshRenderer::Render()
@@ -45,14 +46,21 @@ void Jaraffe::Component::MeshRenderer::Render()
 	XMMATRIX worldInvTranspose = Jaraffe::Util::MathHelper::InverseTranspose(world);
 
 	// 셰이더에 상수값 설정.
-	Effects::PosNormalFX->SetWorldViewProj(worldViewProj);
-	Effects::PosNormalFX->SetWorld(world);
-	Effects::PosNormalFX->SetWorldInvTranspose(worldInvTranspose);
-	Effects::PosNormalFX->SetEyePosW(Camera::g_pMainCamera->GetEyePos());
-	Effects::PosNormalFX->SetDirLights( Jaraffe::Component::Light::m_vLights[0]->GetDirectionalLight() );
-	Effects::PosNormalFX->SetMaterial(material->m_Material);
+	Effects::BasicFX->SetEyePosW(Camera::g_pMainCamera->GetEyePos());
+	Effects::BasicFX->SetDirLights(Jaraffe::Component::Light::m_vLights[0]->GetDirectionalLight());		// TODO : 라이팅 리펙토링 1순위. 구조 생각중.
 
-	ID3DX11EffectTechnique* tech = Effects::PosNormalFX->LightTech;
+	Effects::BasicFX->SetWorldViewProj(worldViewProj);
+	Effects::BasicFX->SetWorld(world);
+	Effects::BasicFX->SetWorldInvTranspose(worldInvTranspose);
+	Effects::BasicFX->SetMaterial(material->m_Material);
+
+	XMMATRIX I = XMMatrixIdentity();
+	Effects::BasicFX->SetTexTransform(I);																// TODO : 요건 어디다가 둘지 생각중... 일단은 쓸일이 생기면 머트리얼에 넣을 생각.
+	Effects::BasicFX->SetDiffuseMap(gTEXTUREMGR->CreateTexture(L"Resources/Textures/WoodCrate01.dds"));	// TODO : 텍스쳐 매니져도 아직 초기단계.
+	Effects::BasicFX->SetTime(0.0f);																	// TODO : 아직 시간 매니져 안만듬.
+
+	ID3DX11EffectTechnique* tech = Effects::BasicFX->Light1TexTech;
+
 	D3DX11_TECHNIQUE_DESC techDesc;
 	tech->GetDesc(&techDesc);
 	for (UINT p = 0; p < techDesc.Passes; ++p)

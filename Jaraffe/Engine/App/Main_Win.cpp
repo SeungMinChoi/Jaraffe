@@ -27,7 +27,7 @@ public:
 public:
 	HRESULT Init()
 	{
-		// 1) Alloca
+		// 1) Alloca TODO : 메모리풀 만들면 new 쓰는거 다 바꺼야함.. ( 그냥 인터페이스 만들어놀껄.. )
 		m_pTestScene = new Jaraffe::CScene();
 
 		// 2) Create Window
@@ -35,6 +35,9 @@ public:
 
 		// 3) Renderer Init
 		gRENDERER->Init(m_hwnd);
+
+		// 4) TextureMGR Init
+		gTEXTUREMGR->Init();
 
 		// 4)
 		Jaraffe::Effects::InitAll(gRENDERER->GetDevice());

@@ -20,37 +20,37 @@ void Jaraffe::Component::Mesh::Init()
 	float d2 = 0.5f*5.0f;
 
 	// Temp Box
-	Jaraffe::Vertex::PosNormal v[] =
+	Jaraffe::Vertex::PosNormalTex v[] =
 	{
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(-w2, -h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(-w2, +h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(+w2, +h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(+w2, -h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(-w2, -h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(0.0f, 1.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(-w2, +h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(0.0f, 0.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(+w2, +h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(1.0f, 0.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(+w2, -h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(1.0f, 1.0f)),
 
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(-w2, -h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(+w2, -h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(+w2, +h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(-w2, +h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(-w2, -h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(1.0f, 1.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(+w2, -h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(0.0f, 1.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(+w2, +h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(0.0f, 0.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(-w2, +h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(1.0f, 0.0f)),
 
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(-w2, +h2, -d2), XMFLOAT3(0.0f, 1.0f, 0.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(-w2, +h2, +d2), XMFLOAT3(0.0f, 1.0f, 0.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(+w2, +h2, +d2), XMFLOAT3(0.0f, 1.0f, 0.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(+w2, +h2, -d2), XMFLOAT3(0.0f, 1.0f, 0.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(-w2, +h2, -d2), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(-w2, +h2, +d2), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(+w2, +h2, +d2), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(+w2, +h2, -d2), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 1.0f)),
 
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(-w2, -h2, -d2), XMFLOAT3(0.0f, -1.0f, 0.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(+w2, -h2, -d2), XMFLOAT3(0.0f, -1.0f, 0.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(+w2, -h2, +d2), XMFLOAT3(0.0f, -1.0f, 0.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(-w2, -h2, +d2), XMFLOAT3(0.0f, -1.0f, 0.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(-w2, -h2, -d2), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(1.0f, 1.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(+w2, -h2, -d2), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(+w2, -h2, +d2), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(-w2, -h2, +d2), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)),
 
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(-w2, -h2, +d2), XMFLOAT3(-1.0f, 0.0f, 0.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(-w2, +h2, +d2), XMFLOAT3(-1.0f, 0.0f, 0.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(-w2, +h2, -d2), XMFLOAT3(-1.0f, 0.0f, 0.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(-w2, -h2, -d2), XMFLOAT3(-1.0f, 0.0f, 0.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(-w2, -h2, +d2), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(-w2, +h2, +d2), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(-w2, +h2, -d2), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(-w2, -h2, -d2), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f)),
 
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(+w2, -h2, -d2), XMFLOAT3(1.0f, 0.0f, 0.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(+w2, +h2, -d2), XMFLOAT3(1.0f, 0.0f, 0.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(+w2, +h2, +d2), XMFLOAT3(1.0f, 0.0f, 0.0f)),
-		Jaraffe::Vertex::PosNormal(XMFLOAT3(+w2, -h2, +d2), XMFLOAT3(1.0f, 0.0f, 0.0f))
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(+w2, -h2, -d2), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(+w2, +h2, -d2), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(+w2, +h2, +d2), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)),
+		Jaraffe::Vertex::PosNormalTex(XMFLOAT3(+w2, -h2, +d2), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f))
 	};
 
 	m_pVertices.assign(&v[0], &v[24]);
@@ -88,9 +88,9 @@ void Jaraffe::Component::Mesh::Init()
 	m_pIndices.assign(&i[0], &i[36]);
 
 	// 1)
-	m_VertexType	= Jaraffe::Vertex::VertexType::PosNormal;
-	m_pInputLayout	= InputLayouts::PosNormal;
-	m_Stride		= sizeof(Vertex::PosNormal);
+	m_VertexType	= Jaraffe::Vertex::VertexType::PosNormalTex;
+	m_pInputLayout	= InputLayouts::PosNormalTex;
+	m_Stride		= sizeof(Vertex::PosNormalTex);
 	m_IndexCount	= 36;
 
 	// 2) VertexBuffer Create

@@ -57,6 +57,7 @@
 #include "Source/D3D11/Effect.h"
 #include "Source/D3D11/Vertex.h"
 #include "Source/D3D11/RenderStates.h"
+#include "Source/D3D11/TextureMgr.h"
 
 // Component Basic
 #include "Source/Core/Object/Component/Interface/CommonComponent.h"

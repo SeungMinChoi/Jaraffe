@@ -172,6 +172,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Utils\MathHelper.cpp" />
+    <ClCompile Include="Source\D3D11\TextureMgr.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -201,6 +202,7 @@
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\RHI\D3D11\D3DDevice.h" />
     <ClInclude Include="Source\Utils\MathHelper.h" />
+    <ClInclude Include="Source\D3D11\TextureMgr.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Source\D3D11\Vertex.h" />
     <ClInclude Include="Source\Core\Object\Component\Transform.h" />
@@ -226,6 +228,11 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc compile for release : %(FullPath)</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)\%(FileName).fxo</Outputs>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\flare.dds" />
+    <Image Include="Resources\flarealpha.dds" />
+    <Image Include="Resources\mipmaps.dds" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,5 +1,6 @@
 #pragma once
 
+// TODO : 이후 구조 잡고 리펙토링 할때 이부분 없어지거나 이동할수있음. ( 그냥 어느정도 만들고 다시 처음부터 짜는게 빠를지도?.. )
 namespace Jaraffe
 {
 	class CScene;
@@ -7,7 +8,7 @@ namespace Jaraffe
 
 	class Effect;
 	class SimpleEffect;
-	class PosNormalEffect;
+	class BasicEffect;
 	class Effects;
 
 	class InputLayoutDesc;

@@ -45,24 +45,33 @@ Jaraffe::SimpleEffect::~SimpleEffect()
 
 #pragma endregion
 
-#pragma region PosNormalEffect
+#pragma region BasicEffect
 
-Jaraffe::PosNormalEffect::PosNormalEffect(ID3D11Device * device, const std::wstring & filename)
+Jaraffe::BasicEffect::BasicEffect(ID3D11Device * device, const std::wstring & filename)
 	: Effect(device, filename)
 {
-	// Techniques
-	LightTech = mFX->GetTechniqueByName("LightTech");
+	Light1Tech = mFX->GetTechniqueByName("Light1");
+	Light2Tech = mFX->GetTechniqueByName("Light2");
+	Light3Tech = mFX->GetTechniqueByName("Light3");
 
-	// Constant Values
-	m_fxWorldViewProj = mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
-	m_fxWorld = mFX->GetVariableByName("gWorld")->AsMatrix();
-	m_fxWorldInvTranspose = mFX->GetVariableByName("gWorldInvTranspose")->AsMatrix();
-	m_fxEyePosW = mFX->GetVariableByName("gEyePosW")->AsVector();
-	m_fxDirLight = mFX->GetVariableByName("gDirLight");
-	m_fxMaterial = mFX->GetVariableByName("gMaterial");
+	Light0TexTech = mFX->GetTechniqueByName("Light0Tex");
+	Light1TexTech = mFX->GetTechniqueByName("Light1Tex");
+	Light2TexTech = mFX->GetTechniqueByName("Light2Tex");
+	Light3TexTech = mFX->GetTechniqueByName("Light3Tex");
+
+	WorldViewProj		= mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
+	World				= mFX->GetVariableByName("gWorld")->AsMatrix();
+	WorldInvTranspose	= mFX->GetVariableByName("gWorldInvTranspose")->AsMatrix();
+	TexTransform		= mFX->GetVariableByName("gTexTransform")->AsMatrix();
+	EyePosW				= mFX->GetVariableByName("gEyePosW")->AsVector();
+	DirLights			= mFX->GetVariableByName("gDirLights");
+	Mat					= mFX->GetVariableByName("gMaterial");
+	DiffuseMap			= mFX->GetVariableByName("gDiffuseMap")->AsShaderResource();
+
+	Time				= mFX->GetVariableByName("gTime")->AsScalar();
 }
 
-Jaraffe::PosNormalEffect::~PosNormalEffect()
+Jaraffe::BasicEffect::~BasicEffect()
 {
 }
 
@@ -72,18 +81,18 @@ Jaraffe::PosNormalEffect::~PosNormalEffect()
 
 // Static Values
 Jaraffe::SimpleEffect* Jaraffe::Effects::SimpleFX = 0;
-Jaraffe::PosNormalEffect* Jaraffe::Effects::PosNormalFX = 0;
+Jaraffe::BasicEffect* Jaraffe::Effects::BasicFX = 0;
 
 void Jaraffe::Effects::InitAll(ID3D11Device * device)
 {
 	SimpleFX	= new SimpleEffect(device, L"Source/Shader/Color.fxo");
-	PosNormalFX = new PosNormalEffect(device, L"Source/Shader/Basic.fxo");
+	BasicFX		= new BasicEffect(device, L"Source/Shader/Basic.fxo");
 }
 
 void Jaraffe::Effects::DestroyAll()
 {
 	SafeDelete(SimpleFX);
-	SafeDelete(PosNormalFX);
+	SafeDelete(BasicFX);
 }
 
 #pragma endregion

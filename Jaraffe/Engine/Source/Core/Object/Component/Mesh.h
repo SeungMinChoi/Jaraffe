@@ -55,7 +55,7 @@ protected:
 	UINT										m_Stride;
 	UINT										m_IndexCount;
 
-	std::vector<Jaraffe::Vertex::PosNormal>		m_pVertices;
+	std::vector<Jaraffe::Vertex::PosNormalTex>	m_pVertices;
 	std::vector<UINT>							m_pIndices;
 
 	ID3D11Buffer*								m_pVB;			// Vertex Buffer
