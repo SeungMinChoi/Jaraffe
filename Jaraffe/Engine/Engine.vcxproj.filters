@@ -25,16 +25,17 @@
     <ClCompile Include="Source\Core\Object\Component\Interface\BaseComponent.cpp" />
     <ClCompile Include="Source\Core\Object\GameObject\GameObject.cpp" />
     <ClCompile Include="Source\Core\Object\Component\Mesh.cpp" />
-    <ClCompile Include="Source\Core\Object\Component\Material.cpp" />
     <ClCompile Include="Source\Utils\MathHelper.cpp" />
     <ClCompile Include="Source\D3D11\TextureMgr.cpp" />
+    <ClCompile Include="Source\Core\Object\Object.cpp" />
+    <ClCompile Include="Source\Core\Object\Material.cpp" />
+    <ClCompile Include="Source\Core\Object\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\RHI\D3D11\D3DDevice.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Common\Defines.h" />
     <ClInclude Include="Source\Scene\Scene.h" />
-    <ClInclude Include="Source\Interface\IObject.h" />
     <ClInclude Include="Common\ForwardDeclaration.h" />
     <ClInclude Include="Source\Utils\GameTimer.h" />
     <ClInclude Include="Source\D3D11\Vertex.h" />
@@ -52,9 +53,11 @@
     <ClInclude Include="Source\Core\Object\Component\Interface\CommonComponent.h" />
     <ClInclude Include="Source\Core\Object\GameObject\GameObject.h" />
     <ClInclude Include="Source\Core\Object\Component\Mesh.h" />
-    <ClInclude Include="Source\Core\Object\Component\Material.h" />
     <ClInclude Include="Source\Utils\MathHelper.h" />
     <ClInclude Include="Source\D3D11\TextureMgr.h" />
+    <ClInclude Include="Source\Core\Object\Object.h" />
+    <ClInclude Include="Source\Core\Object\Material.h" />
+    <ClInclude Include="Source\Core\Object\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Source\Shader\Basic.fx" />

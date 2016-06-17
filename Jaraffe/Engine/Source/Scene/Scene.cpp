@@ -40,12 +40,18 @@ HRESULT Jaraffe::CScene::Init()
 	m_DirectionalLight->InsertComponent(pMainLight);
 
 	//---- T E S T ----
+	Jaraffe::Material* pMat = new Jaraffe::Material();
+	Jaraffe::Texture* pTex = new Jaraffe::Texture();
+	pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/WoodCrate01.dds"));
+	pMat->m_MainTexture = pTex;
+
+	MeshRenderer* pMeshRenderer = new MeshRenderer();
+	pMeshRenderer->SetMaterial(pMat);
 
 	GameObject* m_pTestModel = GameObject::Create();
 	m_pTestModel->InsertComponent(new Transform);
-	m_pTestModel->InsertComponent(new MeshRenderer);
+	m_pTestModel->InsertComponent(pMeshRenderer);
 	m_pTestModel->InsertComponent(new Mesh);
-	m_pTestModel->InsertComponent(new Jaraffe::Component::Material);
 
 	m_ObjectList.push_back(m_pTestModel);
 

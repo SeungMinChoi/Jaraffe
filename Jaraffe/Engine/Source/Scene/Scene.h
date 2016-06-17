@@ -3,18 +3,17 @@
 namespace Jaraffe
 {
 
-class CScene : public IObject
+class CScene
 {
 public:
 	CScene();
 	virtual ~CScene();
 
 public:
-	// Inherited via IObject
-	virtual HRESULT Init()				override;
-	virtual void	Update(float t)		override;
-	virtual void	Render()			override;
-	virtual void	Release()			override;
+	virtual HRESULT Init();
+	virtual void	Update(float t);
+	virtual void	Render();
+	virtual void	Release();
 
 	std::vector<Jaraffe::GameObject*>	m_ObjectList;
 };

@@ -15,7 +15,7 @@ ID3D11ShaderResourceView* Jaraffe::Util::Texture::CreateTexture2DArraySRV(
 	// CPU can read the resource.
 	//
 
-	UINT size = filenames.size();
+	UINT size = (UINT)filenames.size();
 
 	std::vector<ID3D11Texture2D*> srcTex(size);
 	for (UINT i = 0; i < size; ++i)

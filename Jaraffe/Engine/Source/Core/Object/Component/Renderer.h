@@ -29,10 +29,18 @@ public:
 	virtual void Receve()	{}
 
 // ****************************************************************************
-// Public Functions) 
+// Public virtual Functions) 
 // ----------------------------------------------------------------------------
 public:
-	virtual void Render() {}
+	virtual void Render()	{}
+
+// ****************************************************************************
+// Public Functions) 
+// ----------------------------------------------------------------------------
+	void SetMaterial(Jaraffe::Material* p_pMaterial);
+
+protected:
+	Jaraffe::Material* m_Material;
 };
 
 }

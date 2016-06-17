@@ -12,3 +12,8 @@ Jaraffe::Component::Renderer::~Renderer()
 {
 
 }
+
+void Jaraffe::Component::Renderer::SetMaterial(Jaraffe::Material* p_pMaterial)
+{
+	m_Material = p_pMaterial;
+}

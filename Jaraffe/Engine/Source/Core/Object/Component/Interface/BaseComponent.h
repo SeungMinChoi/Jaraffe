@@ -6,7 +6,7 @@ class GameObject;
 
 namespace Component
 {
-class BaseComponent
+class BaseComponent : public Jaraffe::Object
 {
 // ****************************************************************************
 // Constructor/Destructor)

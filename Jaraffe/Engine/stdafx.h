@@ -5,11 +5,14 @@
 #include <windowsx.h>
 
 // DirectX11
+#pragma warning( push )
+#pragma warning( disable : 4005 4838  ) 
 #include <d3d11_1.h>
 #include <d3dx11.h>
 #include <D3Dcompiler.h>
 #include <DirectXMath.h>
 #include <xnamath.h>
+#pragma warning( pop )
 
 // DirectX11 lib
 #include <d3dx11effect.h>
@@ -42,7 +45,7 @@
 #include "Source/Core/GenericPlatform/GenericPlatform.h"
 
 // Interface
-#include "Source/Interface/IObject.h"
+
 
 // Renderer
 #include "Source/RHI/D3D11/D3DDevice.h"
@@ -59,6 +62,11 @@
 #include "Source/D3D11/RenderStates.h"
 #include "Source/D3D11/TextureMgr.h"
 
+// Object
+#include "Source/Core/Object/Object.h"
+#include "Source/Core/Object/Texture.h"
+#include "Source/Core/Object/Material.h"
+
 // Component Basic
 #include "Source/Core/Object/Component/Interface/CommonComponent.h"
 #include "Source/Core/Object/Component/Interface/BaseComponent.h"
@@ -71,6 +79,5 @@
 #include "Source/Core/Object/Component/MeshRenderer.h"
 #include "Source/Core/Object/Component/Light.h"
 #include "Source/Core/Object/Component/Mesh.h"
-#include "Source/Core/Object/Component/Material.h"
 
 // Geometry
