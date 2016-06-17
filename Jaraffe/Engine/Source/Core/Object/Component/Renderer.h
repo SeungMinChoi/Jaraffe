@@ -37,9 +37,10 @@ public:
 // ****************************************************************************
 // Public Functions) 
 // ----------------------------------------------------------------------------
+	Jaraffe::Material* GetMaterial();
 	void SetMaterial(Jaraffe::Material* p_pMaterial);
 
-protected:
+private:
 	Jaraffe::Material* m_Material;
 };
 

@@ -23,21 +23,27 @@ void Jaraffe::Component::MeshRenderer::Update()
 
 void Jaraffe::Component::MeshRenderer::Render()
 {
-	auto* transform = GetOwner()->GetComponent<Jaraffe::Component::Transform>();
-	auto* mesh		= GetOwner()->GetComponent<Jaraffe::Component::Mesh>();
+	// Get)
+	auto* pTransform	= GetOwner()->GetComponent<Jaraffe::Component::Transform>();
+	auto* pMesh			= GetOwner()->GetComponent<Jaraffe::Component::Mesh>();
+	auto* pMarerial		= GetMaterial(); 
+
+	// Check)
+	RETURN_IF(pTransform == nullptr,	);
+	RETURN_IF(pMesh == nullptr,			);
 
 	// Set Layout And Topology
-	gRENDERER->GetDC()->IASetInputLayout(mesh->m_pInputLayout);
+	gRENDERER->GetDC()->IASetInputLayout(pMesh->m_pInputLayout);
 	gRENDERER->GetDC()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Set VertexBuffer And IndexBuffer
-	UINT stride = mesh->m_Stride;
+	UINT stride = pMesh->m_Stride;
 	UINT offset = 0;
-	gRENDERER->GetDC()->IASetVertexBuffers(0, 1, &mesh->m_pVB, &stride, &offset);
-	gRENDERER->GetDC()->IASetIndexBuffer(mesh->m_pIB, DXGI_FORMAT_R32_UINT, 0);
+	gRENDERER->GetDC()->IASetVertexBuffers(0, 1, &pMesh->m_pVB, &stride, &offset);
+	gRENDERER->GetDC()->IASetIndexBuffer(pMesh->m_pIB, DXGI_FORMAT_R32_UINT, 0);
 
 	// worldViewProj 행렬을 구한다.
-	XMMATRIX world	= XMLoadFloat4x4(&transform->GetTransformMatrix());
+	XMMATRIX world	= XMLoadFloat4x4(&pTransform->GetTransformMatrix());
 	XMMATRIX view	= Camera::g_pMainCamera->GetView();
 	XMMATRIX proj	= Camera::g_pMainCamera->GetProj();
 	XMMATRIX worldViewProj = world * view * proj;
@@ -51,11 +57,11 @@ void Jaraffe::Component::MeshRenderer::Render()
 	Effects::BasicFX->SetWorldViewProj(worldViewProj);
 	Effects::BasicFX->SetWorld(world);
 	Effects::BasicFX->SetWorldInvTranspose(worldInvTranspose);
-	Effects::BasicFX->SetMaterial(m_Material->m_Material);
+	Effects::BasicFX->SetMaterial(pMarerial->m_Material);
 
 	XMMATRIX I = XMMatrixIdentity();
 	Effects::BasicFX->SetTexTransform(I);																// TODO : 요건 어디다가 둘지 생각중... 일단은 쓸일이 생기면 머트리얼에 넣을 생각.
-	Effects::BasicFX->SetDiffuseMap(m_Material->m_MainTexture->m_pTexture);								// TODO : 텍스쳐 매니져도 아직 초기단계.
+	Effects::BasicFX->SetDiffuseMap(pMarerial->m_MainTexture->GetTexture());								// TODO : 텍스쳐 매니져도 아직 초기단계.
 	Effects::BasicFX->SetTime(0.0f);																	// TODO : 아직 시간 매니져 안만듬.
 
 	ID3DX11EffectTechnique* tech = Effects::BasicFX->Light1TexTech;
@@ -67,7 +73,7 @@ void Jaraffe::Component::MeshRenderer::Render()
 		tech->GetPassByIndex(p)->Apply(0, gRENDERER->GetDC());
 
 		// 색인 36개로 상자를 그린다.
-		gRENDERER->GetDC()->DrawIndexed(mesh->m_IndexCount, 0, 0);
+		gRENDERER->GetDC()->DrawIndexed(pMesh->m_IndexCount, 0, 0);
 	}
 }
 

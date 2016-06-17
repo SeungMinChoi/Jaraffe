@@ -10,6 +10,7 @@ public: static class_name* GetInstance() { static class_name instance; return &i
 
 // Check
 #define HR(x) (x)
+#define RETURN_IF(x, y) if(x) return y;
 
 //Debug 
 #if defined(DEBUG) || defined(_DEBUG)

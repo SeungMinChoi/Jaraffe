@@ -16,11 +16,13 @@ public:
 // public Functions)
 // ----------------------------------------------------------------------------
 public:
+	ID3D11ShaderResourceView* GetTexture();
 	void SetTexture(ID3D11ShaderResourceView* p_pTexture);
 
 // ****************************************************************************
 // private Members)
 // ----------------------------------------------------------------------------
+private:
 	ID3D11ShaderResourceView* m_pTexture;
 };
 
