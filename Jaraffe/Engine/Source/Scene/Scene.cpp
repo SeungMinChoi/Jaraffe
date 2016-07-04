@@ -14,30 +14,38 @@ Jaraffe::CScene::~CScene()
 HRESULT Jaraffe::CScene::Init()
 {
 	// 1) Create MainCamera
-	Camera* newCamera = new Camera();
-	Camera::SetMainCamera(newCamera);
-
-	GameObject* m_pMainCamera = GameObject::Create();
-	m_pMainCamera->InsertComponent(new Transform);
-	m_pMainCamera->InsertComponent(newCamera);
-
-	m_pMainCamera->Init();
-
-	// 2) Create Directional Light
-	Jaraffe::Component::Light* pMainLight = new Jaraffe::Component::Light();
-	auto plight = pMainLight->SetLightType(Jaraffe::Light::LightType::Directional);
-	if (plight != nullptr)
 	{
-		auto cast = (Jaraffe::Light::DirectionalLight*)plight;
-		cast->Ambient	= XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-		cast->Diffuse	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		cast->Specular	= XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-		cast->Direction = XMFLOAT3(-0.707f, 0.0f, 0.707f);
+		Camera* newCamera = new Camera();
+		Camera::SetMainCamera(newCamera);
+
+		GameObject* m_pMainCamera = GameObject::Create();
+		m_pMainCamera->InsertComponent(new Transform);
+		m_pMainCamera->InsertComponent(newCamera);
+
+		m_pMainCamera->Init();
+
+		m_ObjectList.push_back(m_pMainCamera);
 	}
 
-	GameObject* m_DirectionalLight = GameObject::Create();
-	m_DirectionalLight->InsertComponent(new Transform);
-	m_DirectionalLight->InsertComponent(pMainLight);
+	// 2) Create Directional Light 1
+	{
+		Jaraffe::Component::Light* pMainLight = new Jaraffe::Component::Light();
+		auto plight = pMainLight->SetLightType(Jaraffe::Light::LightType::Directional);
+		if (plight != nullptr)
+		{
+			auto cast = (Jaraffe::Light::DirectionalLight*)plight;
+			cast->Ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+			cast->Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+			cast->Specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+			cast->Direction = XMFLOAT3(-0.707f, 0.0f, 0.707f);
+		}
+
+		GameObject* m_DirectionalLight = GameObject::Create();
+		m_DirectionalLight->InsertComponent(new Transform);
+		m_DirectionalLight->InsertComponent(pMainLight);
+
+		m_ObjectList.push_back(m_DirectionalLight);
+	}
 
 	//---- T E S T ----
 	Jaraffe::Material* pMat = new Jaraffe::Material();

@@ -61,7 +61,7 @@ void Jaraffe::Component::MeshRenderer::Render()
 
 	XMMATRIX I = XMMatrixIdentity();
 	Effects::BasicFX->SetTexTransform(I);																// TODO : 요건 어디다가 둘지 생각중... 일단은 쓸일이 생기면 머트리얼에 넣을 생각.
-	Effects::BasicFX->SetDiffuseMap(pMarerial->m_MainTexture->GetTexture());								// TODO : 텍스쳐 매니져도 아직 초기단계.
+	Effects::BasicFX->SetDiffuseMap(pMarerial->m_MainTexture->GetTexture());							// TODO : 텍스쳐 매니져도 아직 초기단계.
 	Effects::BasicFX->SetTime(0.0f);																	// TODO : 아직 시간 매니져 안만듬.
 
 	ID3DX11EffectTechnique* tech = Effects::BasicFX->Light1TexTech;

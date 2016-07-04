@@ -55,7 +55,7 @@ public:
 	void SetWorldInvTranspose(CXMMATRIX M) { WorldInvTranspose->SetMatrix(reinterpret_cast<const float*>(&M)); }
 	void SetTexTransform(CXMMATRIX M) { TexTransform->SetMatrix(reinterpret_cast<const float*>(&M)); }
 	void SetEyePosW(const XMFLOAT3& v) { EyePosW->SetRawValue(&v, 0, sizeof(XMFLOAT3)); }
-	void SetDirLights(const Jaraffe::Light::DirectionalLight* lights) { DirLights->SetRawValue(lights, 0, 3 * sizeof(Jaraffe::Light::DirectionalLight)); }
+	void SetDirLights(const void* lights) { DirLights->SetRawValue(lights, 0, 3 * sizeof(Jaraffe::Light::DirectionalLight)); }
 	void SetMaterial(const Jaraffe::Light::Material& mat) { Mat->SetRawValue(&mat, 0, sizeof(Jaraffe::Light::Material)); }
 	void SetDiffuseMap(ID3D11ShaderResourceView* tex) { DiffuseMap->SetResource(tex); }
 	void SetTime(const float& f) { Time->SetFloat(f); }

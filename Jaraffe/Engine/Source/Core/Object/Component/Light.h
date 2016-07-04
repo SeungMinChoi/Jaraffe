@@ -32,7 +32,7 @@ public:
 // public Funtions) 
 // ----------------------------------------------------------------------------
 public:
-	Jaraffe::Light::BasicLight* SetLightType(Jaraffe::Light::LightType p_LightType);
+	Jaraffe::Light::BasicLight*			SetLightType(Jaraffe::Light::LightType p_LightType);
 	
 	Jaraffe::Light::BasicLight*			GetLight();
 	Jaraffe::Light::DirectionalLight*	GetDirectionalLight();
