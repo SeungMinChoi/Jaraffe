@@ -69,6 +69,11 @@ public:
 	ID3DX11EffectTechnique* Light2TexTech;
 	ID3DX11EffectTechnique* Light3TexTech;
 
+	ID3DX11EffectTechnique* Light0TexAlphaClipTech;
+	ID3DX11EffectTechnique* Light1TexAlphaClipTech;
+	ID3DX11EffectTechnique* Light2TexAlphaClipTech;
+	ID3DX11EffectTechnique* Light3TexAlphaClipTech;
+
 	ID3DX11EffectMatrixVariable* WorldViewProj;
 	ID3DX11EffectMatrixVariable* World;
 	ID3DX11EffectMatrixVariable* WorldInvTranspose;

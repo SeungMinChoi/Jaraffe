@@ -50,7 +50,8 @@ HRESULT Jaraffe::CScene::Init()
 	//---- T E S T ----
 	Jaraffe::Material* pMat = new Jaraffe::Material();
 	Jaraffe::Texture* pTex = new Jaraffe::Texture();
-	pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/WoodCrate01.dds"));
+	pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/WireFence.dds"));
+	pMat->m_RSState = Jaraffe::RenderStates::m_SolidRS;
 	pMat->m_MainTexture = pTex;
 
 	MeshRenderer* pMeshRenderer = new MeshRenderer();

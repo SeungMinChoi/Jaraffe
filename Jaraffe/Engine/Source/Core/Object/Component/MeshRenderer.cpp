@@ -23,6 +23,9 @@ void Jaraffe::Component::MeshRenderer::Update()
 
 void Jaraffe::Component::MeshRenderer::Render()
 {
+	// Declear)
+	float blendFactors[] = {0.0f, 0.0f, 0.0f, 0.0f};
+
 	// Get)
 	auto* pTransform	= GetOwner()->GetComponent<Jaraffe::Component::Transform>();
 	auto* pMesh			= GetOwner()->GetComponent<Jaraffe::Component::Mesh>();
@@ -64,8 +67,16 @@ void Jaraffe::Component::MeshRenderer::Render()
 	Effects::BasicFX->SetDiffuseMap(pMarerial->m_MainTexture->GetTexture());							// TODO : 텍스쳐 매니져도 아직 초기단계.
 	Effects::BasicFX->SetTime(0.0f);																	// TODO : 아직 시간 매니져 안만듬.
 
-	ID3DX11EffectTechnique* tech = Effects::BasicFX->Light1TexTech;
+	// 레스터라이즈 상태를 셋팅한다.
+	if(pMarerial->m_RSState != nullptr)
+		gRENDERER->GetDC()->RSSetState(pMarerial->m_RSState);
 
+	// 블렌드 스테이트 상태를 셋팅한다.
+	if(pMarerial->m_BlendState != nullptr)
+		gRENDERER->GetDC()->OMSetBlendState(pMarerial->m_BlendState, blendFactors, 0xffffffff);
+
+	// 
+	ID3DX11EffectTechnique* tech = Effects::BasicFX->Light1TexAlphaClipTech;
 	D3DX11_TECHNIQUE_DESC techDesc;
 	tech->GetDesc(&techDesc);
 	for (UINT p = 0; p < techDesc.Passes; ++p)
@@ -75,6 +86,10 @@ void Jaraffe::Component::MeshRenderer::Render()
 		// 색인 36개로 상자를 그린다.
 		gRENDERER->GetDC()->DrawIndexed(pMesh->m_IndexCount, 0, 0);
 	}
+
+	// 기본 랜더상태로 복원한다.
+	gRENDERER->GetDC()->RSSetState(0);
+	gRENDERER->GetDC()->OMSetBlendState(0, blendFactors, 0xffffffff);
 }
 
 void Jaraffe::Component::MeshRenderer::Receve()

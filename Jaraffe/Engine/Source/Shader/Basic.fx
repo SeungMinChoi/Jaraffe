@@ -63,7 +63,7 @@ VertexOut VS(VertexIn vin)
 	return vout;
 }
 
-float4 PS(VertexOut pin, uniform int gLightCount, uniform bool gUseTexure) : SV_Target
+float4 PS(VertexOut pin, uniform int gLightCount, uniform bool gUseTexure, uniform bool gAlphaClip) : SV_Target
 {
 	// Interpolating normal can unnormalize it, so normalize it.
     pin.NormalW = normalize(pin.NormalW);
@@ -83,6 +83,14 @@ float4 PS(VertexOut pin, uniform int gLightCount, uniform bool gUseTexure) : SV_
 	{
 		// Sample texture.
 		texColor = gDiffuseMap.Sample( samAnisotropic, pin.Tex );
+
+		if (gAlphaClip)
+		{
+			// Discard pixel if texture alpha < 0.1.  Note that we do this
+			// test as soon as possible so that we can potentially exit the shader 
+			// early, thereby skipping the rest of the shader code.
+			clip(texColor.a - 0.1f);
+		}
 	}
 	 
 	//
@@ -115,7 +123,7 @@ float4 PS(VertexOut pin, uniform int gLightCount, uniform bool gUseTexure) : SV_
 	}
 
 	// Common to take alpha from diffuse material and texture.
-	litColor.a = gMaterial.Diffuse.a * texColor.a;
+	litColor.a = gMaterial.Diffuse.a * 0.5f;
 
     return litColor;
 }
@@ -126,7 +134,7 @@ technique11 Light1
 	{
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, PS(1, false)));
+		SetPixelShader(CompileShader(ps_5_0, PS(1, false, false)));
 	}
 }
 
@@ -136,7 +144,7 @@ technique11 Light2
 	{
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, PS(2, false)));
+		SetPixelShader(CompileShader(ps_5_0, PS(2, false, false)));
 	}
 }
 
@@ -146,7 +154,7 @@ technique11 Light3
 	{
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, PS(3, false)));
+		SetPixelShader(CompileShader(ps_5_0, PS(3, false, false)));
 	}
 }
 
@@ -156,7 +164,7 @@ technique11 Light0Tex
 	{
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, PS(0, true)));
+		SetPixelShader(CompileShader(ps_5_0, PS(0, true, false)));
 	}
 }
 
@@ -166,7 +174,7 @@ technique11 Light1Tex
 	{
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, PS(1, true)));
+		SetPixelShader(CompileShader(ps_5_0, PS(1, true, false)));
 	}
 }
 
@@ -176,7 +184,7 @@ technique11 Light2Tex
 	{
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, PS(2, true)));
+		SetPixelShader(CompileShader(ps_5_0, PS(2, true, false)));
 	}
 }
 
@@ -186,6 +194,46 @@ technique11 Light3Tex
 	{
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, PS(3, true)));
+		SetPixelShader(CompileShader(ps_5_0, PS(3, true, false)));
+	}
+}
+
+technique11 Light0TexAlphaClip
+{
+	pass P0
+	{
+		SetVertexShader(CompileShader(vs_5_0, VS()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_5_0, PS(0, true, true)));
+	}
+}
+
+technique11 Light1TexAlphaClip
+{
+	pass P0
+	{
+		SetVertexShader(CompileShader(vs_5_0, VS()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_5_0, PS(1, true, true)));
+	}
+}
+
+technique11 Light2TexAlphaClip
+{
+	pass P0
+	{
+		SetVertexShader(CompileShader(vs_5_0, VS()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_5_0, PS(2, true, true)));
+	}
+}
+
+technique11 Light3TexAlphaClip
+{
+	pass P0
+	{
+		SetVertexShader(CompileShader(vs_5_0, VS()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_5_0, PS(3, true, true)));
 	}
 }

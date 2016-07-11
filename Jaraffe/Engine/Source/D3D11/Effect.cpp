@@ -59,6 +59,11 @@ Jaraffe::BasicEffect::BasicEffect(ID3D11Device * device, const std::wstring & fi
 	Light2TexTech = mFX->GetTechniqueByName("Light2Tex");
 	Light3TexTech = mFX->GetTechniqueByName("Light3Tex");
 
+	Light0TexAlphaClipTech = mFX->GetTechniqueByName("Light0TexAlphaClip");
+	Light1TexAlphaClipTech = mFX->GetTechniqueByName("Light1TexAlphaClip");
+	Light2TexAlphaClipTech = mFX->GetTechniqueByName("Light2TexAlphaClip");
+	Light3TexAlphaClipTech = mFX->GetTechniqueByName("Light3TexAlphaClip");
+
 	WorldViewProj		= mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
 	World				= mFX->GetVariableByName("gWorld")->AsMatrix();
 	WorldInvTranspose	= mFX->GetVariableByName("gWorldInvTranspose")->AsMatrix();

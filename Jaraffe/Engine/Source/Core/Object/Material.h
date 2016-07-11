@@ -18,7 +18,9 @@ public:
 // ----------------------------------------------------------------------------
 public:
 	Jaraffe::Light::Material	m_Material;
-	Jaraffe::Texture*			m_MainTexture;
+	Jaraffe::Texture*			m_MainTexture	= nullptr;
+	ID3D11RasterizerState*		m_RSState		= nullptr;
+	ID3D11BlendState*			m_BlendState	= nullptr;
 
 // ****************************************************************************
 // static Public Functions)
