@@ -75,8 +75,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <ExecutablePath>3rdPartySDK\DirectX\bin\x64;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>3rdPartySDK\DirectX\Include;3rdPartySDK\Effect\inc;3rdPartySDK\boost\stage\include\boost-1_61;$(IncludePath)</IncludePath>
-    <LibraryPath>3rdPartySDK\DirectX\Lib\x64;3rdPartySDK\Effect\lib;3rdPartySDK\boost\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>3rdPartySDK\DirectX\Include;3rdPartySDK\Effect\inc;3rdPartySDK\boost\stage\include\boost-1_61;3rdPartySDK\MyProjectLib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>3rdPartySDK\DirectX\Lib\x64;3rdPartySDK\Effect\lib;3rdPartySDK\boost\stage\lib;3rdPartySDK\MyProjectLib\lib;$(LibraryPath)</LibraryPath>
     <OutDir>..\..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>..\..\Binaries\$(Platform)\$(Configuration)\Intermediate\</IntDir>
   </PropertyGroup>
@@ -107,9 +107,10 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -143,6 +144,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -196,8 +198,6 @@
     <ClInclude Include="Source\D3D11\RenderStates.h" />
     <ClInclude Include="Source\D3D11\Effect.h" />
     <ClInclude Include="Source\Core\Object\Component\Camera.h" />
-    <ClInclude Include="Common\Defines.h" />
-    <ClInclude Include="Common\ForwardDeclaration.h" />
     <ClInclude Include="Source\D3D11\LightHelper.h" />
     <ClInclude Include="Source\Utils\D3DUtil.h" />
     <ClInclude Include="Source\Utils\GameTimer.h" />

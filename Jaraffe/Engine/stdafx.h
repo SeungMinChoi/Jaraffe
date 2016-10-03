@@ -1,5 +1,11 @@
 #pragma once
 
+//Debug 
+#if defined(DEBUG) || defined(_DEBUG)
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
+#endif
+
 // Windows Header Files:
 #include <windows.h>
 #include <windowsx.h>
@@ -36,10 +42,10 @@
 // Boost
 
 // Defines
-#include "Common/Defines.h"
+#include "JFCommonClasses.h"
 
-// ForwardDeclaration
-#include "Common/ForwardDeclaration.h"
+//
+#include "JFObjectClasses.h"
 
 // Platform
 #include "Source/Core/GenericPlatform/GenericPlatform.h"

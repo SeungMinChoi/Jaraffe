@@ -34,9 +34,7 @@
   <ItemGroup>
     <ClInclude Include="Source\RHI\D3D11\D3DDevice.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Common\Defines.h" />
     <ClInclude Include="Source\Scene\Scene.h" />
-    <ClInclude Include="Common\ForwardDeclaration.h" />
     <ClInclude Include="Source\Utils\GameTimer.h" />
     <ClInclude Include="Source\D3D11\Vertex.h" />
     <ClInclude Include="Source\D3D11\Effect.h" />

@@ -6,15 +6,13 @@
 Jaraffe::Effect::Effect(ID3D11Device* device, const std::wstring& filename)
 	: mFX(0)
 {
-	std::ifstream fin(filename.c_str(), std::ios::binary);
+	auto fin = JFAPI::FILE::Open(filename.c_str(), eFILE_OPERATION::READ);
+	size_t size = JFAPI::FILE::GetLength(fin);
 
-	fin.seekg(0, std::ios_base::end);
-	int size = (int)fin.tellg();
-	fin.seekg(0, std::ios_base::beg);
 	std::vector<char> compiledShader(size);
 
-	fin.read(&compiledShader[0], size);
-	fin.close();
+	JFAPI::FILE::Read(fin, size, &compiledShader[0]);
+	JFAPI::FILE::Close(fin);
 
 	HR(D3DX11CreateEffectFromMemory(&compiledShader[0], size,
 		0, device, &mFX));
