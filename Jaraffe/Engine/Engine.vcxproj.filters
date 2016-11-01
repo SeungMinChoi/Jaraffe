@@ -30,6 +30,7 @@
     <ClCompile Include="Source\Core\Object\Object.cpp" />
     <ClCompile Include="Source\Core\Object\Material.cpp" />
     <ClCompile Include="Source\Core\Object\Texture.cpp" />
+    <ClCompile Include="Source\PhysX\PhysXDevice.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\RHI\D3D11\D3DDevice.h" />
@@ -56,6 +57,7 @@
     <ClInclude Include="Source\Core\Object\Object.h" />
     <ClInclude Include="Source\Core\Object\Material.h" />
     <ClInclude Include="Source\Core\Object\Texture.h" />
+    <ClInclude Include="Source\PhysX\PhysXDevice.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Source\Shader\Basic.fx" />

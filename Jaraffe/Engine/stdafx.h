@@ -1,11 +1,5 @@
 #pragma once
 
-//Debug 
-#if defined(DEBUG) || defined(_DEBUG)
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
-#endif
-
 // Windows Header Files:
 #include <windows.h>
 #include <windowsx.h>
@@ -20,8 +14,20 @@
 #include <xnamath.h>
 #pragma warning( pop )
 
-// DirectX11 lib
-#include <d3dx11effect.h>
+// DirectX11 Utile
+#include "d3dx11effect.h"
+
+// PhsyX
+#include <unordered_set>
+
+#include "PxPhysics.h"
+#include "PxPhysicsAPI.h"
+
+//Debug 
+#if defined(DEBUG) || defined(_DEBUG)
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
+#endif
 
 // C RunTime Header Files
 #include <stdlib.h>
@@ -39,6 +45,7 @@
 #include <unordered_map>
 #include <float.h>
 #include <cmath>
+
 // Boost
 
 // Defines
@@ -87,3 +94,25 @@
 #include "Source/Core/Object/Component/Mesh.h"
 
 // Geometry
+
+// PhysX Class's
+#include "Source/PhysX/PhysXDevice.h"
+
+// Libs
+#ifdef _DEBUG
+	#pragma comment(lib, "PhysX3DEBUG_x64.lib")				//Always be needed  
+	#pragma comment(lib, "PhysX3CommonDEBUG_x64.lib")		//Always be needed
+	#pragma comment(lib, "PhysXProfileSDKDEBUG.lib")		//PhysX extended library 
+	#pragma comment(lib, "PhysX3ExtensionsDEBUG.lib")		//PhysX extended library 
+	#pragma comment(lib, "PhysXVisualDebuggerSDKDEBUG.lib") //For PVD only 
+	
+	#pragma comment(lib, "Effects11d.lib")
+#else
+	#pragma comment(lib, "PhysX3_x64.lib")	
+	#pragma comment(lib, "PhysX3Common_x64.lib") 
+	#pragma comment(lib, "PhysXProfileSDK.lib")
+	#pragma comment(lib, "PhysX3Extensions.lib")
+	#pragma comment(lib, "PhysXVisualDebuggerSDK.lib")
+
+	#pragma comment(lib, "Effects11.lib")
+#endif
