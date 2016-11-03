@@ -37,11 +37,6 @@ void Jaraffe::Component::Light::Release()
 	SafeDelete(m_pLight);
 }
 
-void Jaraffe::Component::Light::Receve()
-{
-
-}
-
 Jaraffe::Light::BasicLight* Jaraffe::Component::Light::SetLightType(Jaraffe::Light::LightType p_LightType)
 {
 	//

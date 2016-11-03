@@ -92,6 +92,8 @@
 #include "Source/Core/Object/Component/MeshRenderer.h"
 #include "Source/Core/Object/Component/Light.h"
 #include "Source/Core/Object/Component/Mesh.h"
+#include "Source/Core/Object/Component/Colision.h"
+#include "Source/Core/Object/Component/ColisionBox.h"
 
 // Geometry
 

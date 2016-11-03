@@ -61,6 +61,13 @@ HRESULT Jaraffe::CScene::Init()
 	m_pTestModel->InsertComponent(new Transform);
 	m_pTestModel->InsertComponent(pMeshRenderer);
 	m_pTestModel->InsertComponent(new Mesh);
+	
+	ColisionBox* pColisionBox = new ColisionBox();
+	m_pTestModel->InsertComponent(pColisionBox);
+
+	//PhysXDevice::GetInstance()->
+	PxRigidStatic* groundPlane = PxCreatePlane(*PhysXDevice::GetInstance()->GetPhysics(), PxPlane(0, 1, 0, 7), *PhysXDevice::GetInstance()->GetMaterial());
+	PhysXDevice::GetInstance()->GetScene()->addActor(*groundPlane);
 
 	m_ObjectList.push_back(m_pTestModel);
 
@@ -72,6 +79,8 @@ HRESULT Jaraffe::CScene::Init()
 		m_ObjectList[i]->Init();
 	}
 
+	pColisionBox->SethalfExtents(XMFLOAT3(2.5f, 2.5f, 2.5f));
+
 	return S_OK;
 }
 
@@ -81,10 +90,15 @@ void Jaraffe::CScene::Update(float t)
 	static float fTestTime = 0;
 	fTestTime += t;
 
-	// 1) Camera Update.
+	// 1) physics Update
+	PX_UNUSED(true);
+	PhysXDevice::GetInstance()->GetScene()->simulate(t);
+	PhysXDevice::GetInstance()->GetScene()->fetchResults(true);
+
+	// 2) Camera Update.
 	Camera::g_pMainCamera->Update();
 
-	// 2) All GameObject Update
+	// 3) All GameObject Update
 	for (size_t i = 0; i < m_ObjectList.size(); i++)
 	{
 		auto* transform = m_ObjectList[i]->GetComponent<Jaraffe::Component::Transform>();

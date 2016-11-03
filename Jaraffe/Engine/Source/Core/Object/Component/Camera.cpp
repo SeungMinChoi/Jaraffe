@@ -45,11 +45,6 @@ void Jaraffe::Component::Camera::Release()
 {
 }
 
-void Jaraffe::Component::Camera::Receve()
-{
-
-}
-
 void Jaraffe::Component::Camera::UpdateViewMatrix()
 {
 	// 뷰 행렬을 갱신한다.

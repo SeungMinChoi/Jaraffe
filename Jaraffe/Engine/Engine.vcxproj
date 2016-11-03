@@ -155,6 +155,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App\Main_Win.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\Colision.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\ColisionBox.cpp" />
     <ClCompile Include="Source\Core\Object\Object.cpp" />
     <ClCompile Include="Source\Core\Object\Material.cpp" />
     <ClCompile Include="Source\Core\Object\Component\Mesh.cpp" />
@@ -185,6 +187,8 @@
     <ClCompile Include="Source\Core\Object\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Core\Object\Component\Colision.h" />
+    <ClInclude Include="Source\Core\Object\Component\ColisionBox.h" />
     <ClInclude Include="Source\Core\Object\Object.h" />
     <ClInclude Include="Source\Core\Object\Material.h" />
     <ClInclude Include="Source\Core\Object\Component\Mesh.h" />

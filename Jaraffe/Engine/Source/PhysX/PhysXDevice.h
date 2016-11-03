@@ -4,12 +4,20 @@ using namespace physx;
 
 class PhysXDevice
 {
-public:
-	PhysXDevice();
-	virtual ~PhysXDevice();
+// ****************************************************************************
+// Singletone)
+// ----------------------------------------------------------------------------
+	SINGLETONE(PhysXDevice)
 
 public:
-	void Init();
+	void DeviceInit();
+	void CleanupDevice();
+
+	void SceneSetting(PxVec3 _gravity, PxReal _staticFriction, PxReal _dynamicFriction, PxReal _restitution);
+
+	PxPhysics* GetPhysics() { return m_Physics; }
+	PxScene* GetScene() { return m_Scene; }
+	PxMaterial* GetMaterial() { return m_Material; }
 
 private:
 	PxDefaultAllocator			m_Allocator;

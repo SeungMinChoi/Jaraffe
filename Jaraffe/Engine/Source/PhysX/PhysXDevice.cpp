@@ -11,16 +11,16 @@ PhysXDevice::~PhysXDevice()
 {
 }
 
-void PhysXDevice::Init()
+void PhysXDevice::DeviceInit()
 {
-	// 1)
+	// 1) 
 	m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_Allocator, m_ErrorCallback);
 
-	// 2)
+	// 2) 프로파일러 생성
 	PxProfileZoneManager* profileZoneManager = &PxProfileZoneManager::createProfileZoneManager(m_Foundation);
 	m_Physics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, PxTolerancesScale(), true, profileZoneManager);
 
-	// 3)
+	// 3) 그래픽 디버거 연결.
 	if (m_Physics->getPvdConnectionManager())
 	{
 		m_Physics->getVisualDebugger()->setVisualizeConstraints(true);
@@ -30,18 +30,31 @@ void PhysXDevice::Init()
 	}
 
 	// 4)
-	PxSceneDesc sceneDesc(m_Physics->getTolerancesScale());
-	sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
 	m_Dispatcher = PxDefaultCpuDispatcherCreate(2);
+}
+
+void PhysXDevice::CleanupDevice()
+{
+	PX_UNUSED(false);
+	m_Scene->release();
+	m_Dispatcher->release();
+	PxProfileZoneManager* profileZoneManager = m_Physics->getProfileZoneManager();
+	if (m_Connection != NULL)
+		m_Connection->release();
+	m_Physics->release();
+	profileZoneManager->release();
+	m_Foundation->release();
+}
+
+void PhysXDevice::SceneSetting(PxVec3 _gravity, PxReal _staticFriction, PxReal _dynamicFriction, PxReal _restitution)
+{
+	// 1) Scene 생성
+	PxSceneDesc sceneDesc(m_Physics->getTolerancesScale());
+	sceneDesc.gravity		= _gravity;
 	sceneDesc.cpuDispatcher = m_Dispatcher;
-	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
-	m_Scene =m_Physics->createScene(sceneDesc);
+	sceneDesc.filterShader	= PxDefaultSimulationFilterShader;
+	m_Scene = m_Physics->createScene(sceneDesc);
 
-	// 5)
-	m_Material = m_Physics->createMaterial(0.5f, 0.5f, 0.6f);
-
-	// 6) 
-	PxRigidStatic* groundPlane = PxCreatePlane(*m_Physics, PxPlane(0, 1, 0, 0), *m_Material);
-	m_Scene->addActor(*groundPlane);
-
+	// 2) 마찰력 정보 생성
+	m_Material = m_Physics->createMaterial(_staticFriction, _dynamicFriction, _restitution);
 }

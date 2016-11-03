@@ -13,7 +13,7 @@ Jaraffe::Component::MeshRenderer::~MeshRenderer()
 
 void Jaraffe::Component::MeshRenderer::Init()
 {
-	
+
 }
 
 void Jaraffe::Component::MeshRenderer::Update()
@@ -90,11 +90,6 @@ void Jaraffe::Component::MeshRenderer::Render()
 	// 기본 랜더상태로 복원한다.
 	gRENDERER->GetDC()->RSSetState(0);
 	gRENDERER->GetDC()->OMSetBlendState(0, blendFactors, 0xffffffff);
-}
-
-void Jaraffe::Component::MeshRenderer::Receve()
-{
-
 }
 
 void Jaraffe::Component::MeshRenderer::Release()

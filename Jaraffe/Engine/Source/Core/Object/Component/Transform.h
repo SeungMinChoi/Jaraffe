@@ -24,9 +24,8 @@ public:
 // override) 
 // ----------------------------------------------------------------------------
 public:
-	virtual void Init();
-	virtual void Release();
-	virtual void Receve();
+	virtual void Init()		{}
+	virtual void Release()	{}
 
 // ****************************************************************************
 // Public Functions) 
@@ -38,9 +37,9 @@ public:
 	XMFLOAT3& GetScale()	{ return m_vScale; }
 
 	// Set
-	void SetPosition(float x, float y, float z) { m_vPosition = XMFLOAT3(x, y, z); }
-	void SetRotation(float x, float y, float z) { m_vRotation = XMFLOAT3(x, y, z); }
-	void SetScale(float x, float y, float z)	{ m_vScale = XMFLOAT3(x, y, z); }
+	void SetPosition(float x, float y, float z);
+	void SetRotation(float x, float y, float z);
+	void SetScale(float x, float y, float z);
 
 	XMFLOAT4X4& GetTransformMatrix();
 

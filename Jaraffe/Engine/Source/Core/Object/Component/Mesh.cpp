@@ -105,8 +105,3 @@ void Jaraffe::Component::Mesh::Release()
 	ReleaseCOM(m_pVB);
 	ReleaseCOM(m_pIB);
 }
-
-void Jaraffe::Component::Mesh::Receve()
-{
-
-}

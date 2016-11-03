@@ -31,6 +31,8 @@
     <ClCompile Include="Source\Core\Object\Material.cpp" />
     <ClCompile Include="Source\Core\Object\Texture.cpp" />
     <ClCompile Include="Source\PhysX\PhysXDevice.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\ColisionBox.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\Colision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\RHI\D3D11\D3DDevice.h" />
@@ -58,6 +60,8 @@
     <ClInclude Include="Source\Core\Object\Material.h" />
     <ClInclude Include="Source\Core\Object\Texture.h" />
     <ClInclude Include="Source\PhysX\PhysXDevice.h" />
+    <ClInclude Include="Source\Core\Object\Component\ColisionBox.h" />
+    <ClInclude Include="Source\Core\Object\Component\Colision.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Source\Shader\Basic.fx" />

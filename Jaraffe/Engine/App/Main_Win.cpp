@@ -39,12 +39,16 @@ public:
 		// 4) TextureMGR Init
 		gTEXTUREMGR->Init();
 
-		// 4)
+		// 5)
 		Jaraffe::Effects::InitAll(gRENDERER->GetDevice());
 		Jaraffe::RenderStates::InitAll(gRENDERER->GetDevice());
 		Jaraffe::InputLayouts::InitAll(gRENDERER->GetDevice());
 
-		// 5) Test Scene Init
+		// 6) 
+		PhysXDevice::GetInstance()->DeviceInit();
+		PhysXDevice::GetInstance()->SceneSetting(PxVec3(0.0f, -9.81f, 0.0f), 0.5f, 0.5f, 0.6f);
+
+		// 7) Test Scene Init
 		m_pTestScene->Init();
 
 		return S_OK;
@@ -96,6 +100,9 @@ public:
 		//
 		m_pTestScene->Release();
 		SafeDelete(m_pTestScene);
+
+		//
+		PhysXDevice::GetInstance()->CleanupDevice();
 
 		//
 		Jaraffe::Effects::DestroyAll();

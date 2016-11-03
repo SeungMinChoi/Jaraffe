@@ -26,7 +26,6 @@ public:
 public:
 	virtual void Init();
 	virtual void Release();
-	virtual void Receve();
 
 // ****************************************************************************
 // public Funtions) 
