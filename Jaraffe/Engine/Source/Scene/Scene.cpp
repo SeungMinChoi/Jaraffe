@@ -66,7 +66,7 @@ HRESULT Jaraffe::CScene::Init()
 	m_pTestModel->InsertComponent(pColisionBox);
 
 	//PhysXDevice::GetInstance()->
-	PxRigidStatic* groundPlane = PxCreatePlane(*PhysXDevice::GetInstance()->GetPhysics(), PxPlane(0, 1, 0, 7), *PhysXDevice::GetInstance()->GetMaterial());
+	PxRigidStatic* groundPlane = PxCreatePlane(*PhysXDevice::GetInstance()->GetPhysics(), PxPlane(0, 1, 0, 10), *PhysXDevice::GetInstance()->GetMaterial());
 	PhysXDevice::GetInstance()->GetScene()->addActor(*groundPlane);
 
 	m_ObjectList.push_back(m_pTestModel);
@@ -104,7 +104,7 @@ void Jaraffe::CScene::Update(float t)
 		auto* transform = m_ObjectList[i]->GetComponent<Jaraffe::Component::Transform>();
 		if (transform != nullptr)
 		{
-			transform->SetRotation(0.0f, fTestTime, 0.0f);
+			transform->SetRotation(0.0f, 0.0f, fTestTime * 1.5f);
 		}
 
 		m_ObjectList[i]->Update();

@@ -33,7 +33,7 @@ public:
 public:
 	// Get
 	XMFLOAT3& GetPosition() { return m_vPosition; }
-	XMFLOAT3& GetRotation() { return m_vRotation; }
+	XMFLOAT4& GetRotation() { return m_vRotation; }
 	XMFLOAT3& GetScale()	{ return m_vScale; }
 
 	// Set
@@ -48,7 +48,7 @@ public:
 // ----------------------------------------------------------------------------
 private:
 	XMFLOAT3	m_vPosition = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	XMFLOAT3	m_vRotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	XMFLOAT4	m_vRotation = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
 	XMFLOAT3	m_vScale	= XMFLOAT3(1.0f, 1.0f, 1.0f);
 
 	XMFLOAT4X4	m_Transform;

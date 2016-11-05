@@ -37,6 +37,12 @@ void Jaraffe::GameObject::Render()
 	{
 		pRenderer->Render();
 	}
+
+	auto pColision = GetComponent<Jaraffe::Component::Colision>();
+	if (pColision != nullptr)
+	{
+		pColision->Render();
+	}
 }
 
 void Jaraffe::GameObject::Release()

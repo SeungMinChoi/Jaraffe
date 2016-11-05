@@ -42,6 +42,16 @@ protected:
 
 	physx::PxRigidDynamic*	m_pRigidBody	= nullptr;
 	physx::PxShape*			m_pShape		= nullptr;
+
+// ****************************************************************************
+// private) 
+// ----------------------------------------------------------------------------
+protected:
+	ID3D11Buffer* m_VertBuff = nullptr;
+	ID3D11Buffer* m_IndexBuff = nullptr;
+
+	UINT m_VertexSize = 0;
+	UINT m_indexCnt = 0;
 };
 
 }
