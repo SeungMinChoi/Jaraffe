@@ -73,11 +73,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <ExecutablePath>3rdPartySDK\DirectX\bin\x64;3rdPartySDK\PhysXSDK\Bin\vc14win64;$(ExecutablePath)</ExecutablePath>
+    <ExecutablePath>3rdPartySDK\DirectX\bin\x64;$(ExecutablePath)</ExecutablePath>
     <IncludePath>3rdPartySDK\DirectX\Include;3rdPartySDK\Effect\inc;3rdPartySDK\boost\stage\include\boost-1_61;3rdPartySDK\MyProjectLib\include;3rdPartySDK\\PhysXSDK\Include;$(IncludePath)</IncludePath>
     <LibraryPath>3rdPartySDK\DirectX\Lib\x64;3rdPartySDK\Effect\lib;3rdPartySDK\boost\stage\lib;3rdPartySDK\MyProjectLib\lib;3rdPartySDK\\PhysXSDK\Lib\vc14win64;$(LibraryPath)</LibraryPath>
     <OutDir>..\..\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>..\..\Binaries\$(Platform)\$(Configuration)\Intermediate\</IntDir>
+    <ReferencePath>$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -108,7 +109,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;PX_DEBUG;PX_CHECKED;PX_SUPPORT_VISUAL_DEBUGGER;PX_NVTX;PHYSX_PROFILE_SDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>

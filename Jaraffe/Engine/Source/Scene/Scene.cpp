@@ -79,7 +79,7 @@ HRESULT Jaraffe::CScene::Init()
 		m_ObjectList[i]->Init();
 	}
 
-	pColisionBox->SethalfExtents(XMFLOAT3(2.5f, 2.5f, 2.5f));
+	pColisionBox->SethalfExtents(XMFLOAT3(0.5f, 0.5f, 0.5f));
 
 	return S_OK;
 }

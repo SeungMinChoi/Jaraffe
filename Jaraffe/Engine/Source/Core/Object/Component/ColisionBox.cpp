@@ -6,6 +6,8 @@ DECLARE_IDENTIFIER(Jaraffe::Component::ColisionBox);
 
 Jaraffe::Component::ColisionBox::ColisionBox()
 {
+	m_Center	= XMFLOAT3(0, 0, 0);
+	m_Size		= XMFLOAT3(1, 1, 1);
 }
 
 Jaraffe::Component::ColisionBox::~ColisionBox()
@@ -22,7 +24,7 @@ void Jaraffe::Component::ColisionBox::Init()
 
 	// 2) 
 	m_pShape = PhysXDevice::GetInstance()->GetPhysics()->createShape(
-		PxBoxGeometry(1.0f, 1.0f, 1.0f),
+		PxBoxGeometry(m_Size.x, m_Size.y, m_Size.z),
 		*PhysXDevice::GetInstance()->GetMaterial());
 	
 	// 3)
@@ -115,7 +117,16 @@ void Jaraffe::Component::ColisionBox::Render()
 	gRENDERER->GetDC()->IASetIndexBuffer(m_IndexBuff, DXGI_FORMAT_R32_UINT, 0);
 
 	// worldViewProj 행렬을 구한다.
-	XMMATRIX world = XMLoadFloat4x4(&pTransform->GetTransformMatrix());
+	XMFLOAT3& rPosition = XMFLOAT3(pTransform->GetPosition().x + m_Center.x, pTransform->GetPosition().y + m_Center.y, pTransform->GetPosition().z + m_Center.z);
+	XMFLOAT4& rRotation = pTransform->GetRotation();
+	XMFLOAT3& rScale	= m_Size;
+
+	XMMATRIX scl, rot, tsl;
+	scl = XMMatrixScalingFromVector(XMLoadFloat3(&rScale));
+	rot = XMMatrixRotationQuaternion(XMLoadFloat4(&rRotation));
+	tsl = XMMatrixTranslationFromVector(XMLoadFloat3(&rPosition));
+
+	XMMATRIX world = scl*rot*tsl;
 	XMMATRIX view = Camera::g_pMainCamera->GetView();
 	XMMATRIX proj = Camera::g_pMainCamera->GetProj();
 	XMMATRIX worldViewProj = world * view * proj;
@@ -147,55 +158,11 @@ void Jaraffe::Component::ColisionBox::Release()
 
 void Jaraffe::Component::ColisionBox::SethalfExtents(XMFLOAT3 _vhalfExtents)
 {
-	ReleaseCOM(m_VertBuff);
-	ReleaseCOM(m_IndexBuff);
+	// 1)
+	m_Size = _vhalfExtents;
 
-	m_pShape->getGeometry().box().halfExtents = PxVec3(_vhalfExtents.x, _vhalfExtents.y, _vhalfExtents.z);
-
-	// 5)
-	float cX = 0.0f;
-	float cY = 0.0f;
-	float cZ = 0.0f;
-
-	float eX = _vhalfExtents.x;
-	float eY = _vhalfExtents.y;
-	float eZ = _vhalfExtents.z;
-
-	// 정점 
-	Jaraffe::Vertex::PosColor  vertices[] =
-	{
-		// 1, 1, 1	(0)
-		{ XMFLOAT3(cX + eX, cY + eY, cZ + eZ), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-		// 1, 1, -1	(1)
-		{ XMFLOAT3(cX + eX, cY + eY, cZ + -eZ), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-		// -1, 1, 1	(2)
-		{ XMFLOAT3(cX + -eX, cY + eY, cZ + eZ), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-		// -1, 1, -1 (3)
-		{ XMFLOAT3(cX + -eX, cY + eY, cZ + -eZ), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-		// 1, -1, 1 (4)
-		{ XMFLOAT3(cX + eX, cY + -eY, cZ + eZ), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-		// 1, -1, -1 (5)
-		{ XMFLOAT3(cX + eX, cY + -eY, cZ + -eZ), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-		// -1, -1, 1 (6)
-		{ XMFLOAT3(cX + -eX, cY + -eY, cZ + eZ), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-		// -1, -1, -1 (7)
-		{ XMFLOAT3(cX + -eX, cY + -eY, cZ + -eZ), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) }
-	};
-	m_VertexSize = ARRAYSIZE(vertices);
-
-	// 인덱스
-	UINT indices[] =
-	{
-		// Top
-		0,1, 1,3, 3,2, 0,2,
-		// Bottom
-		4,5, 5,7, 7,6, 6,4,
-		// Top - Bottom
-		0,4, 1,5, 2,6, 3,7
-	};
-	m_indexCnt = ARRAYSIZE(indices);
-
-	// Create 
-	Jaraffe::Util::Mesh::CreateVertexBuffer(&vertices[0], sizeof(Jaraffe::Vertex::PosColor) * m_VertexSize, &m_VertBuff);
-	Jaraffe::Util::Mesh::CreateIndexBuffer(&indices[0], sizeof(UINT) * m_indexCnt, &m_IndexBuff);
+	// 2)
+	m_pRigidBody->detachShape(*m_pShape);
+	m_pShape->setGeometry(PxBoxGeometry(m_Size.x, m_Size.y, m_Size.z));
+	m_pRigidBody->attachShape(*m_pShape);
 }
