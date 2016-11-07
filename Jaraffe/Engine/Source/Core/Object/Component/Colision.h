@@ -31,7 +31,7 @@ public:
 
 	void UseDebugMode(bool _bUse) { m_bUseDebugMode = _bUse; }
 
-	physx::PxRigidDynamic* GetRigidBody()	{ return m_pRigidBody; }
+	physx::PxRigidBody* GetRigidBody()		{ return m_pRigidBody; }
 	physx::PxShape* GetShape()				{ return m_pShape; }
 
 // ****************************************************************************
@@ -40,7 +40,7 @@ public:
 protected:
 	bool m_bUseDebugMode;
 
-	physx::PxRigidDynamic*	m_pRigidBody	= nullptr;
+	physx::PxRigidBody*		m_pRigidBody	= nullptr;
 	physx::PxShape*			m_pShape		= nullptr;
 
 	XMFLOAT3 m_Center;

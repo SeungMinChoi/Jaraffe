@@ -47,29 +47,60 @@ HRESULT Jaraffe::CScene::Init()
 		m_ObjectList.push_back(m_DirectionalLight);
 	}
 
-	//---- T E S T ----
-	Jaraffe::Material* pMat = new Jaraffe::Material();
-	Jaraffe::Texture* pTex = new Jaraffe::Texture();
-	pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/WireFence.dds"));
-	pMat->m_RSState = Jaraffe::RenderStates::m_SolidRS;
-	pMat->m_MainTexture = pTex;
+	// ---- T E S T _ B O X ---- //
+	{
+		Jaraffe::Material* pMat = new Jaraffe::Material();
+		Jaraffe::Texture* pTex = new Jaraffe::Texture();
+		pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/WireFence.dds"));
+		pMat->m_RSState = Jaraffe::RenderStates::m_SolidRS;
+		pMat->m_MainTexture = pTex;
 
-	MeshRenderer* pMeshRenderer = new MeshRenderer();
-	pMeshRenderer->SetMaterial(pMat);
+		MeshRenderer* pBoxMeshRenderer = new MeshRenderer();
+		pBoxMeshRenderer->SetMaterial(pMat);
 
-	GameObject* m_pTestModel = GameObject::Create();
-	m_pTestModel->InsertComponent(new Transform);
-	m_pTestModel->InsertComponent(pMeshRenderer);
-	m_pTestModel->InsertComponent(new Mesh);
-	
-	ColisionBox* pColisionBox = new ColisionBox();
-	m_pTestModel->InsertComponent(pColisionBox);
+		Mesh* pBoxMesh = new Mesh();
+		float w2 = 1.0f;
+		float h2 = 1.0f;
+		float d2 = 1.0f;
+		Jaraffe::GeometryGenerator::CreateBox(w2, h2, d2, pBoxMesh->GetVertices(), pBoxMesh->GetIndices());
 
-	//PhysXDevice::GetInstance()->
-	PxRigidStatic* groundPlane = PxCreatePlane(*PhysXDevice::GetInstance()->GetPhysics(), PxPlane(0, 1, 0, 10), *PhysXDevice::GetInstance()->GetMaterial());
-	PhysXDevice::GetInstance()->GetScene()->addActor(*groundPlane);
+		GameObject* m_pTestBox = GameObject::Create();
+		m_pTestBox->InsertComponent(new Transform);
+		m_pTestBox->InsertComponent(pBoxMeshRenderer);
+		m_pTestBox->InsertComponent(pBoxMesh);
 
-	m_ObjectList.push_back(m_pTestModel);
+		ColisionBox* pColisionBox = new ColisionBox();
+		pColisionBox->SethalfExtents(XMFLOAT3(0.5f, 0.5f, 0.5f));
+		m_pTestBox->InsertComponent(pColisionBox);
+
+		m_ObjectList.push_back(m_pTestBox);
+	}
+
+	// ---- T E S T _ G R O U N D ---- //
+	{
+		Jaraffe::Material* pMat = new Jaraffe::Material();
+		Transform* groundtransform = new Transform;
+		groundtransform->SetScale(50.0f, 1.0f, 50.0f);
+		groundtransform->SetPosition(0.0f, -3.0f, 0.0f);
+		groundtransform->SetRotation(270.0f, 0.0f, 0.0f);
+
+		Mesh* pGroundMesh = new Mesh();
+		Jaraffe::MeshLoader::OBJLoad(L"Resources/Models/ground.obj", pGroundMesh->GetVertices(), pGroundMesh->GetIndices(), *pMat);
+
+		GameObject* m_pTestGround = GameObject::Create();
+		m_pTestGround->InsertComponent(groundtransform);
+
+		MeshRenderer* pMeshRenderer = new MeshRenderer();
+		pMeshRenderer->SetMaterial(pMat);
+		m_pTestGround->InsertComponent(pMeshRenderer);
+		m_pTestGround->InsertComponent(pGroundMesh);
+
+		// 임시 고정 플렌 콜리전
+		PxRigidStatic* groundPlane = PxCreatePlane(*PhysXDevice::GetInstance()->GetPhysics(), PxPlane(0, 1, 0, 2), *PhysXDevice::GetInstance()->GetMaterial());
+		PhysXDevice::GetInstance()->GetScene()->addActor(*groundPlane);
+
+		m_ObjectList.push_back(m_pTestGround);
+	}
 
 	//---- E N D   ----
 
@@ -78,8 +109,6 @@ HRESULT Jaraffe::CScene::Init()
 	{
 		m_ObjectList[i]->Init();
 	}
-
-	pColisionBox->SethalfExtents(XMFLOAT3(0.5f, 0.5f, 0.5f));
 
 	return S_OK;
 }
@@ -101,12 +130,6 @@ void Jaraffe::CScene::Update(float t)
 	// 3) All GameObject Update
 	for (size_t i = 0; i < m_ObjectList.size(); i++)
 	{
-		auto* transform = m_ObjectList[i]->GetComponent<Jaraffe::Component::Transform>();
-		if (transform != nullptr)
-		{
-			transform->SetRotation(0.0f, 0.0f, fTestTime * 1.5f);
-		}
-
 		m_ObjectList[i]->Update();
 	}
 }

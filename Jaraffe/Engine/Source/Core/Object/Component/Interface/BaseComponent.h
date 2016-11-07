@@ -40,7 +40,7 @@ public:
 // private Values) 
 // ----------------------------------------------------------------------------
 private:
-	GameObject*	m_pOwner;
+	GameObject*	m_pOwner = nullptr;
 };
 
 

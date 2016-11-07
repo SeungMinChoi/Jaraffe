@@ -30,15 +30,18 @@ void Jaraffe::Component::Transform::SetRotation(float x, float y, float z)
 	m_vRotation.y = t0 * t2 * t5 + t1 * t3 * t4;
 	m_vRotation.z = t1 * t2 * t4 - t0 * t3 * t5;
 
-	Jaraffe::Component::Colision* pColision = GetOwner()->GetComponent<Jaraffe::Component::Colision>();
-	if (pColision != nullptr && pColision->GetShape() != nullptr)
+	if (GetOwner() != nullptr)
 	{
-		auto transform = pColision->GetRigidBody()->getGlobalPose();
-		transform.q.x = m_vRotation.x;
-		transform.q.y = m_vRotation.y;
-		transform.q.z = m_vRotation.z;
-		transform.q.w = m_vRotation.w;
-		pColision->GetRigidBody()->setGlobalPose(transform);
+		Jaraffe::Component::Colision* pColision = GetOwner()->GetComponent<Jaraffe::Component::Colision>();
+		if (pColision != nullptr && pColision->GetShape() != nullptr)
+		{
+			auto transform = pColision->GetRigidBody()->getGlobalPose();
+			transform.q.x = m_vRotation.x;
+			transform.q.y = m_vRotation.y;
+			transform.q.z = m_vRotation.z;
+			transform.q.w = m_vRotation.w;
+			pColision->GetRigidBody()->setGlobalPose(transform);
+		}
 	}
 }
 

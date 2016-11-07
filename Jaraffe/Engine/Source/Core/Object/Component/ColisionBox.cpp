@@ -39,7 +39,7 @@ void Jaraffe::Component::ColisionBox::Init()
 	m_pRigidBody = PhysXDevice::GetInstance()->GetPhysics()->createRigidDynamic(localTm);
 	m_pRigidBody->attachShape(*m_pShape);
 	PxRigidBodyExt::updateMassAndInertia(*m_pRigidBody, 10.0f);
-	m_pRigidBody->setLinearVelocity(PxVec3(0, 10, 5.0f));
+	m_pRigidBody->setLinearVelocity(PxVec3(0, 10, 2.0f));
 	PhysXDevice::GetInstance()->GetScene()->addActor(*m_pRigidBody);
 
 	// 5)
@@ -117,9 +117,9 @@ void Jaraffe::Component::ColisionBox::Render()
 	gRENDERER->GetDC()->IASetIndexBuffer(m_IndexBuff, DXGI_FORMAT_R32_UINT, 0);
 
 	// worldViewProj 행렬을 구한다.
-	XMFLOAT3& rPosition = XMFLOAT3(pTransform->GetPosition().x + m_Center.x, pTransform->GetPosition().y + m_Center.y, pTransform->GetPosition().z + m_Center.z);
+	XMFLOAT3 rPosition	= XMFLOAT3(pTransform->GetPosition().x + m_Center.x, pTransform->GetPosition().y + m_Center.y, pTransform->GetPosition().z + m_Center.z);
+	XMFLOAT3 rScale		= XMFLOAT3(pTransform->GetScale().x * m_Size.x, pTransform->GetScale().y * m_Size.y, pTransform->GetScale().z * m_Size.z);
 	XMFLOAT4& rRotation = pTransform->GetRotation();
-	XMFLOAT3& rScale	= m_Size;
 
 	XMMATRIX scl, rot, tsl;
 	scl = XMMatrixScalingFromVector(XMLoadFloat3(&rScale));
@@ -162,7 +162,10 @@ void Jaraffe::Component::ColisionBox::SethalfExtents(XMFLOAT3 _vhalfExtents)
 	m_Size = _vhalfExtents;
 
 	// 2)
-	m_pRigidBody->detachShape(*m_pShape);
-	m_pShape->setGeometry(PxBoxGeometry(m_Size.x, m_Size.y, m_Size.z));
-	m_pRigidBody->attachShape(*m_pShape);
+	if (m_pRigidBody != nullptr && m_pShape != nullptr)
+	{
+		m_pRigidBody->detachShape(*m_pShape);
+		m_pShape->setGeometry(PxBoxGeometry(m_Size.x, m_Size.y, m_Size.z));
+		m_pRigidBody->attachShape(*m_pShape);
+	}
 }

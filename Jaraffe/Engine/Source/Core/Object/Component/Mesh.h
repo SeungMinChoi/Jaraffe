@@ -34,11 +34,12 @@ public:
 	virtual void Release();
 
 // ****************************************************************************
-// protected Functions) 
+// public Functions) 
 // ----------------------------------------------------------------------------
 public:
-	void SetVertexType(Jaraffe::Vertex::VertexType p_VertexType);
-	
+	std::vector<Jaraffe::Vertex::PosNormalTex>&	GetVertices()	{ return m_pVertices; }
+	std::vector<UINT>&							GetIndices()	{ return m_pIndices; }
+
 	ID3D11InputLayout*	GetInputLayout()	{ return m_pInputLayout; }
 	UINT				GetStride()			{ return m_Stride; }
 
@@ -49,9 +50,9 @@ public:
 // protected Members) 
 // ----------------------------------------------------------------------------
 protected:
-	Jaraffe::Vertex::VertexType					m_VertexType;
 	ID3D11InputLayout*							m_pInputLayout;
 	UINT										m_Stride;
+	UINT										m_VertexCount;
 	UINT										m_IndexCount;
 
 	std::vector<Jaraffe::Vertex::PosNormalTex>	m_pVertices;

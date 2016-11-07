@@ -33,6 +33,8 @@
     <ClCompile Include="Source\PhysX\PhysXDevice.cpp" />
     <ClCompile Include="Source\Core\Object\Component\ColisionBox.cpp" />
     <ClCompile Include="Source\Core\Object\Component\Colision.cpp" />
+    <ClCompile Include="Source\Utils\GeometryGenerator.cpp" />
+    <ClCompile Include="Source\Utils\MeshLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\RHI\D3D11\D3DDevice.h" />
@@ -62,6 +64,8 @@
     <ClInclude Include="Source\PhysX\PhysXDevice.h" />
     <ClInclude Include="Source\Core\Object\Component\ColisionBox.h" />
     <ClInclude Include="Source\Core\Object\Component\Colision.h" />
+    <ClInclude Include="Source\Utils\GeometryGenerator.h" />
+    <ClInclude Include="Source\Utils\MeshLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Source\Shader\Basic.fx" />

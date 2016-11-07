@@ -63,17 +63,19 @@
 // Renderer
 #include "Source/RHI/D3D11/D3DDevice.h"
 
-// Utils
-#include "Source/Utils/GameTimer.h"
-#include "Source/Utils/D3DUtil.h"
-#include "Source/Utils/MathHelper.h"
-
 // 
 #include "Source/D3D11/LightHelper.h"
 #include "Source/D3D11/Effect.h"
 #include "Source/D3D11/Vertex.h"
 #include "Source/D3D11/RenderStates.h"
 #include "Source/D3D11/TextureMgr.h"
+
+// Utils
+#include "Source/Utils/GameTimer.h"
+#include "Source/Utils/D3DUtil.h"
+#include "Source/Utils/MathHelper.h"
+#include "Source/Utils/GeometryGenerator.h"
+#include "Source/Utils/MeshLoader.h"
 
 // Object
 #include "Source/Core/Object/Object.h"

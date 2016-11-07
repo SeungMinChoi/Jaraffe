@@ -18,12 +18,12 @@ namespace Vertex
 	// PosColor 24Byte Struct
 	struct PosColor : BasicVertex
 	{
+		PosColor() : BasicVertex(){}
 		PosColor(XMFLOAT3 pos, XMFLOAT4 color)
-			: BasicVertex()
-		{
-			Pos		= pos;
-			Color	= color;
-		}
+			: BasicVertex(), Pos(pos), Color(color){}
+		PosColor(float px, float py, float pz,
+				 float cr, float cg, float cb, float ca)
+			: BasicVertex(), Pos(px, py, pz), Color(cr, cg, cb, ca) {}
 
 		XMFLOAT3 Pos;
 		XMFLOAT4 Color;
@@ -32,13 +32,16 @@ namespace Vertex
 	// Basic 32Byte Struct
 	struct PosNormalTex : BasicVertex
 	{
-		PosNormalTex(XMFLOAT3 pos, XMFLOAT3 normal, XMFLOAT2 tex)
-			: BasicVertex()
-		{
-			Pos		= pos;
-			Normal	= normal;
-			Tex		= tex;
-		}
+		PosNormalTex() : BasicVertex() {}
+		PosNormalTex(XMFLOAT3& pos, XMFLOAT3& normal, XMFLOAT2& tex)
+			: BasicVertex(),
+			Pos(pos), Normal(normal), Tex(tex)	{}
+		PosNormalTex(
+			float px, float py, float pz,
+			float nx, float ny, float nz,
+			float u, float v)
+			: BasicVertex(), 
+			Pos(px, py, pz), Normal(nx, ny, nz), Tex(u, v) {}
 
 		XMFLOAT3 Pos;
 		XMFLOAT3 Normal;

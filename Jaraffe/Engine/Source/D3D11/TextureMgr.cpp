@@ -25,7 +25,7 @@ void Jaraffe::TextureMgr::Init()
 
 ID3D11ShaderResourceView* Jaraffe::TextureMgr::CreateTexture(std::wstring filename)
 {
-	ID3D11ShaderResourceView* srv = 0;
+	ID3D11ShaderResourceView* srv = nullptr;
 
 	// Does it already exist?
 	if( mTextureSRV.find(filename) != mTextureSRV.end() )
