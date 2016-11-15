@@ -33,6 +33,9 @@ namespace Vertex
 	struct PosNormalTex : BasicVertex
 	{
 		PosNormalTex() : BasicVertex() {}
+		PosNormalTex(XMFLOAT3 pos, XMFLOAT3 normal, XMFLOAT2 tex)
+			: BasicVertex(),
+			Pos(pos), Normal(normal), Tex(tex) {}
 		PosNormalTex(XMFLOAT3& pos, XMFLOAT3& normal, XMFLOAT2& tex)
 			: BasicVertex(),
 			Pos(pos), Normal(normal), Tex(tex)	{}

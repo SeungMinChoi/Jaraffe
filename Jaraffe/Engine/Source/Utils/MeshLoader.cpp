@@ -142,6 +142,8 @@ bool Jaraffe::MeshLoader::OBJLoad(IN const std::wstring& _filePath, OUT std::vec
 
 	// 연산을통해 노멀과 탄젠트값을 구해주는 함수.
 	ComputeNomalAndTangent(TrianglesCnt, VertsTotalCnt, _vertices, _indices);
+
+	return true;
 }
 
 void Jaraffe::MeshLoader::ProcessMtl(IN LPCWSTR _wfilename, OUT Jaraffe::Material& _material)
@@ -261,9 +263,9 @@ void Jaraffe::MeshLoader::ComputeNomalAndTangent(IN const int& _triangleCnt, IN 
 	int facesUsing = 0;
 	float tX, tY, tZ;
 
-	for (int i = 0; i < _vertexCnt; ++i)
+	for (size_t i = 0; i < _vertexCnt; ++i)
 	{
-		for (int j = 0; j < _triangleCnt; ++j)
+		for (size_t j = 0; j < _triangleCnt; ++j)
 		{
 			if (_indices[j * 3] == i ||
 				_indices[(j * 3) + 1] == i ||
@@ -285,8 +287,8 @@ void Jaraffe::MeshLoader::ComputeNomalAndTangent(IN const int& _triangleCnt, IN 
 			}
 		}
 
-		normalSum = normalSum / facesUsing;
-		tangentSum = tangentSum / facesUsing;
+		normalSum = normalSum / (float)facesUsing;
+		tangentSum = tangentSum / (float)facesUsing;
 
 		normalSum = XMVector3Normalize(normalSum);
 		tangentSum = XMVector3Normalize(tangentSum);

@@ -22,11 +22,11 @@ void Jaraffe::GameObject::Init()
 	}
 }
 
-void Jaraffe::GameObject::Update()
+void Jaraffe::GameObject::Update(float t)
 {
 	for each (auto component in m_mapComponents)
 	{
-		component.second->Update();
+		component.second->Update(t);
 	}
 }
 

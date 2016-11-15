@@ -16,7 +16,7 @@ void Jaraffe::Component::MeshRenderer::Init()
 
 }
 
-void Jaraffe::Component::MeshRenderer::Update()
+void Jaraffe::Component::MeshRenderer::Update(float t)
 {
 
 }

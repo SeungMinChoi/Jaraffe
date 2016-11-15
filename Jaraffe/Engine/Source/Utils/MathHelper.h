@@ -65,6 +65,42 @@ public:
 		return XMMatrixTranspose(XMMatrixInverse(&det, A));
 	}
 
+	// Returns the forward vector from a transform matrix
+	static XMFLOAT3 ForwardVec(const XMFLOAT4X4& matrix)
+	{
+		return XMFLOAT3(matrix._31, matrix._32, matrix._33);
+	}
+
+	// Returns the forward vector from a transform matrix
+	static XMFLOAT3 BackVec(const XMFLOAT4X4& matrix)
+	{
+		return XMFLOAT3(-matrix._31, -matrix._32, -matrix._33);
+	}
+
+	// Returns the forward vector from a transform matrix
+	static XMFLOAT3 RightVec(const XMFLOAT4X4& matrix)
+	{
+		return XMFLOAT3(matrix._11, matrix._12, matrix._13);
+	}
+
+	// Returns the forward vector from a transform matrix
+	static XMFLOAT3 LeftVec(const XMFLOAT4X4& matrix)
+	{
+		return XMFLOAT3(-matrix._11, -matrix._12, -matrix._13);
+	}
+
+	// Returns the forward vector from a transform matrix
+	static XMFLOAT3 UpVec(const XMFLOAT4X4& matrix)
+	{
+		return XMFLOAT3(matrix._21, matrix._22, matrix._23);
+	}
+
+	// Returns the forward vector from a transform matrix
+	static XMFLOAT3 DownVec(const XMFLOAT4X4& matrix)
+	{
+		return XMFLOAT3(-matrix._21, -matrix._22, -matrix._23);
+	}
+
 	static XMVECTOR RandUnitVec3();
 	static XMVECTOR RandHemisphereUnitVec3(XMVECTOR n);
 

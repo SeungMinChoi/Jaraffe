@@ -18,8 +18,11 @@ HRESULT Jaraffe::CScene::Init()
 		Camera* newCamera = new Camera();
 		Camera::SetMainCamera(newCamera);
 
+		Transform* transform = new Transform();
+		transform->SetPosition(0.0f, 0.0f, -10.0f);
+
 		GameObject* m_pMainCamera = GameObject::Create();
-		m_pMainCamera->InsertComponent(new Transform);
+		m_pMainCamera->InsertComponent(transform);
 		m_pMainCamera->InsertComponent(newCamera);
 
 		m_pMainCamera->Init();
@@ -47,7 +50,7 @@ HRESULT Jaraffe::CScene::Init()
 		m_ObjectList.push_back(m_DirectionalLight);
 	}
 
-	// ---- T E S T _ B O X ---- //
+	// ---- T E S T _ B O X 1 ---- //
 	{
 		Jaraffe::Material* pMat = new Jaraffe::Material();
 		Jaraffe::Texture* pTex = new Jaraffe::Texture();
@@ -76,13 +79,41 @@ HRESULT Jaraffe::CScene::Init()
 		m_ObjectList.push_back(m_pTestBox);
 	}
 
+	// ---- T E S T _ B O X 2 ---- //
+	{
+		Jaraffe::Material* pMat = new Jaraffe::Material();
+		Jaraffe::Texture* pTex = new Jaraffe::Texture();
+		pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/darkbrickdxt1.dds"));
+		pMat->m_RSState = Jaraffe::RenderStates::m_SolidRS;
+		pMat->m_MainTexture = pTex;
+
+		MeshRenderer* pBoxMeshRenderer = new MeshRenderer();
+		pBoxMeshRenderer->SetMaterial(pMat);
+
+		Mesh* pBoxMesh = new Mesh();
+		float w2 = 1.0f;
+		float h2 = 1.0f;
+		float d2 = 1.0f;
+		Jaraffe::GeometryGenerator::CreateBox(w2, h2, d2, pBoxMesh->GetVertices(), pBoxMesh->GetIndices());
+
+		Transform* transform = new Transform();
+		transform->SetPosition(3.0f, 0.0f, 0.0f);
+		transform->SetRotation(0.0f, 0.0f, 0.0f);
+
+		GameObject* m_pTestBox = GameObject::Create();
+		m_pTestBox->InsertComponent(transform);
+		m_pTestBox->InsertComponent(pBoxMeshRenderer);
+		m_pTestBox->InsertComponent(pBoxMesh);
+
+		m_ObjectList.push_back(m_pTestBox);
+	}
+
 	// ---- T E S T _ G R O U N D ---- //
 	{
 		Jaraffe::Material* pMat = new Jaraffe::Material();
 		Transform* groundtransform = new Transform;
 		groundtransform->SetScale(50.0f, 1.0f, 50.0f);
 		groundtransform->SetPosition(0.0f, -3.0f, 0.0f);
-		groundtransform->SetRotation(270.0f, 0.0f, 0.0f);
 
 		Mesh* pGroundMesh = new Mesh();
 		Jaraffe::MeshLoader::OBJLoad(L"Resources/Models/ground.obj", pGroundMesh->GetVertices(), pGroundMesh->GetIndices(), *pMat);
@@ -96,7 +127,7 @@ HRESULT Jaraffe::CScene::Init()
 		m_pTestGround->InsertComponent(pGroundMesh);
 
 		// 임시 고정 플렌 콜리전
-		PxRigidStatic* groundPlane = PxCreatePlane(*PhysXDevice::GetInstance()->GetPhysics(), PxPlane(0, 1, 0, 2), *PhysXDevice::GetInstance()->GetMaterial());
+		PxRigidStatic* groundPlane = PxCreatePlane(*PhysXDevice::GetInstance()->GetPhysics(), PxPlane(0, 1, 0, 3), *PhysXDevice::GetInstance()->GetMaterial());
 		PhysXDevice::GetInstance()->GetScene()->addActor(*groundPlane);
 
 		m_ObjectList.push_back(m_pTestGround);
@@ -115,22 +146,22 @@ HRESULT Jaraffe::CScene::Init()
 
 void Jaraffe::CScene::Update(float t)
 {
-	// TODO : Test Tick
-	static float fTestTime = 0;
-	fTestTime += t;
-
 	// 1) physics Update
 	PX_UNUSED(true);
 	PhysXDevice::GetInstance()->GetScene()->simulate(t);
 	PhysXDevice::GetInstance()->GetScene()->fetchResults(true);
 
-	// 2) Camera Update.
-	Camera::g_pMainCamera->Update();
+	// test
+	{
+		m_ObjectList[3]->GetComponent<Transform>()->Roll(t);
+		m_ObjectList[3]->GetComponent<Transform>()->Pitch(t);
+		m_ObjectList[3]->GetComponent<Transform>()->Yaw(t);
+	}
 
-	// 3) All GameObject Update
+	// 2) All GameObject Update
 	for (size_t i = 0; i < m_ObjectList.size(); i++)
 	{
-		m_ObjectList[i]->Update();
+		m_ObjectList[i]->Update(t);
 	}
 }
 
@@ -141,9 +172,6 @@ void Jaraffe::CScene::Render()
 
 	// 2) Depth And Stencil View Clear.
 	gRENDERER->ClearDepthStencilView();
-
-	// 3) View Matrix Calculation.
-	Camera::g_pMainCamera->UpdateViewMatrix();
 
 	// 4) All Renderer Render
 	for (size_t i = 0; i < m_ObjectList.size(); i++)

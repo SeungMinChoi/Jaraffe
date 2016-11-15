@@ -189,14 +189,14 @@ HRESULT Jaraffe::CD3DDevice::CleanupDevice()
 		//ULONG ul = m_pd3dDevice->Release();
 #ifdef _DEBUG
 		ID3D11Debug* pDebug = nullptr;
-		HRESULT hr = m_pd3dDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&pDebug));
+		m_pd3dDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&pDebug));
 		if (pDebug != nullptr)
 		{
 			pDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 		}
 		pDebug->Release();
 #endif
-		unsigned long ul = m_pd3dDevice->Release();
+		m_pd3dDevice->Release();
 		//assert(ul == 0 && "All device COM references are not released");
 		return S_FALSE;
 	}

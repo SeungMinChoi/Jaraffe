@@ -90,7 +90,7 @@ void Jaraffe::Component::ColisionBox::Init()
 	Jaraffe::Util::Mesh::CreateIndexBuffer(&indices[0], sizeof(UINT) * m_indexCnt, &m_IndexBuff);
 }
 
-void Jaraffe::Component::ColisionBox::Update()
+void Jaraffe::Component::ColisionBox::Update(float t)
 {
 
 }
@@ -119,7 +119,7 @@ void Jaraffe::Component::ColisionBox::Render()
 	// worldViewProj 행렬을 구한다.
 	XMFLOAT3 rPosition	= XMFLOAT3(pTransform->GetPosition().x + m_Center.x, pTransform->GetPosition().y + m_Center.y, pTransform->GetPosition().z + m_Center.z);
 	XMFLOAT3 rScale		= XMFLOAT3(pTransform->GetScale().x * m_Size.x, pTransform->GetScale().y * m_Size.y, pTransform->GetScale().z * m_Size.z);
-	XMFLOAT4& rRotation = pTransform->GetRotation();
+	XMFLOAT4 rRotation	= pTransform->GetRotation();
 
 	XMMATRIX scl, rot, tsl;
 	scl = XMMatrixScalingFromVector(XMLoadFloat3(&rScale));

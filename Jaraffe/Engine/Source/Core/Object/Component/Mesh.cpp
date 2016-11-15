@@ -18,8 +18,8 @@ void Jaraffe::Component::Mesh::Init()
 	// 1)
 	m_pInputLayout	= InputLayouts::PosNormalTex;
 	m_Stride		= sizeof(Vertex::PosNormalTex);
-	m_VertexCount	= m_pVertices.size();
-	m_IndexCount	= m_pIndices.size();
+	m_VertexCount	= (UINT)m_pVertices.size();
+	m_IndexCount	= (UINT)m_pIndices.size();
 
 	// 2) VertexBuffer Create
 	Jaraffe::Util::Mesh::CreateVertexBuffer(&m_pVertices[0], m_Stride * m_VertexCount, &m_pVB);

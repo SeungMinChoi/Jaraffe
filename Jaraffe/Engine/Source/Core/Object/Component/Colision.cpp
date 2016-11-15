@@ -14,6 +14,5 @@ Jaraffe::Component::Colision::~Colision()
 
 void Jaraffe::Component::Colision::Release()
 {
-	//m_pShape->release();
-	//m_pRigidBody->release();
+
 }
