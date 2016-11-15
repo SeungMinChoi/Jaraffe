@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App\Main_Win.cpp" />
+    <ClCompile Include="Source\D3D11\Input.cpp" />
     <ClCompile Include="Source\Utils\MeshLoader.cpp" />
     <ClCompile Include="Source\Utils\GeometryGenerator.cpp" />
     <ClCompile Include="Source\Core\Object\Component\Colision.cpp" />
@@ -190,6 +191,7 @@
     <ClCompile Include="Source\Core\Object\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\D3D11\Input.h" />
     <ClInclude Include="Source\Utils\MeshLoader.h" />
     <ClInclude Include="Source\Utils\GeometryGenerator.h" />
     <ClInclude Include="Source\Core\Object\Component\Colision.h" />

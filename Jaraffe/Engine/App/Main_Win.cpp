@@ -119,13 +119,21 @@ public:
 	{
 		switch (msg)
 		{
-		case WM_CLOSE:			PostQuitMessage(0);		break;
+		case WM_CLOSE:			PostQuitMessage(0);				break;
 		case WM_MOVE:
-		case WM_SIZE:			OnResize();				break;
-		case WM_QUIT:			m_finished = true;		break;
-		case WM_INPUT:			handleRawInput(lparam); break;
-		case WM_EXITSIZEMOVE:	m_Timer.Start();		break;
-		case WM_ENTERSIZEMOVE:	m_Timer.Stop();			break;
+		case WM_SIZE:			OnResize();						break;
+		case WM_QUIT:			m_finished = true;				break;
+		case WM_EXITSIZEMOVE:	m_Timer.Start();				break;
+		case WM_ENTERSIZEMOVE:	m_Timer.Stop();					break;
+		case WM_LBUTTONDOWN:	gINPUT->OnKeyDown(VK_LBUTTON);	break;
+		case WM_MBUTTONDOWN:	gINPUT->OnKeyDown(VK_MBUTTON);	break;
+		case WM_RBUTTONDOWN:	gINPUT->OnKeyDown(VK_RBUTTON);	break;
+		case WM_LBUTTONUP:		gINPUT->OnKeyUp(VK_LBUTTON);	break;
+		case WM_MBUTTONUP:		gINPUT->OnKeyUp(VK_MBUTTON);	break;
+		case WM_RBUTTONUP:		gINPUT->OnKeyUp(VK_RBUTTON);	break;
+		case WM_MOUSEMOVE:		gINPUT->OnMouseMove(lparam);	break;
+		case WM_KEYDOWN:		gINPUT->OnKeyDown(wparam);		break;
+		case WM_KEYUP:			gINPUT->OnKeyUp(wparam);		break;
 		}
 		return DefWindowProc(hwnd, msg, wparam, lparam);
 	}
@@ -144,10 +152,6 @@ public:
 
 			gRENDERER->OnResize();
 		}
-	}
-
-	void handleRawInput(LPARAM lParam)
-	{
 	}
 
 // 

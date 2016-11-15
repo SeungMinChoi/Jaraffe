@@ -69,6 +69,7 @@
 #include "Source/D3D11/Vertex.h"
 #include "Source/D3D11/RenderStates.h"
 #include "Source/D3D11/TextureMgr.h"
+#include "Source/D3D11/Input.h"
 
 // Utils
 #include "Source/Utils/GameTimer.h"
