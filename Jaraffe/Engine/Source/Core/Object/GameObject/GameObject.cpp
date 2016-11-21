@@ -38,6 +38,12 @@ void Jaraffe::GameObject::Render()
 		pRenderer->Render();
 	}
 
+	auto pCubeMap = GetComponent<Jaraffe::Component::CubeMap>();
+	if (pCubeMap != nullptr)
+	{
+		pCubeMap->Render();
+	}
+
 	auto pColision = GetComponent<Jaraffe::Component::Colision>();
 	if (pColision != nullptr)
 	{

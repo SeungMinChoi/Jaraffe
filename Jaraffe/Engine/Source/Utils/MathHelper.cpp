@@ -35,10 +35,10 @@ XMVECTOR Jaraffe::Util::MathHelper::RandUnitVec3()
 	XMVECTOR One  = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	XMVECTOR Zero = XMVectorZero();
 
-	// Keep trying until we get a point on/in the hemisphere.
+	// Keep trying until we get a m_Point on/in the hemisphere.
 	while(true)
 	{
-		// Generate random point in the cube [-1,1]^3.
+		// Generate random m_Point in the cube [-1,1]^3.
 		XMVECTOR v = XMVectorSet(MathHelper::RandF(-1.0f, 1.0f), MathHelper::RandF(-1.0f, 1.0f), MathHelper::RandF(-1.0f, 1.0f), 0.0f);
 
 		// Ignore points outside the unit sphere in order to get an even distribution 
@@ -57,10 +57,10 @@ XMVECTOR Jaraffe::Util::MathHelper::RandHemisphereUnitVec3(XMVECTOR n)
 	XMVECTOR One  = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	XMVECTOR Zero = XMVectorZero();
 
-	// Keep trying until we get a point on/in the hemisphere.
+	// Keep trying until we get a m_Point on/in the hemisphere.
 	while(true)
 	{
-		// Generate random point in the cube [-1,1]^3.
+		// Generate random m_Point in the cube [-1,1]^3.
 		XMVECTOR v = XMVectorSet(MathHelper::RandF(-1.0f, 1.0f), MathHelper::RandF(-1.0f, 1.0f), MathHelper::RandF(-1.0f, 1.0f), 0.0f);
 
 		// Ignore points outside the unit sphere in order to get an even distribution 

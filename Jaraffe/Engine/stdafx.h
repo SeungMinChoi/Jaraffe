@@ -1,8 +1,68 @@
 #pragma once
 
+// Add common controls 6.0 DLL to the manifest
+#if defined _M_IX86
+#pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#elif defined _M_IA64
+#pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='ia64' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#elif defined _M_X64
+#pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='amd64' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#else
+#pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#endif
+
+// Platform SDK defines, specifies that our min version is Windows Vista
+#ifndef WINVER
+#define WINVER 0x0600
+#endif
+
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0600
+#endif
+
+#ifndef _WIN32_WINDOWS
+#define _WIN32_WINDOWS 0x0410
+#endif
+
+#ifndef _WIN32_IE
+#define _WIN32_IE 0x0700
+#endif
+
+#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+#define STRICT							// Use strict declarations for Windows types
+
 // Windows Header Files:
 #include <windows.h>
 #include <windowsx.h>
+#include <commctrl.h>
+#include <psapi.h>
+
+// C RunTime Header Files
+#include <stdlib.h>
+#include <malloc.h>
+#include <memory.h>
+#include <tchar.h>
+
+// C++ Standard Library Header Files
+#include <functional>
+#include <string>
+#include <vector>
+#include <memory>
+#include <map>
+#include <cmath>
+#include <sstream>
+#include <fstream>
+#include <stdlib.h>
+#include <string>
+#include <cassert>
+#include <ctime>
+#include <algorithm>
+#include <unordered_map>
+#include <float.h>
+
+// MSVC COM Support
+#include <comip.h>
+#include <comdef.h>
 
 // DirectX11
 #pragma warning( push )
@@ -29,23 +89,6 @@
 #include <crtdbg.h>
 #endif
 
-// C RunTime Header Files
-#include <stdlib.h>
-#include <malloc.h>
-#include <memory.h>
-#include <tchar.h>
-#include <string>
-#include <sstream>
-#include <fstream>
-#include <cassert>
-#include <ctime>
-#include <algorithm>
-#include <vector>
-#include <map>
-#include <unordered_map>
-#include <float.h>
-#include <cmath>
-
 // Boost
 
 // Defines
@@ -64,6 +107,7 @@
 #include "Source/RHI/D3D11/D3DDevice.h"
 
 // 
+#include "Source/D3D11/InterfacePointers.h"
 #include "Source/D3D11/LightHelper.h"
 #include "Source/D3D11/Effect.h"
 #include "Source/D3D11/Vertex.h"
@@ -97,6 +141,7 @@
 #include "Source/Core/Object/Component/Mesh.h"
 #include "Source/Core/Object/Component/Colision.h"
 #include "Source/Core/Object/Component/ColisionBox.h"
+#include "Source/Core/Object/Component/CubeMap.h"
 
 // Geometry
 

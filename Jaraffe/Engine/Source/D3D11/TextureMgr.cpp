@@ -7,11 +7,6 @@ Jaraffe::TextureMgr::TextureMgr()
 
 Jaraffe::TextureMgr::~TextureMgr()
 {
-	for(auto it = mTextureSRV.begin(); it != mTextureSRV.end(); ++it)
-    {
-		ReleaseCOM(it->second);
-    }
-
 	mTextureSRV.clear();
 }
 
@@ -25,7 +20,7 @@ void Jaraffe::TextureMgr::Init()
 
 ID3D11ShaderResourceView* Jaraffe::TextureMgr::CreateTexture(std::wstring filename)
 {
-	ID3D11ShaderResourceView* srv = nullptr;
+	ID3D11ShaderResourceViewPtr srv = nullptr;
 
 	// Does it already exist?
 	if( mTextureSRV.find(filename) != mTextureSRV.end() )

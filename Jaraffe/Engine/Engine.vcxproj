@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App\Main_Win.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\CubeMap.cpp" />
     <ClCompile Include="Source\D3D11\Input.cpp" />
     <ClCompile Include="Source\Utils\MeshLoader.cpp" />
     <ClCompile Include="Source\Utils\GeometryGenerator.cpp" />
@@ -191,6 +192,8 @@
     <ClCompile Include="Source\Core\Object\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Core\Object\Component\CubeMap.h" />
+    <ClInclude Include="Source\D3D11\InterfacePointers.h" />
     <ClInclude Include="Source\D3D11\Input.h" />
     <ClInclude Include="Source\Utils\MeshLoader.h" />
     <ClInclude Include="Source\Utils\GeometryGenerator.h" />
@@ -248,6 +251,14 @@
     <Image Include="Resources\flare.dds" />
     <Image Include="Resources\flarealpha.dds" />
     <Image Include="Resources\mipmaps.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Source\Shader\CubeMap.fx">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc compile for release : %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)\%(FileName).fxo</Outputs>
+    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

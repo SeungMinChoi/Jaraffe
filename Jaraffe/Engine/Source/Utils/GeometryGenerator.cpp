@@ -94,7 +94,7 @@ void Jaraffe::GeometryGenerator::CreateSphere(float _radius, UINT _sliceCount, U
 	//
 
 	// Poles: note that there will be texture coordinate distortion as there is
-	// not a unique point on the texture map to assign to the pole when mapping
+	// not a unique m_Point on the texture map to assign to the pole when mapping
 	// a rectangular texture onto a sphere.
 	Vertex::PosNormalTex topVertex(XMFLOAT3(0.0f, +_radius, 0.0f), XMFLOAT3(0.0f, +1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f));
 	Vertex::PosNormalTex bottomVertex(XMFLOAT3(0.0f, -_radius, 0.0f), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f));

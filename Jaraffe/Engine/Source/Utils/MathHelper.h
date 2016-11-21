@@ -50,7 +50,7 @@ public:
 		return x < low ? low : (x > high ? high : x); 
 	}
 
-	// Returns the polar angle of the point (x,y) in [0, 2*PI).
+	// Returns the polar angle of the m_Point (x,y) in [0, 2*PI).
 	static float AngleFromXY(float x, float y);
 
 	static XMMATRIX InverseTranspose(CXMMATRIX M)

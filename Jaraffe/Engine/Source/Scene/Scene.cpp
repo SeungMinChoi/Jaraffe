@@ -50,12 +50,24 @@ HRESULT Jaraffe::CScene::Init()
 		m_ObjectList.push_back(m_DirectionalLight);
 	}
 
+	// ---- CubeMap -- //
+	{
+		Jaraffe::Texture* pTex = new Jaraffe::Texture();
+		//pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/grasscube1024.dds"));
+		pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/HomeCubeMap.dds"));
+
+		GameObject* m_pCubeMap = GameObject::Create();
+		m_pCubeMap->InsertComponent(new CubeMap(5000.0f, pTex));
+
+		m_ObjectList.push_back(m_pCubeMap);
+	}
+
 	// ---- T E S T _ B O X 1 ---- //
 	{
 		Jaraffe::Material* pMat = new Jaraffe::Material();
 		Jaraffe::Texture* pTex = new Jaraffe::Texture();
 		pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/WireFence.dds"));
-		pMat->m_RSState = Jaraffe::RenderStates::m_SolidRS;
+		pMat->m_RSState = Jaraffe::RenderStates::GetRasterizerStates()->BackFaceCull();
 		pMat->m_MainTexture = pTex;
 
 		MeshRenderer* pBoxMeshRenderer = new MeshRenderer();
@@ -84,7 +96,7 @@ HRESULT Jaraffe::CScene::Init()
 		Jaraffe::Material* pMat = new Jaraffe::Material();
 		Jaraffe::Texture* pTex = new Jaraffe::Texture();
 		pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/darkbrickdxt1.dds"));
-		pMat->m_RSState = Jaraffe::RenderStates::m_SolidRS;
+		pMat->m_RSState = Jaraffe::RenderStates::GetRasterizerStates()->BackFaceCull();
 		pMat->m_MainTexture = pTex;
 
 		MeshRenderer* pBoxMeshRenderer = new MeshRenderer();
@@ -153,9 +165,9 @@ void Jaraffe::CScene::Update(float t)
 
 	// test
 	{
-		m_ObjectList[3]->GetComponent<Transform>()->Roll(t);
-		m_ObjectList[3]->GetComponent<Transform>()->Pitch(t);
-		m_ObjectList[3]->GetComponent<Transform>()->Yaw(t);
+		m_ObjectList[4]->GetComponent<Transform>()->Roll(t);
+		m_ObjectList[4]->GetComponent<Transform>()->Pitch(t);
+		m_ObjectList[4]->GetComponent<Transform>()->Yaw(t);
 	}
 
 	// 2) All GameObject Update

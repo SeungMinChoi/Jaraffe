@@ -58,11 +58,11 @@ void Jaraffe::Component::Camera::Update(float t)
 			pTransform->Strafe(25.0f * t);
 		}
 
-		if (gINPUT->GetKeyDown('E'))
+		if (gINPUT->GetKeyDown('Q'))
 		{
 			pTransform->Upper(-25.0f * t);
 		}
-		if (gINPUT->GetKeyDown('Q'))
+		if (gINPUT->GetKeyDown('E'))
 		{
 			pTransform->Upper(25.0f * t);
 		}

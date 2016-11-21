@@ -36,6 +36,7 @@
     <ClCompile Include="Source\Utils\GeometryGenerator.cpp" />
     <ClCompile Include="Source\Utils\MeshLoader.cpp" />
     <ClCompile Include="Source\D3D11\Input.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\CubeMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\RHI\D3D11\D3DDevice.h" />
@@ -68,10 +69,13 @@
     <ClInclude Include="Source\Utils\GeometryGenerator.h" />
     <ClInclude Include="Source\Utils\MeshLoader.h" />
     <ClInclude Include="Source\D3D11\Input.h" />
+    <ClInclude Include="Source\D3D11\InterfacePointers.h" />
+    <ClInclude Include="Source\Core\Object\Component\CubeMap.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Source\Shader\Basic.fx" />
     <CustomBuild Include="Source\Shader\Color.fx" />
+    <CustomBuild Include="Source\Shader\CubeMap.fx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\LightHelper.fx" />

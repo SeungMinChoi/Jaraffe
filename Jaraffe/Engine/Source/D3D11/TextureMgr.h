@@ -31,7 +31,7 @@ public:
 // private Members) 
 //=============================================================================
 private:
-	std::map<std::wstring, ID3D11ShaderResourceView*> mTextureSRV;
+	std::map<std::wstring, ID3D11ShaderResourceViewPtr> mTextureSRV;
 };
 
 }
