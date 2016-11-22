@@ -24,6 +24,7 @@ private:
 //=============================================================================
 public:
 	void Init();
+	void Release();
 
 	ID3D11ShaderResourceView* CreateTexture(std::wstring filename);
 

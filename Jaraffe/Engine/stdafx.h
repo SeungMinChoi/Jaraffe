@@ -102,10 +102,6 @@
 
 // Interface
 
-
-// Renderer
-#include "Source/RHI/D3D11/D3DDevice.h"
-
 // 
 #include "Source/D3D11/InterfacePointers.h"
 #include "Source/D3D11/LightHelper.h"
@@ -114,6 +110,9 @@
 #include "Source/D3D11/RenderStates.h"
 #include "Source/D3D11/TextureMgr.h"
 #include "Source/D3D11/Input.h"
+
+// Renderer
+#include "Source/RHI/D3D11/D3DDevice.h"
 
 // Utils
 #include "Source/Utils/GameTimer.h"
@@ -141,7 +140,7 @@
 #include "Source/Core/Object/Component/Mesh.h"
 #include "Source/Core/Object/Component/Colision.h"
 #include "Source/Core/Object/Component/ColisionBox.h"
-#include "Source/Core/Object/Component/CubeMap.h"
+#include "Source/Core/Object/Component/SkyBox.h"
 
 // Geometry
 

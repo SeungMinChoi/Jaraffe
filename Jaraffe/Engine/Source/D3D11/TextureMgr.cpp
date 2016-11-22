@@ -7,7 +7,7 @@ Jaraffe::TextureMgr::TextureMgr()
 
 Jaraffe::TextureMgr::~TextureMgr()
 {
-	mTextureSRV.clear();
+	Release();
 }
 
 void Jaraffe::TextureMgr::Init()
@@ -16,6 +16,11 @@ void Jaraffe::TextureMgr::Init()
 	CreateTexture(L"Resources/Textures/WoodCrate01.dds");
 	CreateTexture(L"Resources/Textures/flare.dds");
 	CreateTexture(L"Resources/Textures/flarealpha.dds");
+}
+
+void Jaraffe::TextureMgr::Release()
+{
+	mTextureSRV.clear();
 }
 
 ID3D11ShaderResourceView* Jaraffe::TextureMgr::CreateTexture(std::wstring filename)
@@ -34,6 +39,6 @@ ID3D11ShaderResourceView* Jaraffe::TextureMgr::CreateTexture(std::wstring filena
 		mTextureSRV[filename] = srv;
 	}
 
-	return srv;
+	return srv.GetInterfacePtr();
 }
  

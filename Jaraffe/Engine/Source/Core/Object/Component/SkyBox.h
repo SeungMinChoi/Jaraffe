@@ -1,24 +1,28 @@
 #pragma once
 
+//---------------------------------------------------------------------------------
+// *SkyMap Component*
+// 1. 카메라가 존재하는곳에만 부착가능한 컴포넌트 이다.
+//---------------------------------------------------------------------------------
 namespace Jaraffe
 {
 namespace Component
 {
 
-class CubeMap : public Mesh
+class SkyBox : public Mesh
 {
 	//=============================================================================
 	// Constructor/Destructor)
 	//=============================================================================
 public:
-	CubeMap(float _skySphereRadius, Jaraffe::Texture* _pTexture);
-	virtual ~CubeMap();
+	SkyBox(float _skySphereRadius, Jaraffe::Texture* _pTexture);
+	virtual ~SkyBox();
 
 	//=============================================================================
 	// Component IDENTIFIER)
 	//=============================================================================
 public:
-	COMPONENT_IDENTIFIER(CubeMap, Mesh, true);
+	COMPONENT_IDENTIFIER(SkyBox, Mesh, true);
 
 	//=============================================================================
 	// override) 

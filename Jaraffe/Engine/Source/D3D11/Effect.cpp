@@ -87,7 +87,7 @@ Jaraffe::SkyEffect::SkyEffect(ID3D11Device* device, const std::wstring& filename
 {
 	SkyTech			= mFX->GetTechniqueByName("SkyTech");
 	WorldViewProj	= mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
-	CubeMap			= mFX->GetVariableByName("gCubeMap")->AsShaderResource();
+	SkyBox			= mFX->GetVariableByName("gCubeMap")->AsShaderResource();
 }
 
 Jaraffe::SkyEffect::~SkyEffect()

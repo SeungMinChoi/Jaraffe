@@ -5,7 +5,7 @@
 public: static class_name* GetInstance() { static class_name instance; return &instance; }
 
 // Safe Macros
-#define ReleaseCOM(x) { if(x){ x->Release(); x = 0; } }
+#define ReleaseCOM(x) { if(x){ x->Release(); } }
 #define SafeDelete(x) { delete x; x = 0; }
 
 // Check

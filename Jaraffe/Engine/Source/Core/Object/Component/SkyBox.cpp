@@ -1,19 +1,19 @@
 #include "stdafx.h"
-#include "CubeMap.h"
+#include "SkyBox.h"
 
-DECLARE_IDENTIFIER(Jaraffe::Component::CubeMap);
+DECLARE_IDENTIFIER(Jaraffe::Component::SkyBox);
 
-Jaraffe::Component::CubeMap::CubeMap(float _skySphereRadius, Jaraffe::Texture* _pTexture)
+Jaraffe::Component::SkyBox::SkyBox(float _skySphereRadius, Jaraffe::Texture* _pTexture)
 {
 	m_SkySphereRadius	= _skySphereRadius;
 	m_pMainTexture		= _pTexture;
 }
 
-Jaraffe::Component::CubeMap::~CubeMap()
+Jaraffe::Component::SkyBox::~SkyBox()
 {
 }
 
-void Jaraffe::Component::CubeMap::Init()
+void Jaraffe::Component::SkyBox::Init()
 {
 	// 1)
 	GeometryGenerator::CreateSphere(m_SkySphereRadius, 30, 30, m_pVertices, m_pIndices);
@@ -22,14 +22,19 @@ void Jaraffe::Component::CubeMap::Init()
 	Mesh::Init();
 }
 
-void Jaraffe::Component::CubeMap::Render()
+void Jaraffe::Component::SkyBox::Render()
 {
 	// Declear)
 	float blendFactors[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
+	// 컴포넌트에 카메라가 없거나 메인카메라가 아니라면 패스.
+	Camera* pCamera = GetOwner()->GetComponent<Camera>();
+	if (pCamera == nullptr || Camera::g_pMainCamera != pCamera)
+		return;
+
 	// 
-	Transform* cameraTranfrom = Camera::g_pMainCamera->GetOwner()->GetComponent<Jaraffe::Component::Transform>();
-	if (cameraTranfrom == nullptr)
+	Transform* pTransform = GetOwner()->GetComponent<Transform>();
+	if (pTransform == nullptr)
 		return;
 
 	// Set Layout And Topology
@@ -43,10 +48,10 @@ void Jaraffe::Component::CubeMap::Render()
 	gRENDERER->GetDC()->IASetIndexBuffer(m_pIB, DXGI_FORMAT_R32_UINT, 0);
 
 	// center Sky about eye in world space
-	XMFLOAT3 eyePos = cameraTranfrom->GetPosition();
+	XMFLOAT3 eyePos = pTransform->GetPosition();
 	XMMATRIX T = XMMatrixTranslation(eyePos.x, eyePos.y, eyePos.z);
 
-	XMMATRIX WVP = XMMatrixMultiply(T, Camera::g_pMainCamera->GetViewProj());
+	XMMATRIX WVP = XMMatrixMultiply(T, pCamera->GetViewProj());
 	Effects::CubeMapFX->SetWorldViewProj(WVP);
 	Effects::CubeMapFX->SetCubeMap(m_pMainTexture->GetTexture());
 

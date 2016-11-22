@@ -108,6 +108,9 @@ public:
 		Jaraffe::Effects::DestroyAll();
 		Jaraffe::RenderStates::DestroyAll();
 		Jaraffe::InputLayouts::DestroyAll();
+		
+		//
+		gTEXTUREMGR->Release();
 
 		//
 		gRENDERER->CleanupDevice();

@@ -157,7 +157,7 @@ HRESULT Jaraffe::CD3DDevice::Init(HWND hWnd)
 	HR(m_pd3dDevice->CreateDepthStencilView(m_pDepthStencilBuffer, 0, &m_pDepthStencilView));
 
 	// Bind the render target view and depth/stencil view to the pipeline.
-	m_pImmediateContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+	m_pImmediateContext->OMSetRenderTargets(1, &m_pRenderTargetView.GetInterfacePtr(), m_pDepthStencilView);
 
 	// Set the viewport transform.
 	D3D11_VIEWPORT mScreenViewport;
@@ -177,16 +177,14 @@ HRESULT Jaraffe::CD3DDevice::Init(HWND hWnd)
 HRESULT Jaraffe::CD3DDevice::CleanupDevice()
 {
 	if (m_pImmediateContext)	m_pImmediateContext->ClearState();
-	if (m_pRenderTargetView)	m_pRenderTargetView->Release();
-	if (m_pSwapChain)			m_pSwapChain->Release();
-	if (m_pImmediateContext)	m_pImmediateContext->Release();
-
-	if (m_pDepthStencilView)	m_pDepthStencilView->Release();
-	if (m_pDepthStencilBuffer)	m_pDepthStencilBuffer->Release();
+	ReleaseCOM(m_pRenderTargetView);
+	ReleaseCOM(m_pSwapChain);
+	ReleaseCOM(m_pImmediateContext);
+	ReleaseCOM(m_pDepthStencilView);
+	ReleaseCOM(m_pDepthStencilBuffer);
 
 	if (m_pd3dDevice)
 	{
-		//ULONG ul = m_pd3dDevice->Release();
 #ifdef _DEBUG
 		ID3D11Debug* pDebug = nullptr;
 		m_pd3dDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&pDebug));
@@ -196,8 +194,7 @@ HRESULT Jaraffe::CD3DDevice::CleanupDevice()
 		}
 		pDebug->Release();
 #endif
-		m_pd3dDevice->Release();
-		//assert(ul == 0 && "All device COM references are not released");
+		ReleaseCOM(m_pd3dDevice);
 		return S_FALSE;
 	}
 

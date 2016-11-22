@@ -13,8 +13,12 @@ Jaraffe::CScene::~CScene()
 
 HRESULT Jaraffe::CScene::Init()
 {
-	// 1) Create MainCamera
+	// 1) Create MainCamera ( SkyBox 도 붙인다. )
 	{
+		Jaraffe::Texture* pTex = new Jaraffe::Texture();
+		//pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/grasscube1024.dds"));
+		pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/HomeCubeMap.dds"));
+
 		Camera* newCamera = new Camera();
 		Camera::SetMainCamera(newCamera);
 
@@ -24,6 +28,7 @@ HRESULT Jaraffe::CScene::Init()
 		GameObject* m_pMainCamera = GameObject::Create();
 		m_pMainCamera->InsertComponent(transform);
 		m_pMainCamera->InsertComponent(newCamera);
+		m_pMainCamera->InsertComponent(new SkyBox(5000.0f, pTex));
 
 		m_pMainCamera->Init();
 
@@ -48,18 +53,6 @@ HRESULT Jaraffe::CScene::Init()
 		m_DirectionalLight->InsertComponent(pMainLight);
 
 		m_ObjectList.push_back(m_DirectionalLight);
-	}
-
-	// ---- CubeMap -- //
-	{
-		Jaraffe::Texture* pTex = new Jaraffe::Texture();
-		//pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/grasscube1024.dds"));
-		pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/HomeCubeMap.dds"));
-
-		GameObject* m_pCubeMap = GameObject::Create();
-		m_pCubeMap->InsertComponent(new CubeMap(5000.0f, pTex));
-
-		m_ObjectList.push_back(m_pCubeMap);
 	}
 
 	// ---- T E S T _ B O X 1 ---- //
@@ -165,9 +158,9 @@ void Jaraffe::CScene::Update(float t)
 
 	// test
 	{
-		m_ObjectList[4]->GetComponent<Transform>()->Roll(t);
-		m_ObjectList[4]->GetComponent<Transform>()->Pitch(t);
-		m_ObjectList[4]->GetComponent<Transform>()->Yaw(t);
+		m_ObjectList[3]->GetComponent<Transform>()->Roll(t);
+		m_ObjectList[3]->GetComponent<Transform>()->Pitch(t);
+		m_ObjectList[3]->GetComponent<Transform>()->Yaw(t);
 	}
 
 	// 2) All GameObject Update

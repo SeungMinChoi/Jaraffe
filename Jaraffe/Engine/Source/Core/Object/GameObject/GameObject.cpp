@@ -38,7 +38,7 @@ void Jaraffe::GameObject::Render()
 		pRenderer->Render();
 	}
 
-	auto pCubeMap = GetComponent<Jaraffe::Component::CubeMap>();
+	auto pCubeMap = GetComponent<Jaraffe::Component::SkyBox>();
 	if (pCubeMap != nullptr)
 	{
 		pCubeMap->Render();

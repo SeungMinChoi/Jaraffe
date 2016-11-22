@@ -745,7 +745,7 @@ HRESULT WINAPI
 //   Order
 //      Order of the SH evaluation, generates Order^2 coefs, degree is Order-1
 //   pCubeMap
-//      CubeMap that is going to be projected into spherical harmonics
+//      SkyBox that is going to be projected into spherical harmonics
 //   pROut
 //      Output SH vector for Red.
 //   pGOut

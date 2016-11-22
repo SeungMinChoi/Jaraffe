@@ -97,13 +97,13 @@ public:
 	~SkyEffect();
 
 	void SetWorldViewProj(CXMMATRIX M) { WorldViewProj->SetMatrix(reinterpret_cast<const float*>(&M)); }
-	void SetCubeMap(ID3D11ShaderResourceView* cubemap) { CubeMap->SetResource(cubemap); }
+	void SetCubeMap(ID3D11ShaderResourceView* cubemap) { SkyBox->SetResource(cubemap); }
 
 	ID3DX11EffectTechnique* SkyTech;
 
 	ID3DX11EffectMatrixVariable* WorldViewProj;
 
-	ID3DX11EffectShaderResourceVariable* CubeMap;
+	ID3DX11EffectShaderResourceVariable* SkyBox;
 };
 
 #pragma endregion
