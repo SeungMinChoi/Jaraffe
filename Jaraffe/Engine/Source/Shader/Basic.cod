@@ -24,7 +24,7 @@ cbuffer cbPerObject
 }
 
 //
-// 2 local object(s)
+// 4 local object(s)
 //
 SamplerState samAnisotropic
 {
@@ -33,7 +33,14 @@ SamplerState samAnisotropic
     AddressU = uint(WRAP /* 1 */);
     AddressV = uint(WRAP /* 1 */);
 };
+SamplerState samLinear
+{
+    Filter   = uint(MIN_MAG_MIP_LINEAR /* 21 */);
+    AddressU = uint(WRAP /* 1 */);
+    AddressV = uint(WRAP /* 1 */);
+};
 Texture2D gDiffuseMap;
+Texture2D gNormalMap;
 
 //
 // 1 groups(s)
@@ -90,6 +97,7 @@ fxgroup
                 // POSITION                 0   xyz         0     NONE  float   xyz 
                 // NORMAL                   0   xyz         1     NONE  float   xyz 
                 // TEXCOORD                 0   xy          2     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
                 //
                 //
                 // Output signature:
@@ -99,7 +107,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float   xyzw
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 vs_5_0
                 dcl_globalFlags refactoringAllowed
@@ -107,13 +116,15 @@ fxgroup
                 dcl_input v0.xyz
                 dcl_input v1.xyz
                 dcl_input v2.xy
+                dcl_input v3.xyzw
                 dcl_output_siv o0.xyzw, position
                 dcl_output o1.xyz
                 dcl_output o2.xyz
-                dcl_output o3.xy
-                dcl_temps 5
+                dcl_output o3.xyzw
+                dcl_output o4.xy
+                dcl_temps 6
                 
-                #line 54 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 64 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -122,24 +133,29 @@ fxgroup
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // vout<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // vout<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // vout<9:NaN:Inf>
+                dp4 r3.x, v3.xyzw, cb0[0].xyzw  // vout<10:NaN:Inf>
+                dp4 r3.y, v3.xyzw, cb0[1].xyzw  // vout<11:NaN:Inf>
+                dp4 r3.z, v3.xyzw, cb0[2].xyzw  // vout<12:NaN:Inf>
+                dp4 r3.w, v3.xyzw, cb0[3].xyzw  // vout<13:NaN:Inf>
                 
-                #line 58
-                dp4 r3.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
-                dp4 r3.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
-                dp4 r3.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
-                dp4 r3.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
+                #line 69
+                dp4 r4.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
+                dp4 r4.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
+                dp4 r4.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
+                dp4 r4.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
                 
-                #line 61
+                #line 72
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,0,1.000000)
-                dp4 r4.x, r0.xyzw, cb0[12].xyzw  // vout<10:NaN:Inf>
-                dp4 r4.y, r0.xyzw, cb0[13].xyzw  // vout<11:NaN:Inf>
-                mov o0.xyzw, r3.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                dp4 r5.x, r0.xyzw, cb0[12].xyzw  // vout<14:NaN:Inf>
+                dp4 r5.y, r0.xyzw, cb0[13].xyzw  // vout<15:NaN:Inf>
+                mov o0.xyzw, r4.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                mov o3.xyzw, r3.xyzw  // VS<10:NaN:Inf,11:NaN:Inf,12:NaN:Inf,13:NaN:Inf>
                 mov o1.xyz, r1.xyzx  // VS<4:NaN:Inf,5:NaN:Inf,6:NaN:Inf>
                 mov o2.xyz, r2.xyzx  // VS<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
-                mov o3.xy, r4.xyxx  // VS<10:NaN:Inf,11:NaN:Inf>
+                mov o4.xy, r5.xyxx  // VS<14:NaN:Inf,15:NaN:Inf>
                 ret 
-                // Approximately 21 instruction slots used
+                // Approximately 26 instruction slots used
                             
             };
             GeometryShader = NULL;
@@ -204,7 +220,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float       
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float       
+                // TANGENT                  0   xyzw        3     NONE  float       
+                // TEXCOORD                 0   xy          4     NONE  float       
                 //
                 //
                 // Output signature:
@@ -222,23 +239,23 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 9
                 
-                #line 69 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 80 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
                 
-                #line 72
+                #line 83
                 mov r1.xyz, -v1.xyzx
                 add r1.xyz, r1.xyzx, cb0[12].xyzx  // toEye<0:Inf,1:Inf,2:Inf>
                 
-                #line 75
+                #line 86
                 dp3 r0.w, r1.xyzx, r1.xyzx
                 sqrt r0.w, r0.w  // distToEye<0:NaN:Inf>
                 
-                #line 78
+                #line 89
                 div r1.xyz, r1.xyzx, r0.wwww  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113
+                #line 135
                 nop 
                 mov r2.xyz, cb1[16].xyzx  // mat<0,1,2>
                 mov r3.xyz, cb1[17].xyzx  // mat<4,5,6>
@@ -281,22 +298,20 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r1.xyz, r1.wwww, r1.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 135 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r2.xyz, r2.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r1.xyz, r1.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                
-                #line 116
                 add r2.xyz, r2.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // ambient<0:Inf,1:Inf,2:Inf>
                 add r0.xyz, r0.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r1.xyz, r1.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 122
+                #line 143
                 add r0.xyz, r0.xyzx, r2.xyzx
                 mul r0.xyz, r0.xyzx, l(1.000000, 1.000000, 1.000000, 0.000000)
                 add r0.xyz, r1.xyzx, r0.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 126
+                #line 147
                 mul r0.w, cb1[17].w, l(0.500000)  // litColor<3:[-1.70141e+038f,1.70141e+038f]>
                 mov o0.xyz, r0.xyzx  // PS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov o0.w, r0.w  // PS<3:[-1.70141e+038f,1.70141e+038f]>
@@ -355,6 +370,7 @@ fxgroup
                 // POSITION                 0   xyz         0     NONE  float   xyz 
                 // NORMAL                   0   xyz         1     NONE  float   xyz 
                 // TEXCOORD                 0   xy          2     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
                 //
                 //
                 // Output signature:
@@ -364,7 +380,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float   xyzw
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 vs_5_0
                 dcl_globalFlags refactoringAllowed
@@ -372,13 +389,15 @@ fxgroup
                 dcl_input v0.xyz
                 dcl_input v1.xyz
                 dcl_input v2.xy
+                dcl_input v3.xyzw
                 dcl_output_siv o0.xyzw, position
                 dcl_output o1.xyz
                 dcl_output o2.xyz
-                dcl_output o3.xy
-                dcl_temps 5
+                dcl_output o3.xyzw
+                dcl_output o4.xy
+                dcl_temps 6
                 
-                #line 54 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 64 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -387,24 +406,29 @@ fxgroup
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // vout<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // vout<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // vout<9:NaN:Inf>
+                dp4 r3.x, v3.xyzw, cb0[0].xyzw  // vout<10:NaN:Inf>
+                dp4 r3.y, v3.xyzw, cb0[1].xyzw  // vout<11:NaN:Inf>
+                dp4 r3.z, v3.xyzw, cb0[2].xyzw  // vout<12:NaN:Inf>
+                dp4 r3.w, v3.xyzw, cb0[3].xyzw  // vout<13:NaN:Inf>
                 
-                #line 58
-                dp4 r3.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
-                dp4 r3.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
-                dp4 r3.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
-                dp4 r3.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
+                #line 69
+                dp4 r4.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
+                dp4 r4.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
+                dp4 r4.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
+                dp4 r4.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
                 
-                #line 61
+                #line 72
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,0,1.000000)
-                dp4 r4.x, r0.xyzw, cb0[12].xyzw  // vout<10:NaN:Inf>
-                dp4 r4.y, r0.xyzw, cb0[13].xyzw  // vout<11:NaN:Inf>
-                mov o0.xyzw, r3.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                dp4 r5.x, r0.xyzw, cb0[12].xyzw  // vout<14:NaN:Inf>
+                dp4 r5.y, r0.xyzw, cb0[13].xyzw  // vout<15:NaN:Inf>
+                mov o0.xyzw, r4.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                mov o3.xyzw, r3.xyzw  // VS<10:NaN:Inf,11:NaN:Inf,12:NaN:Inf,13:NaN:Inf>
                 mov o1.xyz, r1.xyzx  // VS<4:NaN:Inf,5:NaN:Inf,6:NaN:Inf>
                 mov o2.xyz, r2.xyzx  // VS<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
-                mov o3.xy, r4.xyxx  // VS<10:NaN:Inf,11:NaN:Inf>
+                mov o4.xy, r5.xyxx  // VS<14:NaN:Inf,15:NaN:Inf>
                 ret 
-                // Approximately 21 instruction slots used
+                // Approximately 26 instruction slots used
                             
             };
             GeometryShader = NULL;
@@ -469,7 +493,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float       
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float       
+                // TANGENT                  0   xyzw        3     NONE  float       
+                // TEXCOORD                 0   xy          4     NONE  float       
                 //
                 //
                 // Output signature:
@@ -487,23 +512,23 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 12
                 
-                #line 69 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 80 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
                 
-                #line 72
+                #line 83
                 mov r1.xyz, -v1.xyzx
                 add r1.xyz, r1.xyzx, cb0[12].xyzx  // toEye<0:Inf,1:Inf,2:Inf>
                 
-                #line 75
+                #line 86
                 dp3 r0.w, r1.xyzx, r1.xyzx
                 sqrt r0.w, r0.w  // distToEye<0:NaN:Inf>
                 
-                #line 78
+                #line 89
                 div r1.xyz, r1.xyzx, r0.wwww  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113
+                #line 135
                 nop 
                 mov r2.xyz, cb1[16].xyzx  // mat<0,1,2>
                 mov r3.xyz, cb1[17].xyzx  // mat<4,5,6>
@@ -546,17 +571,15 @@ fxgroup
                 movc r6.xyz, r1.wwww, r6.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r7.xyz, r1.wwww, r7.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 135 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r5.xyz, r5.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r6.xyz, r6.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r7.xyz, r7.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                
-                #line 116
                 add r5.xyz, r5.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // ambient<0:Inf,1:Inf,2:Inf>
                 add r6.xyz, r6.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r7.xyz, r7.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113
+                #line 135
                 nop 
                 mov r8.xyz, cb0[4].xyzx  // L<0,1,2>
                 mov r9.xyz, cb0[5].xyzx  // L<4,5,6>
@@ -594,22 +617,20 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r1.xyz, r1.wwww, r1.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 135 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r2.xyz, r2.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r1.xyz, r1.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                
-                #line 116
                 add r2.xyz, r2.xyzx, r5.xyzx  // ambient<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r0.xyz, r0.xyzx, r6.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r1.xyz, r1.xyzx, r7.xyzx  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 122
+                #line 143
                 add r0.xyz, r0.xyzx, r2.xyzx
                 mul r0.xyz, r0.xyzx, l(1.000000, 1.000000, 1.000000, 0.000000)
                 add r0.xyz, r1.xyzx, r0.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 126
+                #line 147
                 mul r0.w, cb1[17].w, l(0.500000)  // litColor<3:[-1.70141e+038f,1.70141e+038f]>
                 mov o0.xyz, r0.xyzx  // PS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov o0.w, r0.w  // PS<3:[-1.70141e+038f,1.70141e+038f]>
@@ -668,6 +689,7 @@ fxgroup
                 // POSITION                 0   xyz         0     NONE  float   xyz 
                 // NORMAL                   0   xyz         1     NONE  float   xyz 
                 // TEXCOORD                 0   xy          2     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
                 //
                 //
                 // Output signature:
@@ -677,7 +699,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float   xyzw
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 vs_5_0
                 dcl_globalFlags refactoringAllowed
@@ -685,13 +708,15 @@ fxgroup
                 dcl_input v0.xyz
                 dcl_input v1.xyz
                 dcl_input v2.xy
+                dcl_input v3.xyzw
                 dcl_output_siv o0.xyzw, position
                 dcl_output o1.xyz
                 dcl_output o2.xyz
-                dcl_output o3.xy
-                dcl_temps 5
+                dcl_output o3.xyzw
+                dcl_output o4.xy
+                dcl_temps 6
                 
-                #line 54 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 64 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -700,24 +725,29 @@ fxgroup
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // vout<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // vout<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // vout<9:NaN:Inf>
+                dp4 r3.x, v3.xyzw, cb0[0].xyzw  // vout<10:NaN:Inf>
+                dp4 r3.y, v3.xyzw, cb0[1].xyzw  // vout<11:NaN:Inf>
+                dp4 r3.z, v3.xyzw, cb0[2].xyzw  // vout<12:NaN:Inf>
+                dp4 r3.w, v3.xyzw, cb0[3].xyzw  // vout<13:NaN:Inf>
                 
-                #line 58
-                dp4 r3.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
-                dp4 r3.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
-                dp4 r3.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
-                dp4 r3.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
+                #line 69
+                dp4 r4.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
+                dp4 r4.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
+                dp4 r4.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
+                dp4 r4.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
                 
-                #line 61
+                #line 72
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,0,1.000000)
-                dp4 r4.x, r0.xyzw, cb0[12].xyzw  // vout<10:NaN:Inf>
-                dp4 r4.y, r0.xyzw, cb0[13].xyzw  // vout<11:NaN:Inf>
-                mov o0.xyzw, r3.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                dp4 r5.x, r0.xyzw, cb0[12].xyzw  // vout<14:NaN:Inf>
+                dp4 r5.y, r0.xyzw, cb0[13].xyzw  // vout<15:NaN:Inf>
+                mov o0.xyzw, r4.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                mov o3.xyzw, r3.xyzw  // VS<10:NaN:Inf,11:NaN:Inf,12:NaN:Inf,13:NaN:Inf>
                 mov o1.xyz, r1.xyzx  // VS<4:NaN:Inf,5:NaN:Inf,6:NaN:Inf>
                 mov o2.xyz, r2.xyzx  // VS<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
-                mov o3.xy, r4.xyxx  // VS<10:NaN:Inf,11:NaN:Inf>
+                mov o4.xy, r5.xyxx  // VS<14:NaN:Inf,15:NaN:Inf>
                 ret 
-                // Approximately 21 instruction slots used
+                // Approximately 26 instruction slots used
                             
             };
             GeometryShader = NULL;
@@ -782,7 +812,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float       
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float       
+                // TANGENT                  0   xyzw        3     NONE  float       
+                // TEXCOORD                 0   xy          4     NONE  float       
                 //
                 //
                 // Output signature:
@@ -800,23 +831,23 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 13
                 
-                #line 69 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 80 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
                 
-                #line 72
+                #line 83
                 mov r1.xyz, -v1.xyzx
                 add r1.xyz, r1.xyzx, cb0[12].xyzx  // toEye<0:Inf,1:Inf,2:Inf>
                 
-                #line 75
+                #line 86
                 dp3 r0.w, r1.xyzx, r1.xyzx
                 sqrt r0.w, r0.w  // distToEye<0:NaN:Inf>
                 
-                #line 78
+                #line 89
                 div r1.xyz, r1.xyzx, r0.wwww  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113
+                #line 135
                 nop 
                 mov r2.xyz, cb1[16].xyzx  // mat<0,1,2>
                 mov r3.xyz, cb1[17].xyzx  // mat<4,5,6>
@@ -859,17 +890,15 @@ fxgroup
                 movc r6.xyz, r1.wwww, r6.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r7.xyz, r1.wwww, r7.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 135 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r5.xyz, r5.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r6.xyz, r6.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r7.xyz, r7.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                
-                #line 116
                 add r5.xyz, r5.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // ambient<0:Inf,1:Inf,2:Inf>
                 add r6.xyz, r6.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r7.xyz, r7.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113
+                #line 135
                 nop 
                 mov r8.xyz, cb0[4].xyzx  // L<0,1,2>
                 mov r9.xyz, cb0[5].xyzx  // L<4,5,6>
@@ -907,17 +936,15 @@ fxgroup
                 movc r9.xyz, r1.wwww, r9.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r10.xyz, r1.wwww, r10.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 135 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r8.xyz, r8.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r9.xyz, r9.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r10.xyz, r10.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                
-                #line 116
                 add r5.xyz, r5.xyzx, r8.xyzx  // ambient<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r6.xyz, r6.xyzx, r9.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r7.xyz, r7.xyzx, r10.xyzx  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113
+                #line 135
                 nop 
                 mov r8.xyz, cb0[8].xyzx  // L<0,1,2>
                 mov r9.xyz, cb0[9].xyzx  // L<4,5,6>
@@ -955,22 +982,20 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r1.xyz, r1.wwww, r1.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 135 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r2.xyz, r2.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r1.xyz, r1.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                
-                #line 116
                 add r2.xyz, r2.xyzx, r5.xyzx  // ambient<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r0.xyz, r0.xyzx, r6.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r1.xyz, r1.xyzx, r7.xyzx  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 122
+                #line 143
                 add r0.xyz, r0.xyzx, r2.xyzx
                 mul r0.xyz, r0.xyzx, l(1.000000, 1.000000, 1.000000, 0.000000)
                 add r0.xyz, r1.xyzx, r0.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 126
+                #line 147
                 mul r0.w, cb1[17].w, l(0.500000)  // litColor<3:[-1.70141e+038f,1.70141e+038f]>
                 mov o0.xyz, r0.xyzx  // PS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov o0.w, r0.w  // PS<3:[-1.70141e+038f,1.70141e+038f]>
@@ -1029,6 +1054,7 @@ fxgroup
                 // POSITION                 0   xyz         0     NONE  float   xyz 
                 // NORMAL                   0   xyz         1     NONE  float   xyz 
                 // TEXCOORD                 0   xy          2     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
                 //
                 //
                 // Output signature:
@@ -1038,7 +1064,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float   xyzw
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 vs_5_0
                 dcl_globalFlags refactoringAllowed
@@ -1046,13 +1073,15 @@ fxgroup
                 dcl_input v0.xyz
                 dcl_input v1.xyz
                 dcl_input v2.xy
+                dcl_input v3.xyzw
                 dcl_output_siv o0.xyzw, position
                 dcl_output o1.xyz
                 dcl_output o2.xyz
-                dcl_output o3.xy
-                dcl_temps 5
+                dcl_output o3.xyzw
+                dcl_output o4.xy
+                dcl_temps 6
                 
-                #line 54 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 64 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -1061,24 +1090,29 @@ fxgroup
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // vout<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // vout<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // vout<9:NaN:Inf>
+                dp4 r3.x, v3.xyzw, cb0[0].xyzw  // vout<10:NaN:Inf>
+                dp4 r3.y, v3.xyzw, cb0[1].xyzw  // vout<11:NaN:Inf>
+                dp4 r3.z, v3.xyzw, cb0[2].xyzw  // vout<12:NaN:Inf>
+                dp4 r3.w, v3.xyzw, cb0[3].xyzw  // vout<13:NaN:Inf>
                 
-                #line 58
-                dp4 r3.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
-                dp4 r3.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
-                dp4 r3.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
-                dp4 r3.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
+                #line 69
+                dp4 r4.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
+                dp4 r4.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
+                dp4 r4.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
+                dp4 r4.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
                 
-                #line 61
+                #line 72
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,0,1.000000)
-                dp4 r4.x, r0.xyzw, cb0[12].xyzw  // vout<10:NaN:Inf>
-                dp4 r4.y, r0.xyzw, cb0[13].xyzw  // vout<11:NaN:Inf>
-                mov o0.xyzw, r3.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                dp4 r5.x, r0.xyzw, cb0[12].xyzw  // vout<14:NaN:Inf>
+                dp4 r5.y, r0.xyzw, cb0[13].xyzw  // vout<15:NaN:Inf>
+                mov o0.xyzw, r4.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                mov o3.xyzw, r3.xyzw  // VS<10:NaN:Inf,11:NaN:Inf,12:NaN:Inf,13:NaN:Inf>
                 mov o1.xyz, r1.xyzx  // VS<4:NaN:Inf,5:NaN:Inf,6:NaN:Inf>
                 mov o2.xyz, r2.xyzx  // VS<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
-                mov o3.xy, r4.xyxx  // VS<10:NaN:Inf,11:NaN:Inf>
+                mov o4.xy, r5.xyxx  // VS<14:NaN:Inf,15:NaN:Inf>
                 ret 
-                // Approximately 21 instruction slots used
+                // Approximately 26 instruction slots used
                             
             };
             GeometryShader = NULL;
@@ -1127,7 +1161,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float       
                 // POSITION                 0   xyz         1     NONE  float       
                 // NORMAL                   0   xyz         2     NONE  float       
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float       
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 //
                 // Output signature:
@@ -1141,23 +1176,28 @@ fxgroup
                 dcl_constantbuffer cb0[18], immediateIndexed
                 dcl_sampler s0, mode_default
                 dcl_resource_texture2d (float,float,float,float) t0
-                dcl_input_ps linear v3.xy
+                dcl_input_ps linear v4.xy
                 dcl_output o0.xyzw
                 dcl_temps 1
                 
-                #line 85 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
-                sample_indexable(texture2d)(float,float,float,float) r0.xyz, v3.xyxx, t0.xyzw, s0
-                mov r0.xyz, r0.xyzx  // texColor<0:Inf,1:Inf,2:Inf>
+                #line 96 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v4.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
-                #line 100
+                #line 101
+                add r0.w, r0.w, l(-0.100000)
+                lt r0.w, r0.w, l(0.000000)
+                and r0.w, r0.w, l(-1)
+                discard r0.w
+                
+                #line 119
                 mov r0.xyz, r0.xyzx  // litColor<0:Inf,1:Inf,2:Inf>
                 
-                #line 126
+                #line 147
                 mul r0.w, cb0[17].w, l(0.500000)  // litColor<3:[-1.70141e+038f,1.70141e+038f]>
                 mov o0.xyz, r0.xyzx  // PS<0:Inf,1:Inf,2:Inf>
                 mov o0.w, r0.w  // PS<3:[-1.70141e+038f,1.70141e+038f]>
                 ret 
-                // Approximately 7 instruction slots used
+                // Approximately 10 instruction slots used
                             
             };
         }
@@ -1211,6 +1251,7 @@ fxgroup
                 // POSITION                 0   xyz         0     NONE  float   xyz 
                 // NORMAL                   0   xyz         1     NONE  float   xyz 
                 // TEXCOORD                 0   xy          2     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
                 //
                 //
                 // Output signature:
@@ -1220,7 +1261,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float   xyzw
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 vs_5_0
                 dcl_globalFlags refactoringAllowed
@@ -1228,13 +1270,15 @@ fxgroup
                 dcl_input v0.xyz
                 dcl_input v1.xyz
                 dcl_input v2.xy
+                dcl_input v3.xyzw
                 dcl_output_siv o0.xyzw, position
                 dcl_output o1.xyz
                 dcl_output o2.xyz
-                dcl_output o3.xy
-                dcl_temps 5
+                dcl_output o3.xyzw
+                dcl_output o4.xy
+                dcl_temps 6
                 
-                #line 54 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 64 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -1243,24 +1287,29 @@ fxgroup
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // vout<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // vout<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // vout<9:NaN:Inf>
+                dp4 r3.x, v3.xyzw, cb0[0].xyzw  // vout<10:NaN:Inf>
+                dp4 r3.y, v3.xyzw, cb0[1].xyzw  // vout<11:NaN:Inf>
+                dp4 r3.z, v3.xyzw, cb0[2].xyzw  // vout<12:NaN:Inf>
+                dp4 r3.w, v3.xyzw, cb0[3].xyzw  // vout<13:NaN:Inf>
                 
-                #line 58
-                dp4 r3.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
-                dp4 r3.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
-                dp4 r3.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
-                dp4 r3.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
+                #line 69
+                dp4 r4.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
+                dp4 r4.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
+                dp4 r4.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
+                dp4 r4.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
                 
-                #line 61
+                #line 72
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,0,1.000000)
-                dp4 r4.x, r0.xyzw, cb0[12].xyzw  // vout<10:NaN:Inf>
-                dp4 r4.y, r0.xyzw, cb0[13].xyzw  // vout<11:NaN:Inf>
-                mov o0.xyzw, r3.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                dp4 r5.x, r0.xyzw, cb0[12].xyzw  // vout<14:NaN:Inf>
+                dp4 r5.y, r0.xyzw, cb0[13].xyzw  // vout<15:NaN:Inf>
+                mov o0.xyzw, r4.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                mov o3.xyzw, r3.xyzw  // VS<10:NaN:Inf,11:NaN:Inf,12:NaN:Inf,13:NaN:Inf>
                 mov o1.xyz, r1.xyzx  // VS<4:NaN:Inf,5:NaN:Inf,6:NaN:Inf>
                 mov o2.xyz, r2.xyzx  // VS<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
-                mov o3.xy, r4.xyxx  // VS<10:NaN:Inf,11:NaN:Inf>
+                mov o4.xy, r5.xyxx  // VS<14:NaN:Inf,15:NaN:Inf>
                 ret 
-                // Approximately 21 instruction slots used
+                // Approximately 26 instruction slots used
                             
             };
             GeometryShader = NULL;
@@ -1327,7 +1376,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float       
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float       
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 //
                 // Output signature:
@@ -1344,31 +1394,36 @@ fxgroup
                 dcl_resource_texture2d (float,float,float,float) t0
                 dcl_input_ps linear v1.xyz
                 dcl_input_ps linear v2.xyz
-                dcl_input_ps linear v3.xy
+                dcl_input_ps linear v4.xy
                 dcl_output o0.xyzw
                 dcl_temps 10
                 
-                #line 69 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 80 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
                 
-                #line 72
+                #line 83
                 mov r1.xyz, -v1.xyzx
                 add r1.xyz, r1.xyzx, cb0[12].xyzx  // toEye<0:Inf,1:Inf,2:Inf>
                 
-                #line 75
+                #line 86
                 dp3 r0.w, r1.xyzx, r1.xyzx
                 sqrt r0.w, r0.w  // distToEye<0:NaN:Inf>
                 
-                #line 78
+                #line 89
                 div r1.xyz, r1.xyzx, r0.wwww  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 85
-                sample_indexable(texture2d)(float,float,float,float) r2.xyz, v3.xyxx, t0.xyzw, s0
-                mov r2.xyz, r2.xyzx  // texColor<0:Inf,1:Inf,2:Inf>
+                #line 96
+                sample_indexable(texture2d)(float,float,float,float) r2.xyzw, v4.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
-                #line 113
+                #line 101
+                add r0.w, r2.w, l(-0.100000)
+                lt r0.w, r0.w, l(0.000000)
+                and r0.w, r0.w, l(-1)
+                discard r0.w
+                
+                #line 135
                 nop 
                 mov r3.xyz, cb1[16].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[17].xyzx  // mat<4,5,6>
@@ -1411,27 +1466,25 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r1.xyz, r1.wwww, r1.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 135 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r1.xyz, r1.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                
-                #line 116
                 add r3.xyz, r3.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // ambient<0:Inf,1:Inf,2:Inf>
                 add r0.xyz, r0.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r1.xyz, r1.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 122
+                #line 143
                 add r0.xyz, r0.xyzx, r3.xyzx
                 mul r0.xyz, r0.xyzx, r2.xyzx
                 add r0.xyz, r1.xyzx, r0.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 126
+                #line 147
                 mul r0.w, cb1[17].w, l(0.500000)  // litColor<3:[-1.70141e+038f,1.70141e+038f]>
                 mov o0.xyz, r0.xyzx  // PS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov o0.w, r0.w  // PS<3:[-1.70141e+038f,1.70141e+038f]>
                 ret 
-                // Approximately 54 instruction slots used
+                // Approximately 57 instruction slots used
                             
             };
         }
@@ -1485,6 +1538,7 @@ fxgroup
                 // POSITION                 0   xyz         0     NONE  float   xyz 
                 // NORMAL                   0   xyz         1     NONE  float   xyz 
                 // TEXCOORD                 0   xy          2     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
                 //
                 //
                 // Output signature:
@@ -1494,7 +1548,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float   xyzw
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 vs_5_0
                 dcl_globalFlags refactoringAllowed
@@ -1502,13 +1557,15 @@ fxgroup
                 dcl_input v0.xyz
                 dcl_input v1.xyz
                 dcl_input v2.xy
+                dcl_input v3.xyzw
                 dcl_output_siv o0.xyzw, position
                 dcl_output o1.xyz
                 dcl_output o2.xyz
-                dcl_output o3.xy
-                dcl_temps 5
+                dcl_output o3.xyzw
+                dcl_output o4.xy
+                dcl_temps 6
                 
-                #line 54 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 64 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -1517,24 +1574,29 @@ fxgroup
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // vout<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // vout<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // vout<9:NaN:Inf>
+                dp4 r3.x, v3.xyzw, cb0[0].xyzw  // vout<10:NaN:Inf>
+                dp4 r3.y, v3.xyzw, cb0[1].xyzw  // vout<11:NaN:Inf>
+                dp4 r3.z, v3.xyzw, cb0[2].xyzw  // vout<12:NaN:Inf>
+                dp4 r3.w, v3.xyzw, cb0[3].xyzw  // vout<13:NaN:Inf>
                 
-                #line 58
-                dp4 r3.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
-                dp4 r3.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
-                dp4 r3.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
-                dp4 r3.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
+                #line 69
+                dp4 r4.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
+                dp4 r4.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
+                dp4 r4.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
+                dp4 r4.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
                 
-                #line 61
+                #line 72
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,0,1.000000)
-                dp4 r4.x, r0.xyzw, cb0[12].xyzw  // vout<10:NaN:Inf>
-                dp4 r4.y, r0.xyzw, cb0[13].xyzw  // vout<11:NaN:Inf>
-                mov o0.xyzw, r3.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                dp4 r5.x, r0.xyzw, cb0[12].xyzw  // vout<14:NaN:Inf>
+                dp4 r5.y, r0.xyzw, cb0[13].xyzw  // vout<15:NaN:Inf>
+                mov o0.xyzw, r4.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                mov o3.xyzw, r3.xyzw  // VS<10:NaN:Inf,11:NaN:Inf,12:NaN:Inf,13:NaN:Inf>
                 mov o1.xyz, r1.xyzx  // VS<4:NaN:Inf,5:NaN:Inf,6:NaN:Inf>
                 mov o2.xyz, r2.xyzx  // VS<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
-                mov o3.xy, r4.xyxx  // VS<10:NaN:Inf,11:NaN:Inf>
+                mov o4.xy, r5.xyxx  // VS<14:NaN:Inf,15:NaN:Inf>
                 ret 
-                // Approximately 21 instruction slots used
+                // Approximately 26 instruction slots used
                             
             };
             GeometryShader = NULL;
@@ -1601,7 +1663,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float       
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float       
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 //
                 // Output signature:
@@ -1618,31 +1681,36 @@ fxgroup
                 dcl_resource_texture2d (float,float,float,float) t0
                 dcl_input_ps linear v1.xyz
                 dcl_input_ps linear v2.xyz
-                dcl_input_ps linear v3.xy
+                dcl_input_ps linear v4.xy
                 dcl_output o0.xyzw
                 dcl_temps 13
                 
-                #line 69 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 80 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
                 
-                #line 72
+                #line 83
                 mov r1.xyz, -v1.xyzx
                 add r1.xyz, r1.xyzx, cb0[12].xyzx  // toEye<0:Inf,1:Inf,2:Inf>
                 
-                #line 75
+                #line 86
                 dp3 r0.w, r1.xyzx, r1.xyzx
                 sqrt r0.w, r0.w  // distToEye<0:NaN:Inf>
                 
-                #line 78
+                #line 89
                 div r1.xyz, r1.xyzx, r0.wwww  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 85
-                sample_indexable(texture2d)(float,float,float,float) r2.xyz, v3.xyxx, t0.xyzw, s0
-                mov r2.xyz, r2.xyzx  // texColor<0:Inf,1:Inf,2:Inf>
+                #line 96
+                sample_indexable(texture2d)(float,float,float,float) r2.xyzw, v4.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
-                #line 113
+                #line 101
+                add r0.w, r2.w, l(-0.100000)
+                lt r0.w, r0.w, l(0.000000)
+                and r0.w, r0.w, l(-1)
+                discard r0.w
+                
+                #line 135
                 nop 
                 mov r3.xyz, cb1[16].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[17].xyzx  // mat<4,5,6>
@@ -1685,17 +1753,15 @@ fxgroup
                 movc r7.xyz, r1.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r1.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 135 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                
-                #line 116
                 add r6.xyz, r6.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // ambient<0:Inf,1:Inf,2:Inf>
                 add r7.xyz, r7.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r8.xyz, r8.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113
+                #line 135
                 nop 
                 mov r9.xyz, cb0[4].xyzx  // L<0,1,2>
                 mov r10.xyz, cb0[5].xyzx  // L<4,5,6>
@@ -1733,27 +1799,25 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r1.xyz, r1.wwww, r1.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 135 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r1.xyz, r1.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                
-                #line 116
                 add r3.xyz, r3.xyzx, r6.xyzx  // ambient<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r0.xyz, r0.xyzx, r7.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r1.xyz, r1.xyzx, r8.xyzx  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 122
+                #line 143
                 add r0.xyz, r0.xyzx, r3.xyzx
                 mul r0.xyz, r0.xyzx, r2.xyzx
                 add r0.xyz, r1.xyzx, r0.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 126
+                #line 147
                 mul r0.w, cb1[17].w, l(0.500000)  // litColor<3:[-1.70141e+038f,1.70141e+038f]>
                 mov o0.xyz, r0.xyzx  // PS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov o0.w, r0.w  // PS<3:[-1.70141e+038f,1.70141e+038f]>
                 ret 
-                // Approximately 86 instruction slots used
+                // Approximately 89 instruction slots used
                             
             };
         }
@@ -1807,6 +1871,7 @@ fxgroup
                 // POSITION                 0   xyz         0     NONE  float   xyz 
                 // NORMAL                   0   xyz         1     NONE  float   xyz 
                 // TEXCOORD                 0   xy          2     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
                 //
                 //
                 // Output signature:
@@ -1816,7 +1881,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float   xyzw
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 vs_5_0
                 dcl_globalFlags refactoringAllowed
@@ -1824,13 +1890,15 @@ fxgroup
                 dcl_input v0.xyz
                 dcl_input v1.xyz
                 dcl_input v2.xy
+                dcl_input v3.xyzw
                 dcl_output_siv o0.xyzw, position
                 dcl_output o1.xyz
                 dcl_output o2.xyz
-                dcl_output o3.xy
-                dcl_temps 5
+                dcl_output o3.xyzw
+                dcl_output o4.xy
+                dcl_temps 6
                 
-                #line 54 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 64 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -1839,24 +1907,29 @@ fxgroup
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // vout<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // vout<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // vout<9:NaN:Inf>
+                dp4 r3.x, v3.xyzw, cb0[0].xyzw  // vout<10:NaN:Inf>
+                dp4 r3.y, v3.xyzw, cb0[1].xyzw  // vout<11:NaN:Inf>
+                dp4 r3.z, v3.xyzw, cb0[2].xyzw  // vout<12:NaN:Inf>
+                dp4 r3.w, v3.xyzw, cb0[3].xyzw  // vout<13:NaN:Inf>
                 
-                #line 58
-                dp4 r3.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
-                dp4 r3.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
-                dp4 r3.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
-                dp4 r3.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
+                #line 69
+                dp4 r4.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
+                dp4 r4.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
+                dp4 r4.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
+                dp4 r4.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
                 
-                #line 61
+                #line 72
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,0,1.000000)
-                dp4 r4.x, r0.xyzw, cb0[12].xyzw  // vout<10:NaN:Inf>
-                dp4 r4.y, r0.xyzw, cb0[13].xyzw  // vout<11:NaN:Inf>
-                mov o0.xyzw, r3.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                dp4 r5.x, r0.xyzw, cb0[12].xyzw  // vout<14:NaN:Inf>
+                dp4 r5.y, r0.xyzw, cb0[13].xyzw  // vout<15:NaN:Inf>
+                mov o0.xyzw, r4.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                mov o3.xyzw, r3.xyzw  // VS<10:NaN:Inf,11:NaN:Inf,12:NaN:Inf,13:NaN:Inf>
                 mov o1.xyz, r1.xyzx  // VS<4:NaN:Inf,5:NaN:Inf,6:NaN:Inf>
                 mov o2.xyz, r2.xyzx  // VS<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
-                mov o3.xy, r4.xyxx  // VS<10:NaN:Inf,11:NaN:Inf>
+                mov o4.xy, r5.xyxx  // VS<14:NaN:Inf,15:NaN:Inf>
                 ret 
-                // Approximately 21 instruction slots used
+                // Approximately 26 instruction slots used
                             
             };
             GeometryShader = NULL;
@@ -1923,7 +1996,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float       
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float       
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 //
                 // Output signature:
@@ -1940,31 +2014,36 @@ fxgroup
                 dcl_resource_texture2d (float,float,float,float) t0
                 dcl_input_ps linear v1.xyz
                 dcl_input_ps linear v2.xyz
-                dcl_input_ps linear v3.xy
+                dcl_input_ps linear v4.xy
                 dcl_output o0.xyzw
                 dcl_temps 14
                 
-                #line 69 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 80 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
                 
-                #line 72
+                #line 83
                 mov r1.xyz, -v1.xyzx
                 add r1.xyz, r1.xyzx, cb0[12].xyzx  // toEye<0:Inf,1:Inf,2:Inf>
                 
-                #line 75
+                #line 86
                 dp3 r0.w, r1.xyzx, r1.xyzx
                 sqrt r0.w, r0.w  // distToEye<0:NaN:Inf>
                 
-                #line 78
+                #line 89
                 div r1.xyz, r1.xyzx, r0.wwww  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 85
-                sample_indexable(texture2d)(float,float,float,float) r2.xyz, v3.xyxx, t0.xyzw, s0
-                mov r2.xyz, r2.xyzx  // texColor<0:Inf,1:Inf,2:Inf>
+                #line 96
+                sample_indexable(texture2d)(float,float,float,float) r2.xyzw, v4.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
-                #line 113
+                #line 101
+                add r0.w, r2.w, l(-0.100000)
+                lt r0.w, r0.w, l(0.000000)
+                and r0.w, r0.w, l(-1)
+                discard r0.w
+                
+                #line 135
                 nop 
                 mov r3.xyz, cb1[16].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[17].xyzx  // mat<4,5,6>
@@ -2007,17 +2086,15 @@ fxgroup
                 movc r7.xyz, r1.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r1.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 135 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                
-                #line 116
                 add r6.xyz, r6.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // ambient<0:Inf,1:Inf,2:Inf>
                 add r7.xyz, r7.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r8.xyz, r8.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113
+                #line 135
                 nop 
                 mov r9.xyz, cb0[4].xyzx  // L<0,1,2>
                 mov r10.xyz, cb0[5].xyzx  // L<4,5,6>
@@ -2055,17 +2132,15 @@ fxgroup
                 movc r10.xyz, r1.wwww, r10.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r11.xyz, r1.wwww, r11.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 135 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r9.xyz, r9.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r10.xyz, r10.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r11.xyz, r11.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                
-                #line 116
                 add r6.xyz, r6.xyzx, r9.xyzx  // ambient<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r7.xyz, r7.xyzx, r10.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r8.xyz, r8.xyzx, r11.xyzx  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113
+                #line 135
                 nop 
                 mov r9.xyz, cb0[8].xyzx  // L<0,1,2>
                 mov r10.xyz, cb0[9].xyzx  // L<4,5,6>
@@ -2103,34 +2178,32 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r1.xyz, r1.wwww, r1.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 135 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r1.xyz, r1.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                
-                #line 116
                 add r3.xyz, r3.xyzx, r6.xyzx  // ambient<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r0.xyz, r0.xyzx, r7.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r1.xyz, r1.xyzx, r8.xyzx  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 122
+                #line 143
                 add r0.xyz, r0.xyzx, r3.xyzx
                 mul r0.xyz, r0.xyzx, r2.xyzx
                 add r0.xyz, r1.xyzx, r0.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 126
+                #line 147
                 mul r0.w, cb1[17].w, l(0.500000)  // litColor<3:[-1.70141e+038f,1.70141e+038f]>
                 mov o0.xyz, r0.xyzx  // PS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov o0.w, r0.w  // PS<3:[-1.70141e+038f,1.70141e+038f]>
                 ret 
-                // Approximately 118 instruction slots used
+                // Approximately 121 instruction slots used
                             
             };
         }
 
     }
 
-    technique11 Light0TexAlphaClip
+    technique11 Light0TexNormal
     {
         pass P0
         {
@@ -2177,6 +2250,7 @@ fxgroup
                 // POSITION                 0   xyz         0     NONE  float   xyz 
                 // NORMAL                   0   xyz         1     NONE  float   xyz 
                 // TEXCOORD                 0   xy          2     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
                 //
                 //
                 // Output signature:
@@ -2186,7 +2260,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float   xyzw
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 vs_5_0
                 dcl_globalFlags refactoringAllowed
@@ -2194,13 +2269,15 @@ fxgroup
                 dcl_input v0.xyz
                 dcl_input v1.xyz
                 dcl_input v2.xy
+                dcl_input v3.xyzw
                 dcl_output_siv o0.xyzw, position
                 dcl_output o1.xyz
                 dcl_output o2.xyz
-                dcl_output o3.xy
-                dcl_temps 5
+                dcl_output o3.xyzw
+                dcl_output o4.xy
+                dcl_temps 6
                 
-                #line 54 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 64 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -2209,24 +2286,29 @@ fxgroup
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // vout<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // vout<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // vout<9:NaN:Inf>
+                dp4 r3.x, v3.xyzw, cb0[0].xyzw  // vout<10:NaN:Inf>
+                dp4 r3.y, v3.xyzw, cb0[1].xyzw  // vout<11:NaN:Inf>
+                dp4 r3.z, v3.xyzw, cb0[2].xyzw  // vout<12:NaN:Inf>
+                dp4 r3.w, v3.xyzw, cb0[3].xyzw  // vout<13:NaN:Inf>
                 
-                #line 58
-                dp4 r3.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
-                dp4 r3.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
-                dp4 r3.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
-                dp4 r3.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
+                #line 69
+                dp4 r4.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
+                dp4 r4.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
+                dp4 r4.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
+                dp4 r4.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
                 
-                #line 61
+                #line 72
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,0,1.000000)
-                dp4 r4.x, r0.xyzw, cb0[12].xyzw  // vout<10:NaN:Inf>
-                dp4 r4.y, r0.xyzw, cb0[13].xyzw  // vout<11:NaN:Inf>
-                mov o0.xyzw, r3.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                dp4 r5.x, r0.xyzw, cb0[12].xyzw  // vout<14:NaN:Inf>
+                dp4 r5.y, r0.xyzw, cb0[13].xyzw  // vout<15:NaN:Inf>
+                mov o0.xyzw, r4.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                mov o3.xyzw, r3.xyzw  // VS<10:NaN:Inf,11:NaN:Inf,12:NaN:Inf,13:NaN:Inf>
                 mov o1.xyz, r1.xyzx  // VS<4:NaN:Inf,5:NaN:Inf,6:NaN:Inf>
                 mov o2.xyz, r2.xyzx  // VS<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
-                mov o3.xy, r4.xyxx  // VS<10:NaN:Inf,11:NaN:Inf>
+                mov o4.xy, r5.xyxx  // VS<14:NaN:Inf,15:NaN:Inf>
                 ret 
-                // Approximately 21 instruction slots used
+                // Approximately 26 instruction slots used
                             
             };
             GeometryShader = NULL;
@@ -2275,7 +2357,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float       
                 // POSITION                 0   xyz         1     NONE  float       
                 // NORMAL                   0   xyz         2     NONE  float       
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float       
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 //
                 // Output signature:
@@ -2289,35 +2372,38 @@ fxgroup
                 dcl_constantbuffer cb0[18], immediateIndexed
                 dcl_sampler s0, mode_default
                 dcl_resource_texture2d (float,float,float,float) t0
-                dcl_input_ps linear v3.xy
+                dcl_input_ps linear v4.xy
                 dcl_output o0.xyzw
                 dcl_temps 1
                 
-                #line 85 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
-                sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
+                #line 96 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v4.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
-                #line 92
+                #line 101
                 add r0.w, r0.w, l(-0.100000)
                 lt r0.w, r0.w, l(0.000000)
                 and r0.w, r0.w, l(-1)
                 discard r0.w
                 
-                #line 100
+                #line 112
+                nop 
+                
+                #line 119
                 mov r0.xyz, r0.xyzx  // litColor<0:Inf,1:Inf,2:Inf>
                 
-                #line 126
+                #line 147
                 mul r0.w, cb0[17].w, l(0.500000)  // litColor<3:[-1.70141e+038f,1.70141e+038f]>
                 mov o0.xyz, r0.xyzx  // PS<0:Inf,1:Inf,2:Inf>
                 mov o0.w, r0.w  // PS<3:[-1.70141e+038f,1.70141e+038f]>
                 ret 
-                // Approximately 10 instruction slots used
+                // Approximately 11 instruction slots used
                             
             };
         }
 
     }
 
-    technique11 Light1TexAlphaClip
+    technique11 Light1TexNormal
     {
         pass P0
         {
@@ -2364,6 +2450,7 @@ fxgroup
                 // POSITION                 0   xyz         0     NONE  float   xyz 
                 // NORMAL                   0   xyz         1     NONE  float   xyz 
                 // TEXCOORD                 0   xy          2     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
                 //
                 //
                 // Output signature:
@@ -2373,7 +2460,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float   xyzw
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 vs_5_0
                 dcl_globalFlags refactoringAllowed
@@ -2381,13 +2469,15 @@ fxgroup
                 dcl_input v0.xyz
                 dcl_input v1.xyz
                 dcl_input v2.xy
+                dcl_input v3.xyzw
                 dcl_output_siv o0.xyzw, position
                 dcl_output o1.xyz
                 dcl_output o2.xyz
-                dcl_output o3.xy
-                dcl_temps 5
+                dcl_output o3.xyzw
+                dcl_output o4.xy
+                dcl_temps 6
                 
-                #line 54 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 64 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -2396,24 +2486,29 @@ fxgroup
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // vout<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // vout<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // vout<9:NaN:Inf>
+                dp4 r3.x, v3.xyzw, cb0[0].xyzw  // vout<10:NaN:Inf>
+                dp4 r3.y, v3.xyzw, cb0[1].xyzw  // vout<11:NaN:Inf>
+                dp4 r3.z, v3.xyzw, cb0[2].xyzw  // vout<12:NaN:Inf>
+                dp4 r3.w, v3.xyzw, cb0[3].xyzw  // vout<13:NaN:Inf>
                 
-                #line 58
-                dp4 r3.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
-                dp4 r3.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
-                dp4 r3.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
-                dp4 r3.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
+                #line 69
+                dp4 r4.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
+                dp4 r4.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
+                dp4 r4.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
+                dp4 r4.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
                 
-                #line 61
+                #line 72
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,0,1.000000)
-                dp4 r4.x, r0.xyzw, cb0[12].xyzw  // vout<10:NaN:Inf>
-                dp4 r4.y, r0.xyzw, cb0[13].xyzw  // vout<11:NaN:Inf>
-                mov o0.xyzw, r3.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                dp4 r5.x, r0.xyzw, cb0[12].xyzw  // vout<14:NaN:Inf>
+                dp4 r5.y, r0.xyzw, cb0[13].xyzw  // vout<15:NaN:Inf>
+                mov o0.xyzw, r4.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                mov o3.xyzw, r3.xyzw  // VS<10:NaN:Inf,11:NaN:Inf,12:NaN:Inf,13:NaN:Inf>
                 mov o1.xyz, r1.xyzx  // VS<4:NaN:Inf,5:NaN:Inf,6:NaN:Inf>
                 mov o2.xyz, r2.xyzx  // VS<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
-                mov o3.xy, r4.xyxx  // VS<10:NaN:Inf,11:NaN:Inf>
+                mov o4.xy, r5.xyxx  // VS<14:NaN:Inf,15:NaN:Inf>
                 ret 
-                // Approximately 21 instruction slots used
+                // Approximately 26 instruction slots used
                             
             };
             GeometryShader = NULL;
@@ -2467,7 +2562,9 @@ fxgroup
                 // Name                                 Type  Format         Dim Slot Elements
                 // ------------------------------ ---------- ------- ----------- ---- --------
                 // samAnisotropic                    sampler      NA          NA    0        1
+                // samLinear                         sampler      NA          NA    1        1
                 // gDiffuseMap                       texture  float4          2d    0        1
+                // gNormalMap                        texture  float4          2d    1        1
                 // cbPerFrame                        cbuffer      NA          NA    0        1
                 // cbPerObject                       cbuffer      NA          NA    1        1
                 //
@@ -2480,7 +2577,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float       
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 //
                 // Output signature:
@@ -2494,41 +2592,84 @@ fxgroup
                 dcl_constantbuffer cb0[13], immediateIndexed
                 dcl_constantbuffer cb1[19], immediateIndexed
                 dcl_sampler s0, mode_default
+                dcl_sampler s1, mode_default
                 dcl_resource_texture2d (float,float,float,float) t0
+                dcl_resource_texture2d (float,float,float,float) t1
                 dcl_input_ps linear v1.xyz
                 dcl_input_ps linear v2.xyz
-                dcl_input_ps linear v3.xy
+                dcl_input_ps linear v3.xyzw
+                dcl_input_ps linear v4.xy
                 dcl_output o0.xyzw
                 dcl_temps 10
                 
-                #line 69 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 80 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
+                mov r1.xyz, r0.zxyz  // pin<9:NaN:Inf,7:NaN:Inf,8:NaN:Inf>
                 
-                #line 72
-                mov r1.xyz, -v1.xyzx
-                add r1.xyz, r1.xyzx, cb0[12].xyzx  // toEye<0:Inf,1:Inf,2:Inf>
+                #line 83
+                mov r2.xyz, -v1.xyzx
+                add r2.xyz, r2.xyzx, cb0[12].xyzx  // toEye<0:Inf,1:Inf,2:Inf>
                 
-                #line 75
-                dp3 r0.w, r1.xyzx, r1.xyzx
+                #line 86
+                dp3 r0.w, r2.xyzx, r2.xyzx
                 sqrt r0.w, r0.w  // distToEye<0:NaN:Inf>
                 
-                #line 78
-                div r1.xyz, r1.xyzx, r0.wwww  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                #line 89
+                div r2.xyz, r2.xyzx, r0.wwww  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 85
-                sample_indexable(texture2d)(float,float,float,float) r2.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
+                #line 96
+                sample_indexable(texture2d)(float,float,float,float) r3.xyzw, v4.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
-                #line 92
-                add r0.w, r2.w, l(-0.100000)
+                #line 101
+                add r0.w, r3.w, l(-0.100000)
                 lt r0.w, r0.w, l(0.000000)
                 and r0.w, r0.w, l(-1)
                 discard r0.w
                 
-                #line 113
+                #line 111
+                sample_indexable(texture2d)(float,float,float,float) r4.xyz, v4.xyxx, t1.xyzw, s1
+                mov r4.xyz, r4.xyzx  // normalMapSample<0:Inf,1:Inf,2:Inf>
                 nop 
-                mov r3.xyz, cb1[16].xyzx  // mat<0,1,2>
+                mov r4.xyz, r4.xyzx  // normalMapSample<0:Inf,1:Inf,2:Inf>
+                mov r1.xyz, r1.xyzx  // unitNormalW<2:NaN:Inf,0:NaN:Inf,1:NaN:Inf>
+                mov r5.xyzw, v3.xyzw  // tangentW<0,1,2,3>
+                
+                #line 206 "LightHelper.fx"
+                mul r4.xyz, r4.xyzx, l(2.000000, 2.000000, 2.000000, 0.000000)
+                add r4.xyz, r4.xyzx, l(-1.000000, -1.000000, -1.000000, 0.000000)  // normalT<0:Inf,1:Inf,2:Inf>
+                
+                #line 209
+                mov r1.xyz, r1.xyzx  // N<2:NaN:Inf,0:NaN:Inf,1:NaN:Inf>
+                dp3 r0.w, r5.zxyz, r1.xyzx
+                mul r6.xyz, r1.yzxy, r0.wwww
+                mov r6.xyz, -r6.xyzx
+                add r5.xyz, r5.xyzx, r6.xyzx
+                dp3 r0.w, r5.xyzx, r5.xyzx
+                rsq r0.w, r0.w
+                mul r5.xyz, r0.wwww, r5.xyzx  // T<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r6.xyz, r5.yzxy  // T<1:NaN:Inf,2:NaN:Inf,0:NaN:Inf>
+                mul r7.xyz, r1.zxyz, r6.yzxy
+                mul r1.xyz, r1.xyzx, r6.xyzx
+                mov r1.xyz, -r1.xyzx
+                add r1.xyz, r1.xyzx, r7.xyzx
+                mul r1.xyz, r1.xyzx, r5.wwww  // B<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 216
+                mul r5.xyz, r4.xxxx, r5.xyzx
+                mul r1.xyz, r1.xyzx, r4.yyyy
+                add r1.xyz, r1.xyzx, r5.xyzx
+                mul r0.xyz, r0.xyzx, r4.zzzz
+                add r0.xyz, r0.xyzx, r1.xyzx  // bumpedNormalW<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r0.xyz, r0.xyzx  // NormalSampleToWorldSpace<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 112 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                mov r0.xyz, r0.xyzx  // bumpedNormalW<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 133
+                nop 
+                mov r1.xyz, cb1[16].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[17].xyzx  // mat<4,5,6>
                 mov r5.xyzw, cb1[18].xyzw  // mat<8,9,10,11>
                 mov r6.xyz, cb0[0].xyzx  // L<0,1,2>
@@ -2536,13 +2677,13 @@ fxgroup
                 mov r8.xyz, cb0[2].xyzx  // L<8,9,10>
                 mov r9.xyz, cb0[3].xyzx  // L<12,13,14>
                 mov r0.xyz, r0.xyzx  // normal<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                mov r1.xyz, r1.xyzx  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r2.xyz, r2.xyzx  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
                 #line 70 "LightHelper.fx"
                 mov r9.xyz, -r9.xyzx  // lightVec<0,1,2>
                 
                 #line 73
-                mul r3.xyz, r3.xyzx, r6.xyzx  // ambient<0:Inf,1:Inf,2:Inf>
+                mul r1.xyz, r1.xyzx, r6.xyzx  // ambient<0:Inf,1:Inf,2:Inf>
                 
                 #line 78
                 dp3 r0.w, r9.xyzx, r0.xyzx  // diffuseFactor<0:NaN:Inf>
@@ -2555,48 +2696,48 @@ fxgroup
                 mov r2.w, -r2.w
                 mul r0.xyz, r0.xyzx, r2.wwww
                 add r0.xyz, r6.xyzx, r0.xyzx  // v<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                dp3 r0.x, r0.xyzx, r1.xyzx
+                dp3 r0.x, r0.xyzx, r2.xyzx
                 max r0.x, r0.x, l(0.000000)
                 log r0.x, r0.x
                 mul r0.x, r0.x, r5.w
                 exp r0.x, r0.x  // specFactor<0:NaN:Inf>
                 mul r0.yzw, r4.xxyz, r0.wwww
                 mul r0.yzw, r7.xxyz, r0.yyzw  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                mul r1.xyz, r5.xyzx, r0.xxxx
-                mul r1.xyz, r8.xyzx, r1.xyzx  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mul r2.xyz, r5.xyzx, r0.xxxx
+                mul r2.xyz, r8.xyzx, r2.xyzx  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
                 #line 82
                 movc r0.xyz, r1.wwww, r0.yzwy, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                movc r1.xyz, r1.wwww, r1.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                movc r2.xyz, r1.wwww, r2.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
-                mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
+                #line 133 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                mov r1.xyz, r1.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                mov r1.xyz, r1.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r2.xyz, r2.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 116
-                add r3.xyz, r3.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // ambient<0:Inf,1:Inf,2:Inf>
+                #line 137
+                add r1.xyz, r1.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // ambient<0:Inf,1:Inf,2:Inf>
                 add r0.xyz, r0.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                add r1.xyz, r1.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r2.xyz, r2.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 122
-                add r0.xyz, r0.xyzx, r3.xyzx
-                mul r0.xyz, r0.xyzx, r2.xyzx
-                add r0.xyz, r1.xyzx, r0.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                #line 143
+                add r0.xyz, r0.xyzx, r1.xyzx
+                mul r0.xyz, r0.xyzx, r3.xyzx
+                add r0.xyz, r2.xyzx, r0.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 126
+                #line 147
                 mul r0.w, cb1[17].w, l(0.500000)  // litColor<3:[-1.70141e+038f,1.70141e+038f]>
                 mov o0.xyz, r0.xyzx  // PS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov o0.w, r0.w  // PS<3:[-1.70141e+038f,1.70141e+038f]>
                 ret 
-                // Approximately 57 instruction slots used
+                // Approximately 87 instruction slots used
                             
             };
         }
 
     }
 
-    technique11 Light2TexAlphaClip
+    technique11 Light2TexNormal
     {
         pass P0
         {
@@ -2643,6 +2784,7 @@ fxgroup
                 // POSITION                 0   xyz         0     NONE  float   xyz 
                 // NORMAL                   0   xyz         1     NONE  float   xyz 
                 // TEXCOORD                 0   xy          2     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
                 //
                 //
                 // Output signature:
@@ -2652,7 +2794,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float   xyzw
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 vs_5_0
                 dcl_globalFlags refactoringAllowed
@@ -2660,13 +2803,15 @@ fxgroup
                 dcl_input v0.xyz
                 dcl_input v1.xyz
                 dcl_input v2.xy
+                dcl_input v3.xyzw
                 dcl_output_siv o0.xyzw, position
                 dcl_output o1.xyz
                 dcl_output o2.xyz
-                dcl_output o3.xy
-                dcl_temps 5
+                dcl_output o3.xyzw
+                dcl_output o4.xy
+                dcl_temps 6
                 
-                #line 54 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 64 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -2675,24 +2820,29 @@ fxgroup
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // vout<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // vout<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // vout<9:NaN:Inf>
+                dp4 r3.x, v3.xyzw, cb0[0].xyzw  // vout<10:NaN:Inf>
+                dp4 r3.y, v3.xyzw, cb0[1].xyzw  // vout<11:NaN:Inf>
+                dp4 r3.z, v3.xyzw, cb0[2].xyzw  // vout<12:NaN:Inf>
+                dp4 r3.w, v3.xyzw, cb0[3].xyzw  // vout<13:NaN:Inf>
                 
-                #line 58
-                dp4 r3.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
-                dp4 r3.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
-                dp4 r3.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
-                dp4 r3.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
+                #line 69
+                dp4 r4.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
+                dp4 r4.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
+                dp4 r4.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
+                dp4 r4.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
                 
-                #line 61
+                #line 72
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,0,1.000000)
-                dp4 r4.x, r0.xyzw, cb0[12].xyzw  // vout<10:NaN:Inf>
-                dp4 r4.y, r0.xyzw, cb0[13].xyzw  // vout<11:NaN:Inf>
-                mov o0.xyzw, r3.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                dp4 r5.x, r0.xyzw, cb0[12].xyzw  // vout<14:NaN:Inf>
+                dp4 r5.y, r0.xyzw, cb0[13].xyzw  // vout<15:NaN:Inf>
+                mov o0.xyzw, r4.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                mov o3.xyzw, r3.xyzw  // VS<10:NaN:Inf,11:NaN:Inf,12:NaN:Inf,13:NaN:Inf>
                 mov o1.xyz, r1.xyzx  // VS<4:NaN:Inf,5:NaN:Inf,6:NaN:Inf>
                 mov o2.xyz, r2.xyzx  // VS<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
-                mov o3.xy, r4.xyxx  // VS<10:NaN:Inf,11:NaN:Inf>
+                mov o4.xy, r5.xyxx  // VS<14:NaN:Inf,15:NaN:Inf>
                 ret 
-                // Approximately 21 instruction slots used
+                // Approximately 26 instruction slots used
                             
             };
             GeometryShader = NULL;
@@ -2746,7 +2896,9 @@ fxgroup
                 // Name                                 Type  Format         Dim Slot Elements
                 // ------------------------------ ---------- ------- ----------- ---- --------
                 // samAnisotropic                    sampler      NA          NA    0        1
+                // samLinear                         sampler      NA          NA    1        1
                 // gDiffuseMap                       texture  float4          2d    0        1
+                // gNormalMap                        texture  float4          2d    1        1
                 // cbPerFrame                        cbuffer      NA          NA    0        1
                 // cbPerObject                       cbuffer      NA          NA    1        1
                 //
@@ -2759,7 +2911,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float       
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 //
                 // Output signature:
@@ -2773,41 +2926,84 @@ fxgroup
                 dcl_constantbuffer cb0[13], immediateIndexed
                 dcl_constantbuffer cb1[19], immediateIndexed
                 dcl_sampler s0, mode_default
+                dcl_sampler s1, mode_default
                 dcl_resource_texture2d (float,float,float,float) t0
+                dcl_resource_texture2d (float,float,float,float) t1
                 dcl_input_ps linear v1.xyz
                 dcl_input_ps linear v2.xyz
-                dcl_input_ps linear v3.xy
+                dcl_input_ps linear v3.xyzw
+                dcl_input_ps linear v4.xy
                 dcl_output o0.xyzw
                 dcl_temps 13
                 
-                #line 69 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 80 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
+                mov r1.xyz, r0.zxyz  // pin<9:NaN:Inf,7:NaN:Inf,8:NaN:Inf>
                 
-                #line 72
-                mov r1.xyz, -v1.xyzx
-                add r1.xyz, r1.xyzx, cb0[12].xyzx  // toEye<0:Inf,1:Inf,2:Inf>
+                #line 83
+                mov r2.xyz, -v1.xyzx
+                add r2.xyz, r2.xyzx, cb0[12].xyzx  // toEye<0:Inf,1:Inf,2:Inf>
                 
-                #line 75
-                dp3 r0.w, r1.xyzx, r1.xyzx
+                #line 86
+                dp3 r0.w, r2.xyzx, r2.xyzx
                 sqrt r0.w, r0.w  // distToEye<0:NaN:Inf>
                 
-                #line 78
-                div r1.xyz, r1.xyzx, r0.wwww  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                #line 89
+                div r2.xyz, r2.xyzx, r0.wwww  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 85
-                sample_indexable(texture2d)(float,float,float,float) r2.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
+                #line 96
+                sample_indexable(texture2d)(float,float,float,float) r3.xyzw, v4.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
-                #line 92
-                add r0.w, r2.w, l(-0.100000)
+                #line 101
+                add r0.w, r3.w, l(-0.100000)
                 lt r0.w, r0.w, l(0.000000)
                 and r0.w, r0.w, l(-1)
                 discard r0.w
                 
-                #line 113
+                #line 111
+                sample_indexable(texture2d)(float,float,float,float) r4.xyz, v4.xyxx, t1.xyzw, s1
+                mov r4.xyz, r4.xyzx  // normalMapSample<0:Inf,1:Inf,2:Inf>
                 nop 
-                mov r3.xyz, cb1[16].xyzx  // mat<0,1,2>
+                mov r4.xyz, r4.xyzx  // normalMapSample<0:Inf,1:Inf,2:Inf>
+                mov r1.xyz, r1.xyzx  // unitNormalW<2:NaN:Inf,0:NaN:Inf,1:NaN:Inf>
+                mov r5.xyzw, v3.xyzw  // tangentW<0,1,2,3>
+                
+                #line 206 "LightHelper.fx"
+                mul r4.xyz, r4.xyzx, l(2.000000, 2.000000, 2.000000, 0.000000)
+                add r4.xyz, r4.xyzx, l(-1.000000, -1.000000, -1.000000, 0.000000)  // normalT<0:Inf,1:Inf,2:Inf>
+                
+                #line 209
+                mov r1.xyz, r1.xyzx  // N<2:NaN:Inf,0:NaN:Inf,1:NaN:Inf>
+                dp3 r0.w, r5.zxyz, r1.xyzx
+                mul r6.xyz, r1.yzxy, r0.wwww
+                mov r6.xyz, -r6.xyzx
+                add r5.xyz, r5.xyzx, r6.xyzx
+                dp3 r0.w, r5.xyzx, r5.xyzx
+                rsq r0.w, r0.w
+                mul r5.xyz, r0.wwww, r5.xyzx  // T<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r6.xyz, r5.yzxy  // T<1:NaN:Inf,2:NaN:Inf,0:NaN:Inf>
+                mul r7.xyz, r1.zxyz, r6.yzxy
+                mul r1.xyz, r1.xyzx, r6.xyzx
+                mov r1.xyz, -r1.xyzx
+                add r1.xyz, r1.xyzx, r7.xyzx
+                mul r1.xyz, r1.xyzx, r5.wwww  // B<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 216
+                mul r5.xyz, r4.xxxx, r5.xyzx
+                mul r1.xyz, r1.xyzx, r4.yyyy
+                add r1.xyz, r1.xyzx, r5.xyzx
+                mul r0.xyz, r0.xyzx, r4.zzzz
+                add r0.xyz, r0.xyzx, r1.xyzx  // bumpedNormalW<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r0.xyz, r0.xyzx  // NormalSampleToWorldSpace<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 112 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                mov r0.xyz, r0.xyzx  // bumpedNormalW<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 133
+                nop 
+                mov r1.xyz, cb1[16].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[17].xyzx  // mat<4,5,6>
                 mov r5.xyzw, cb1[18].xyzw  // mat<8,9,10,11>
                 mov r6.xyz, cb0[0].xyzx  // L<0,1,2>
@@ -2815,13 +3011,13 @@ fxgroup
                 mov r8.xyz, cb0[2].xyzx  // L<8,9,10>
                 mov r9.xyz, cb0[3].xyzx  // L<12,13,14>
                 mov r0.xyz, r0.xyzx  // normal<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                mov r1.xyz, r1.xyzx  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r2.xyz, r2.xyzx  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
                 #line 70 "LightHelper.fx"
                 mov r9.xyz, -r9.xyzx  // lightVec<0,1,2>
                 
                 #line 73
-                mul r6.xyz, r3.xyzx, r6.xyzx  // ambient<0:Inf,1:Inf,2:Inf>
+                mul r6.xyz, r1.xyzx, r6.xyzx  // ambient<0:Inf,1:Inf,2:Inf>
                 
                 #line 78
                 dp3 r0.w, r9.xyzx, r0.xyzx  // diffuseFactor<0:NaN:Inf>
@@ -2834,7 +3030,7 @@ fxgroup
                 mov r2.w, -r2.w
                 mul r10.xyz, r0.xyzx, r2.wwww
                 add r9.xyz, r9.xyzx, r10.xyzx  // v<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                dp3 r2.w, r9.xyzx, r1.xyzx
+                dp3 r2.w, r9.xyzx, r2.xyzx
                 max r2.w, r2.w, l(0.000000)
                 log r2.w, r2.w
                 mul r2.w, r2.w, r5.w
@@ -2848,17 +3044,17 @@ fxgroup
                 movc r7.xyz, r1.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r1.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 133 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 116
+                #line 137
                 add r6.xyz, r6.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // ambient<0:Inf,1:Inf,2:Inf>
                 add r7.xyz, r7.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r8.xyz, r8.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113
+                #line 133
                 nop 
                 mov r9.xyz, cb0[4].xyzx  // L<0,1,2>
                 mov r10.xyz, cb0[5].xyzx  // L<4,5,6>
@@ -2869,7 +3065,7 @@ fxgroup
                 mov r12.xyz, -r12.xyzx  // lightVec<0,1,2>
                 
                 #line 73
-                mul r3.xyz, r3.xyzx, r9.xyzx  // ambient<0:Inf,1:Inf,2:Inf>
+                mul r1.xyz, r1.xyzx, r9.xyzx  // ambient<0:Inf,1:Inf,2:Inf>
                 
                 #line 78
                 dp3 r0.w, r12.xyzx, r0.xyzx  // diffuseFactor<0:NaN:Inf>
@@ -2882,48 +3078,48 @@ fxgroup
                 mov r2.w, -r2.w
                 mul r0.xyz, r0.xyzx, r2.wwww
                 add r0.xyz, r9.xyzx, r0.xyzx  // v<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                dp3 r0.x, r0.xyzx, r1.xyzx
+                dp3 r0.x, r0.xyzx, r2.xyzx
                 max r0.x, r0.x, l(0.000000)
                 log r0.x, r0.x
                 mul r0.x, r0.x, r5.w
                 exp r0.x, r0.x  // specFactor<0:NaN:Inf>
                 mul r0.yzw, r4.xxyz, r0.wwww
                 mul r0.yzw, r10.xxyz, r0.yyzw  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                mul r1.xyz, r5.xyzx, r0.xxxx
-                mul r1.xyz, r11.xyzx, r1.xyzx  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mul r2.xyz, r5.xyzx, r0.xxxx
+                mul r2.xyz, r11.xyzx, r2.xyzx  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
                 #line 82
                 movc r0.xyz, r1.wwww, r0.yzwy, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                movc r1.xyz, r1.wwww, r1.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                movc r2.xyz, r1.wwww, r2.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
-                mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
+                #line 133 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                mov r1.xyz, r1.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                mov r1.xyz, r1.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r2.xyz, r2.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 116
-                add r3.xyz, r3.xyzx, r6.xyzx  // ambient<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                #line 137
+                add r1.xyz, r1.xyzx, r6.xyzx  // ambient<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r0.xyz, r0.xyzx, r7.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                add r1.xyz, r1.xyzx, r8.xyzx  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r2.xyz, r2.xyzx, r8.xyzx  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 122
-                add r0.xyz, r0.xyzx, r3.xyzx
-                mul r0.xyz, r0.xyzx, r2.xyzx
-                add r0.xyz, r1.xyzx, r0.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                #line 143
+                add r0.xyz, r0.xyzx, r1.xyzx
+                mul r0.xyz, r0.xyzx, r3.xyzx
+                add r0.xyz, r2.xyzx, r0.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 126
+                #line 147
                 mul r0.w, cb1[17].w, l(0.500000)  // litColor<3:[-1.70141e+038f,1.70141e+038f]>
                 mov o0.xyz, r0.xyzx  // PS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov o0.w, r0.w  // PS<3:[-1.70141e+038f,1.70141e+038f]>
                 ret 
-                // Approximately 89 instruction slots used
+                // Approximately 119 instruction slots used
                             
             };
         }
 
     }
 
-    technique11 Light3TexAlphaClip
+    technique11 Light3TexNormal
     {
         pass P0
         {
@@ -2970,6 +3166,7 @@ fxgroup
                 // POSITION                 0   xyz         0     NONE  float   xyz 
                 // NORMAL                   0   xyz         1     NONE  float   xyz 
                 // TEXCOORD                 0   xy          2     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
                 //
                 //
                 // Output signature:
@@ -2979,7 +3176,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float   xyzw
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 vs_5_0
                 dcl_globalFlags refactoringAllowed
@@ -2987,13 +3185,15 @@ fxgroup
                 dcl_input v0.xyz
                 dcl_input v1.xyz
                 dcl_input v2.xy
+                dcl_input v3.xyzw
                 dcl_output_siv o0.xyzw, position
                 dcl_output o1.xyz
                 dcl_output o2.xyz
-                dcl_output o3.xy
-                dcl_temps 5
+                dcl_output o3.xyzw
+                dcl_output o4.xy
+                dcl_temps 6
                 
-                #line 54 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 64 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -3002,24 +3202,29 @@ fxgroup
                 dp3 r2.x, v1.xyzx, cb0[4].xyzx  // vout<7:NaN:Inf>
                 dp3 r2.y, v1.xyzx, cb0[5].xyzx  // vout<8:NaN:Inf>
                 dp3 r2.z, v1.xyzx, cb0[6].xyzx  // vout<9:NaN:Inf>
+                dp4 r3.x, v3.xyzw, cb0[0].xyzw  // vout<10:NaN:Inf>
+                dp4 r3.y, v3.xyzw, cb0[1].xyzw  // vout<11:NaN:Inf>
+                dp4 r3.z, v3.xyzw, cb0[2].xyzw  // vout<12:NaN:Inf>
+                dp4 r3.w, v3.xyzw, cb0[3].xyzw  // vout<13:NaN:Inf>
                 
-                #line 58
-                dp4 r3.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
-                dp4 r3.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
-                dp4 r3.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
-                dp4 r3.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
+                #line 69
+                dp4 r4.x, r0.xyzw, cb0[8].xyzw  // vout<0:NaN:Inf>
+                dp4 r4.y, r0.xyzw, cb0[9].xyzw  // vout<1:NaN:Inf>
+                dp4 r4.z, r0.xyzw, cb0[10].xyzw  // vout<2:NaN:Inf>
+                dp4 r4.w, r0.xyzw, cb0[11].xyzw  // vout<3:NaN:Inf>
                 
-                #line 61
+                #line 72
                 mov r0.xy, v2.xyxx
                 mov r0.zw, l(0,0,0,1.000000)
-                dp4 r4.x, r0.xyzw, cb0[12].xyzw  // vout<10:NaN:Inf>
-                dp4 r4.y, r0.xyzw, cb0[13].xyzw  // vout<11:NaN:Inf>
-                mov o0.xyzw, r3.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                dp4 r5.x, r0.xyzw, cb0[12].xyzw  // vout<14:NaN:Inf>
+                dp4 r5.y, r0.xyzw, cb0[13].xyzw  // vout<15:NaN:Inf>
+                mov o0.xyzw, r4.xyzw  // VS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                mov o3.xyzw, r3.xyzw  // VS<10:NaN:Inf,11:NaN:Inf,12:NaN:Inf,13:NaN:Inf>
                 mov o1.xyz, r1.xyzx  // VS<4:NaN:Inf,5:NaN:Inf,6:NaN:Inf>
                 mov o2.xyz, r2.xyzx  // VS<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
-                mov o3.xy, r4.xyxx  // VS<10:NaN:Inf,11:NaN:Inf>
+                mov o4.xy, r5.xyxx  // VS<14:NaN:Inf,15:NaN:Inf>
                 ret 
-                // Approximately 21 instruction slots used
+                // Approximately 26 instruction slots used
                             
             };
             GeometryShader = NULL;
@@ -3073,7 +3278,9 @@ fxgroup
                 // Name                                 Type  Format         Dim Slot Elements
                 // ------------------------------ ---------- ------- ----------- ---- --------
                 // samAnisotropic                    sampler      NA          NA    0        1
+                // samLinear                         sampler      NA          NA    1        1
                 // gDiffuseMap                       texture  float4          2d    0        1
+                // gNormalMap                        texture  float4          2d    1        1
                 // cbPerFrame                        cbuffer      NA          NA    0        1
                 // cbPerObject                       cbuffer      NA          NA    1        1
                 //
@@ -3086,7 +3293,8 @@ fxgroup
                 // SV_POSITION              0   xyzw        0      POS  float       
                 // POSITION                 0   xyz         1     NONE  float   xyz 
                 // NORMAL                   0   xyz         2     NONE  float   xyz 
-                // TEXCOORD                 0   xy          3     NONE  float   xy  
+                // TANGENT                  0   xyzw        3     NONE  float   xyzw
+                // TEXCOORD                 0   xy          4     NONE  float   xy  
                 //
                 //
                 // Output signature:
@@ -3100,41 +3308,84 @@ fxgroup
                 dcl_constantbuffer cb0[13], immediateIndexed
                 dcl_constantbuffer cb1[19], immediateIndexed
                 dcl_sampler s0, mode_default
+                dcl_sampler s1, mode_default
                 dcl_resource_texture2d (float,float,float,float) t0
+                dcl_resource_texture2d (float,float,float,float) t1
                 dcl_input_ps linear v1.xyz
                 dcl_input_ps linear v2.xyz
-                dcl_input_ps linear v3.xy
+                dcl_input_ps linear v3.xyzw
+                dcl_input_ps linear v4.xy
                 dcl_output o0.xyzw
                 dcl_temps 14
                 
-                #line 69 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 80 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
+                mov r1.xyz, r0.zxyz  // pin<9:NaN:Inf,7:NaN:Inf,8:NaN:Inf>
                 
-                #line 72
-                mov r1.xyz, -v1.xyzx
-                add r1.xyz, r1.xyzx, cb0[12].xyzx  // toEye<0:Inf,1:Inf,2:Inf>
+                #line 83
+                mov r2.xyz, -v1.xyzx
+                add r2.xyz, r2.xyzx, cb0[12].xyzx  // toEye<0:Inf,1:Inf,2:Inf>
                 
-                #line 75
-                dp3 r0.w, r1.xyzx, r1.xyzx
+                #line 86
+                dp3 r0.w, r2.xyzx, r2.xyzx
                 sqrt r0.w, r0.w  // distToEye<0:NaN:Inf>
                 
-                #line 78
-                div r1.xyz, r1.xyzx, r0.wwww  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                #line 89
+                div r2.xyz, r2.xyzx, r0.wwww  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 85
-                sample_indexable(texture2d)(float,float,float,float) r2.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
+                #line 96
+                sample_indexable(texture2d)(float,float,float,float) r3.xyzw, v4.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
-                #line 92
-                add r0.w, r2.w, l(-0.100000)
+                #line 101
+                add r0.w, r3.w, l(-0.100000)
                 lt r0.w, r0.w, l(0.000000)
                 and r0.w, r0.w, l(-1)
                 discard r0.w
                 
-                #line 113
+                #line 111
+                sample_indexable(texture2d)(float,float,float,float) r4.xyz, v4.xyxx, t1.xyzw, s1
+                mov r4.xyz, r4.xyzx  // normalMapSample<0:Inf,1:Inf,2:Inf>
                 nop 
-                mov r3.xyz, cb1[16].xyzx  // mat<0,1,2>
+                mov r4.xyz, r4.xyzx  // normalMapSample<0:Inf,1:Inf,2:Inf>
+                mov r1.xyz, r1.xyzx  // unitNormalW<2:NaN:Inf,0:NaN:Inf,1:NaN:Inf>
+                mov r5.xyzw, v3.xyzw  // tangentW<0,1,2,3>
+                
+                #line 206 "LightHelper.fx"
+                mul r4.xyz, r4.xyzx, l(2.000000, 2.000000, 2.000000, 0.000000)
+                add r4.xyz, r4.xyzx, l(-1.000000, -1.000000, -1.000000, 0.000000)  // normalT<0:Inf,1:Inf,2:Inf>
+                
+                #line 209
+                mov r1.xyz, r1.xyzx  // N<2:NaN:Inf,0:NaN:Inf,1:NaN:Inf>
+                dp3 r0.w, r5.zxyz, r1.xyzx
+                mul r6.xyz, r1.yzxy, r0.wwww
+                mov r6.xyz, -r6.xyzx
+                add r5.xyz, r5.xyzx, r6.xyzx
+                dp3 r0.w, r5.xyzx, r5.xyzx
+                rsq r0.w, r0.w
+                mul r5.xyz, r0.wwww, r5.xyzx  // T<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r6.xyz, r5.yzxy  // T<1:NaN:Inf,2:NaN:Inf,0:NaN:Inf>
+                mul r7.xyz, r1.zxyz, r6.yzxy
+                mul r1.xyz, r1.xyzx, r6.xyzx
+                mov r1.xyz, -r1.xyzx
+                add r1.xyz, r1.xyzx, r7.xyzx
+                mul r1.xyz, r1.xyzx, r5.wwww  // B<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 216
+                mul r5.xyz, r4.xxxx, r5.xyzx
+                mul r1.xyz, r1.xyzx, r4.yyyy
+                add r1.xyz, r1.xyzx, r5.xyzx
+                mul r0.xyz, r0.xyzx, r4.zzzz
+                add r0.xyz, r0.xyzx, r1.xyzx  // bumpedNormalW<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r0.xyz, r0.xyzx  // NormalSampleToWorldSpace<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 112 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                mov r0.xyz, r0.xyzx  // bumpedNormalW<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                
+                #line 133
+                nop 
+                mov r1.xyz, cb1[16].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[17].xyzx  // mat<4,5,6>
                 mov r5.xyzw, cb1[18].xyzw  // mat<8,9,10,11>
                 mov r6.xyz, cb0[0].xyzx  // L<0,1,2>
@@ -3142,13 +3393,13 @@ fxgroup
                 mov r8.xyz, cb0[2].xyzx  // L<8,9,10>
                 mov r9.xyz, cb0[3].xyzx  // L<12,13,14>
                 mov r0.xyz, r0.xyzx  // normal<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                mov r1.xyz, r1.xyzx  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r2.xyz, r2.xyzx  // toEye<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
                 #line 70 "LightHelper.fx"
                 mov r9.xyz, -r9.xyzx  // lightVec<0,1,2>
                 
                 #line 73
-                mul r6.xyz, r3.xyzx, r6.xyzx  // ambient<0:Inf,1:Inf,2:Inf>
+                mul r6.xyz, r1.xyzx, r6.xyzx  // ambient<0:Inf,1:Inf,2:Inf>
                 
                 #line 78
                 dp3 r0.w, r9.xyzx, r0.xyzx  // diffuseFactor<0:NaN:Inf>
@@ -3161,7 +3412,7 @@ fxgroup
                 mov r2.w, -r2.w
                 mul r10.xyz, r0.xyzx, r2.wwww
                 add r9.xyz, r9.xyzx, r10.xyzx  // v<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                dp3 r2.w, r9.xyzx, r1.xyzx
+                dp3 r2.w, r9.xyzx, r2.xyzx
                 max r2.w, r2.w, l(0.000000)
                 log r2.w, r2.w
                 mul r2.w, r2.w, r5.w
@@ -3175,17 +3426,17 @@ fxgroup
                 movc r7.xyz, r1.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r1.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 133 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 116
+                #line 137
                 add r6.xyz, r6.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // ambient<0:Inf,1:Inf,2:Inf>
                 add r7.xyz, r7.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r8.xyz, r8.xyzx, l(0.000000, 0.000000, 0.000000, 0.000000)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113
+                #line 133
                 nop 
                 mov r9.xyz, cb0[4].xyzx  // L<0,1,2>
                 mov r10.xyz, cb0[5].xyzx  // L<4,5,6>
@@ -3196,7 +3447,7 @@ fxgroup
                 mov r12.xyz, -r12.xyzx  // lightVec<0,1,2>
                 
                 #line 73
-                mul r9.xyz, r3.xyzx, r9.xyzx  // ambient<0:Inf,1:Inf,2:Inf>
+                mul r9.xyz, r1.xyzx, r9.xyzx  // ambient<0:Inf,1:Inf,2:Inf>
                 
                 #line 78
                 dp3 r0.w, r12.xyzx, r0.xyzx  // diffuseFactor<0:NaN:Inf>
@@ -3209,7 +3460,7 @@ fxgroup
                 mov r2.w, -r2.w
                 mul r13.xyz, r0.xyzx, r2.wwww
                 add r12.xyz, r12.xyzx, r13.xyzx  // v<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                dp3 r2.w, r12.xyzx, r1.xyzx
+                dp3 r2.w, r12.xyzx, r2.xyzx
                 max r2.w, r2.w, l(0.000000)
                 log r2.w, r2.w
                 mul r2.w, r2.w, r5.w
@@ -3223,17 +3474,17 @@ fxgroup
                 movc r10.xyz, r1.wwww, r10.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r11.xyz, r1.wwww, r11.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                #line 133 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
                 mov r9.xyz, r9.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r10.xyz, r10.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r11.xyz, r11.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 116
+                #line 137
                 add r6.xyz, r6.xyzx, r9.xyzx  // ambient<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r7.xyz, r7.xyzx, r10.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r8.xyz, r8.xyzx, r11.xyzx  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113
+                #line 133
                 nop 
                 mov r9.xyz, cb0[8].xyzx  // L<0,1,2>
                 mov r10.xyz, cb0[9].xyzx  // L<4,5,6>
@@ -3244,7 +3495,7 @@ fxgroup
                 mov r12.xyz, -r12.xyzx  // lightVec<0,1,2>
                 
                 #line 73
-                mul r3.xyz, r3.xyzx, r9.xyzx  // ambient<0:Inf,1:Inf,2:Inf>
+                mul r1.xyz, r1.xyzx, r9.xyzx  // ambient<0:Inf,1:Inf,2:Inf>
                 
                 #line 78
                 dp3 r0.w, r12.xyzx, r0.xyzx  // diffuseFactor<0:NaN:Inf>
@@ -3257,41 +3508,41 @@ fxgroup
                 mov r2.w, -r2.w
                 mul r0.xyz, r0.xyzx, r2.wwww
                 add r0.xyz, r9.xyzx, r0.xyzx  // v<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                dp3 r0.x, r0.xyzx, r1.xyzx
+                dp3 r0.x, r0.xyzx, r2.xyzx
                 max r0.x, r0.x, l(0.000000)
                 log r0.x, r0.x
                 mul r0.x, r0.x, r5.w
                 exp r0.x, r0.x  // specFactor<0:NaN:Inf>
                 mul r0.yzw, r4.xxyz, r0.wwww
                 mul r0.yzw, r10.xxyz, r0.yyzw  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                mul r1.xyz, r5.xyzx, r0.xxxx
-                mul r1.xyz, r11.xyzx, r1.xyzx  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mul r2.xyz, r5.xyzx, r0.xxxx
+                mul r2.xyz, r11.xyzx, r2.xyzx  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
                 #line 82
                 movc r0.xyz, r1.wwww, r0.yzwy, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                movc r1.xyz, r1.wwww, r1.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                movc r2.xyz, r1.wwww, r2.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 113 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
-                mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
+                #line 133 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\Basic.fx"
+                mov r1.xyz, r1.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                mov r1.xyz, r1.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r2.xyz, r2.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 116
-                add r3.xyz, r3.xyzx, r6.xyzx  // ambient<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                #line 137
+                add r1.xyz, r1.xyzx, r6.xyzx  // ambient<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 add r0.xyz, r0.xyzx, r7.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                add r1.xyz, r1.xyzx, r8.xyzx  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                add r2.xyz, r2.xyzx, r8.xyzx  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 122
-                add r0.xyz, r0.xyzx, r3.xyzx
-                mul r0.xyz, r0.xyzx, r2.xyzx
-                add r0.xyz, r1.xyzx, r0.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                #line 143
+                add r0.xyz, r0.xyzx, r1.xyzx
+                mul r0.xyz, r0.xyzx, r3.xyzx
+                add r0.xyz, r2.xyzx, r0.xyzx  // litColor<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 126
+                #line 147
                 mul r0.w, cb1[17].w, l(0.500000)  // litColor<3:[-1.70141e+038f,1.70141e+038f]>
                 mov o0.xyz, r0.xyzx  // PS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov o0.w, r0.w  // PS<3:[-1.70141e+038f,1.70141e+038f]>
                 ret 
-                // Approximately 121 instruction slots used
+                // Approximately 151 instruction slots used
                             
             };
         }

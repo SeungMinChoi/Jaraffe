@@ -37,8 +37,8 @@ public:
 // public Functions) 
 //=============================================================================
 public:
-	std::vector<Jaraffe::Vertex::PosNormalTex>&	GetVertices()	{ return m_pVertices; }
-	std::vector<UINT>&							GetIndices()	{ return m_pIndices; }
+	std::vector<Jaraffe::Vertex::PosNormalTexTan>&	GetVertices()	{ return m_pVertices; }
+	std::vector<UINT>&								GetIndices()	{ return m_pIndices; }
 
 	ID3D11InputLayout*	GetInputLayout()	{ return m_pInputLayout; }
 	UINT				GetStride()			{ return m_Stride; }
@@ -50,16 +50,16 @@ public:
 // protected Members) 
 //=============================================================================
 protected:
-	ID3D11InputLayout*							m_pInputLayout;
-	UINT										m_Stride;
-	UINT										m_VertexCount;
-	UINT										m_IndexCount;
+	ID3D11InputLayout*								m_pInputLayout;
+	UINT											m_Stride;
+	UINT											m_VertexCount;
+	UINT											m_IndexCount;
 
-	std::vector<Jaraffe::Vertex::PosNormalTex>	m_pVertices;
-	std::vector<UINT>							m_pIndices;
+	std::vector<Jaraffe::Vertex::PosNormalTexTan>	m_pVertices;
+	std::vector<UINT>								m_pIndices;
 
-	ID3D11Buffer*								m_pVB;			// Vertex Buffer
-	ID3D11Buffer*								m_pIB;			// Index Buffer
+	ID3D11Buffer*									m_pVB;			// Vertex Buffer
+	ID3D11Buffer*									m_pIB;			// Index Buffer
 };
 
 }

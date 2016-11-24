@@ -19,6 +19,8 @@ public:
 public:
 	Jaraffe::Light::Material	m_Material;
 	Jaraffe::Texture*			m_MainTexture	= nullptr;
+	Jaraffe::Texture*			m_BumpTexture	= nullptr;
+
 	ID3D11RasterizerState*		m_RSState		= nullptr;
 	ID3D11BlendState*			m_BlendState	= nullptr;
 

@@ -1,53 +1,53 @@
 #include "stdafx.h"
 #include "GeometryGenerator.h"
 
-void Jaraffe::GeometryGenerator::CreateBox(float _width, float _height, float _depth, std::vector<Vertex::PosNormalTex>& _vertices, std::vector<UINT>& _indices)
+void Jaraffe::GeometryGenerator::CreateBox(float _width, float _height, float _depth, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	//
 	// Create the vertices.
 	//
 
-	Vertex::PosNormalTex v[24];
+	Vertex::PosNormalTexTan v[24];
 
 	float w2 = 0.5f*_width;
 	float h2 = 0.5f*_height;
 	float d2 = 0.5f*_depth;
 
 	// Fill in the front face vertex data.
-	v[0] = Vertex::PosNormalTex(XMFLOAT3(-w2, -h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(0.0f, 1.0f));
-	v[1] = Vertex::PosNormalTex(XMFLOAT3(-w2, +h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(0.0f, 0.0f));
-	v[2] = Vertex::PosNormalTex(XMFLOAT3(+w2, +h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(1.0f, 0.0f));
-	v[3] = Vertex::PosNormalTex(XMFLOAT3(+w2, -h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(1.0f, 1.0f));
+	v[0] = Vertex::PosNormalTexTan(XMFLOAT3(-w2, -h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(0.0f, 1.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+	v[1] = Vertex::PosNormalTexTan(XMFLOAT3(-w2, +h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+	v[2] = Vertex::PosNormalTexTan(XMFLOAT3(+w2, +h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(1.0f, 0.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+	v[3] = Vertex::PosNormalTexTan(XMFLOAT3(+w2, -h2, -d2), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(1.0f, 1.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
 
 	// Fill in the back face vertex data.
-	v[4] = Vertex::PosNormalTex(XMFLOAT3(-w2, -h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(1.0f, 1.0f));
-	v[5] = Vertex::PosNormalTex(XMFLOAT3(+w2, -h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(0.0f, 1.0f));
-	v[6] = Vertex::PosNormalTex(XMFLOAT3(+w2, +h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(0.0f, 0.0f));
-	v[7] = Vertex::PosNormalTex(XMFLOAT3(-w2, +h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(1.0f, 0.0f));
+	v[4] = Vertex::PosNormalTexTan(XMFLOAT3(-w2, -h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(1.0f, 1.0f), XMFLOAT4(-1.0f, 0.0f, 0.0f, 1.0f));
+	v[5] = Vertex::PosNormalTexTan(XMFLOAT3(+w2, -h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(0.0f, 1.0f), XMFLOAT4(-1.0f, 0.0f, 0.0f, 1.0f));
+	v[6] = Vertex::PosNormalTexTan(XMFLOAT3(+w2, +h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT4(-1.0f, 0.0f, 0.0f, 1.0f));
+	v[7] = Vertex::PosNormalTexTan(XMFLOAT3(-w2, +h2, +d2), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(1.0f, 0.0f), XMFLOAT4(-1.0f, 0.0f, 0.0f, 1.0f));
 
 	// Fill in the top face vertex data.
-	v[8] = Vertex::PosNormalTex(XMFLOAT3(-w2, +h2, -d2), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f));
-	v[9] = Vertex::PosNormalTex(XMFLOAT3(-w2, +h2, +d2), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f));
-	v[10] = Vertex::PosNormalTex(XMFLOAT3(+w2, +h2, +d2), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f));
-	v[11] = Vertex::PosNormalTex(XMFLOAT3(+w2, +h2, -d2), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 1.0f));
+	v[8] = Vertex::PosNormalTexTan(XMFLOAT3(-w2, +h2, -d2), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+	v[9] = Vertex::PosNormalTexTan(XMFLOAT3(-w2, +h2, +d2), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+	v[10] = Vertex::PosNormalTexTan(XMFLOAT3(+w2, +h2, +d2), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+	v[11] = Vertex::PosNormalTexTan(XMFLOAT3(+w2, +h2, -d2), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
 
 	// Fill in the bottom face vertex data.
-	v[12] = Vertex::PosNormalTex(XMFLOAT3(-w2, -h2, -d2), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(1.0f, 1.0f));
-	v[13] = Vertex::PosNormalTex(XMFLOAT3(+w2, -h2, -d2), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f));
-	v[14] = Vertex::PosNormalTex(XMFLOAT3(+w2, -h2, +d2), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f));
-	v[15] = Vertex::PosNormalTex(XMFLOAT3(-w2, -h2, +d2), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f));
+	v[12] = Vertex::PosNormalTexTan(XMFLOAT3(-w2, -h2, -d2), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), XMFLOAT4(-1.0f, 0.0f, 0.0f, 1.0f));
+	v[13] = Vertex::PosNormalTexTan(XMFLOAT3(+w2, -h2, -d2), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f), XMFLOAT4(-1.0f, 0.0f, 0.0f, 1.0f));
+	v[14] = Vertex::PosNormalTexTan(XMFLOAT3(+w2, -h2, +d2), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT4(-1.0f, 0.0f, 0.0f, 1.0f));
+	v[15] = Vertex::PosNormalTexTan(XMFLOAT3(-w2, -h2, +d2), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f), XMFLOAT4(-1.0f, 0.0f, 0.0f, 1.0f));
 
 	// Fill in the left face vertex data.
-	v[16] = Vertex::PosNormalTex(XMFLOAT3(-w2, -h2, +d2), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f));
-	v[17] = Vertex::PosNormalTex(XMFLOAT3(-w2, +h2, +d2), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f));
-	v[18] = Vertex::PosNormalTex(XMFLOAT3(-w2, +h2, -d2), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 0.0f));
-	v[19] = Vertex::PosNormalTex(XMFLOAT3(-w2, -h2, -d2), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f));
+	v[16] = Vertex::PosNormalTexTan(XMFLOAT3(-w2, -h2, +d2), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f), XMFLOAT4(0.0f, 0.0f, -1.0f, 1.0f));
+	v[17] = Vertex::PosNormalTexTan(XMFLOAT3(-w2, +h2, +d2), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, -1.0f, 1.0f));
+	v[18] = Vertex::PosNormalTexTan(XMFLOAT3(-w2, +h2, -d2), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, -1.0f, 1.0f));
+	v[19] = Vertex::PosNormalTexTan(XMFLOAT3(-w2, -h2, -d2), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), XMFLOAT4(0.0f, 0.0f, -1.0f, 1.0f));
 
 	// Fill in the right face vertex data.
-	v[20] = Vertex::PosNormalTex(XMFLOAT3(+w2, -h2, -d2), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f));
-	v[21] = Vertex::PosNormalTex(XMFLOAT3(+w2, +h2, -d2), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f));
-	v[22] = Vertex::PosNormalTex(XMFLOAT3(+w2, +h2, +d2), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 0.0f));
-	v[23] = Vertex::PosNormalTex(XMFLOAT3(+w2, -h2, +d2), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f));
+	v[20] = Vertex::PosNormalTexTan(XMFLOAT3(+w2, -h2, -d2), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
+	v[21] = Vertex::PosNormalTexTan(XMFLOAT3(+w2, +h2, -d2), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
+	v[22] = Vertex::PosNormalTexTan(XMFLOAT3(+w2, +h2, +d2), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
+	v[23] = Vertex::PosNormalTexTan(XMFLOAT3(+w2, -h2, +d2), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
 
 	_vertices.assign(&v[0], &v[24]);
 
@@ -84,7 +84,7 @@ void Jaraffe::GeometryGenerator::CreateBox(float _width, float _height, float _d
 	_indices.assign(&i[0], &i[36]);
 }
 
-void Jaraffe::GeometryGenerator::CreateSphere(float _radius, UINT _sliceCount, UINT _stackCount, std::vector<Vertex::PosNormalTex>& _vertices, std::vector<UINT>& _indices)
+void Jaraffe::GeometryGenerator::CreateSphere(float _radius, UINT _sliceCount, UINT _stackCount, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	_vertices.clear();
 	_indices.clear();
@@ -96,8 +96,8 @@ void Jaraffe::GeometryGenerator::CreateSphere(float _radius, UINT _sliceCount, U
 	// Poles: note that there will be texture coordinate distortion as there is
 	// not a unique m_Point on the texture map to assign to the pole when mapping
 	// a rectangular texture onto a sphere.
-	Vertex::PosNormalTex topVertex(XMFLOAT3(0.0f, +_radius, 0.0f), XMFLOAT3(0.0f, +1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f));
-	Vertex::PosNormalTex bottomVertex(XMFLOAT3(0.0f, -_radius, 0.0f), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f));
+	Vertex::PosNormalTexTan topVertex(XMFLOAT3(0.0f, +_radius, 0.0f), XMFLOAT3(0.0f, +1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+	Vertex::PosNormalTexTan bottomVertex(XMFLOAT3(0.0f, -_radius, 0.0f), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
 
 	_vertices.push_back(topVertex);
 
@@ -114,15 +114,24 @@ void Jaraffe::GeometryGenerator::CreateSphere(float _radius, UINT _sliceCount, U
 		{
 			float theta = j*thetaStep;
 
-			Vertex::PosNormalTex v;
+			Vertex::PosNormalTexTan v;
 
 			// spherical to cartesian
 			v.Pos.x = _radius*sinf(phi)*cosf(theta);
 			v.Pos.y = _radius*cosf(phi);
 			v.Pos.z = _radius*sinf(phi)*sinf(theta);
 
+			// Partial derivative of P with respect to theta
+			v.Tan.x = -_radius*sinf(phi)*sinf(theta);
+			v.Tan.y = 0.0f;
+			v.Tan.z = +_radius*sinf(phi)*cosf(theta);
+			v.Tan.w = 1.0f;
+
 			XMVECTOR p = XMLoadFloat3(&v.Pos);
 			XMStoreFloat3(&v.Normal, XMVector3Normalize(p));
+
+			XMVECTOR T = XMLoadFloat4(&v.Tan);
+			XMStoreFloat4(&v.Tan, XMVector3Normalize(T));
 
 			v.Tex.x = theta / XM_2PI;
 			v.Tex.y = phi / XM_PI;
@@ -186,7 +195,7 @@ void Jaraffe::GeometryGenerator::CreateSphere(float _radius, UINT _sliceCount, U
 	}
 }
 
-void Jaraffe::GeometryGenerator::CreateGeosphere(float _radius, UINT _numSubdivisions, std::vector<Vertex::PosNormalTex>& _vertices, std::vector<UINT>& _indices)
+void Jaraffe::GeometryGenerator::CreateGeosphere(float _radius, UINT _numSubdivisions, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	// Put a cap on the number of subdivisions.
 	_numSubdivisions = Jaraffe::Util::MathHelper::Min(_numSubdivisions, 5u);
@@ -247,10 +256,19 @@ void Jaraffe::GeometryGenerator::CreateGeosphere(float _radius, UINT _numSubdivi
 
 		_vertices[i].Tex.x = theta / XM_2PI;
 		_vertices[i].Tex.y = phi / XM_PI;
+
+		// Partial derivative of P with respect to theta
+		_vertices[i].Tan.x = -_radius*sinf(phi)*sinf(theta);
+		_vertices[i].Tan.y = 0.0f;
+		_vertices[i].Tan.z = +_radius*sinf(phi)*cosf(theta);
+		_vertices[i].Tan.w = 1.0f;
+
+		XMVECTOR T = XMLoadFloat4(&_vertices[i].Tan);
+		XMStoreFloat4(&_vertices[i].Tan, XMVector3Normalize(T));
 	}
 }
 
-void Jaraffe::GeometryGenerator::CreateCylinder(float _bottomRadius, float _topRadius, float _height, UINT _sliceCount, UINT _stackCount, std::vector<Vertex::PosNormalTex>& _vertices, std::vector<UINT>& _indices)
+void Jaraffe::GeometryGenerator::CreateCylinder(float _bottomRadius, float _topRadius, float _height, UINT _sliceCount, UINT _stackCount, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	_vertices.clear();
 	_indices.clear();
@@ -276,7 +294,7 @@ void Jaraffe::GeometryGenerator::CreateCylinder(float _bottomRadius, float _topR
 		float dTheta = 2.0f*XM_PI / _sliceCount;
 		for (UINT j = 0; j <= _sliceCount; ++j)
 		{
-			Vertex::PosNormalTex vertex;
+			Vertex::PosNormalTexTan vertex;
 
 			float c = cosf(j*dTheta);
 			float s = sinf(j*dTheta);
@@ -305,10 +323,13 @@ void Jaraffe::GeometryGenerator::CreateCylinder(float _bottomRadius, float _topR
 			//  dy/dv = -h
 			//  dz/dv = (r0-r1)*sin(t)
 
+			// This is unit length.
+			vertex.Tan = XMFLOAT4(-s, 0.0f, c, 1.0f);
+
 			float dr = _bottomRadius - _topRadius;
 			XMFLOAT3 bitangent(dr*c, -_height, dr*s);
 
-			XMVECTOR T = XMLoadFloat3(&XMFLOAT3(-s, 0.0f, c));
+			XMVECTOR T = XMLoadFloat4(&vertex.Tan);
 			XMVECTOR B = XMLoadFloat3(&bitangent);
 			XMVECTOR N = XMVector3Normalize(XMVector3Cross(T, B));
 			XMStoreFloat3(&vertex.Normal, N);
@@ -340,7 +361,7 @@ void Jaraffe::GeometryGenerator::CreateCylinder(float _bottomRadius, float _topR
 	BuildCylinderBottomCap(_bottomRadius, _topRadius, _height, _sliceCount, _stackCount, _vertices, _indices);
 }
 
-void Jaraffe::GeometryGenerator::CreateGrid(float _width, float _depth, UINT _m, UINT _n, std::vector<Vertex::PosNormalTex>& _vertices, std::vector<UINT>& _indices)
+void Jaraffe::GeometryGenerator::CreateGrid(float _width, float _depth, UINT _m, UINT _n, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	UINT vertexCount = _m*_n;
 	UINT faceCount = (_m - 1)*(_n - 1) * 2;
@@ -366,8 +387,9 @@ void Jaraffe::GeometryGenerator::CreateGrid(float _width, float _depth, UINT _m,
 		{
 			float x = -halfWidth + j*dx;
 
-			_vertices[i*_n + j].Pos = XMFLOAT3(x, 0.0f, z);
-			_vertices[i*_n + j].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
+			_vertices[i*_n + j].Pos		= XMFLOAT3(x, 0.0f, z);
+			_vertices[i*_n + j].Normal	= XMFLOAT3(0.0f, 1.0f, 0.0f);
+			_vertices[i*_n + j].Tan		= XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 
 			// Stretch texture over grid.
 			_vertices[i*_n + j].Tex.x = j*du;
@@ -400,31 +422,35 @@ void Jaraffe::GeometryGenerator::CreateGrid(float _width, float _depth, UINT _m,
 	}
 }
 
-void Jaraffe::GeometryGenerator::CreateFullscreenQuad(std::vector<Vertex::PosNormalTex>& _vertices, std::vector<UINT>& _indices)
+void Jaraffe::GeometryGenerator::CreateFullscreenQuad(std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	_vertices.resize(4);
 	_indices.resize(6);
 
 	// Position coordinates specified in NDC space.
-	_vertices[0] = Vertex::PosNormalTex(
+	_vertices[0] = Vertex::PosNormalTexTan(
 		XMFLOAT3(-1.0f, -1.0f, 0.0f),
 		XMFLOAT3(0.0f, 0.0f, -1.0f),
-		XMFLOAT2(0.0f, 1.0f));
+		XMFLOAT2(0.0f, 1.0f),
+		XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
 
-	_vertices[1] = Vertex::PosNormalTex(
+	_vertices[1] = Vertex::PosNormalTexTan(
 		XMFLOAT3(-1.0f, +1.0f, 0.0f),
 		XMFLOAT3(0.0f, 0.0f, -1.0f),
-		XMFLOAT2(0.0f, 0.0f));
+		XMFLOAT2(0.0f, 0.0f),
+		XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
 
-	_vertices[2] = Vertex::PosNormalTex(
+	_vertices[2] = Vertex::PosNormalTexTan(
 		XMFLOAT3(+1.0f, +1.0f, 0.0f),
 		XMFLOAT3(0.0f, 0.0f, -1.0f),
-		XMFLOAT2(1.0f, 0.0f));
+		XMFLOAT2(1.0f, 0.0f),
+		XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
 
-	_vertices[3] = Vertex::PosNormalTex(
+	_vertices[3] = Vertex::PosNormalTexTan(
 		XMFLOAT3(+1.0f, -1.0f, 0.0f),
 		XMFLOAT3(0.0f, 0.0f, -1.0f),
-		XMFLOAT2(1.0f, 1.0f));
+		XMFLOAT2(1.0f, 1.0f),
+		XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
 
 	_indices[0] = 0;
 	_indices[1] = 1;
@@ -435,10 +461,10 @@ void Jaraffe::GeometryGenerator::CreateFullscreenQuad(std::vector<Vertex::PosNor
 	_indices[5] = 3;
 }
 
-void Jaraffe::GeometryGenerator::Subdivide(std::vector<Vertex::PosNormalTex>& _vertices, std::vector<UINT>& _indices)
+void Jaraffe::GeometryGenerator::Subdivide(std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	// Save a copy of the input geometry.
-	std::vector<Vertex::PosNormalTex> inputCopyVertices;
+	std::vector<Vertex::PosNormalTexTan> inputCopyVertices;
 	std::vector<UINT> inputCopyIndices;
 
 	inputCopyVertices.assign(_vertices.begin(), _vertices.end());
@@ -460,15 +486,15 @@ void Jaraffe::GeometryGenerator::Subdivide(std::vector<Vertex::PosNormalTex>& _v
 	UINT numTris = inputCopyIndices.size() / 3;
 	for (UINT i = 0; i < numTris; ++i)
 	{
-		Vertex::PosNormalTex v0 = inputCopyVertices[inputCopyIndices[i * 3 + 0]];
-		Vertex::PosNormalTex v1 = inputCopyVertices[inputCopyIndices[i * 3 + 1]];
-		Vertex::PosNormalTex v2 = inputCopyVertices[inputCopyIndices[i * 3 + 2]];
+		Vertex::PosNormalTexTan v0 = inputCopyVertices[inputCopyIndices[i * 3 + 0]];
+		Vertex::PosNormalTexTan v1 = inputCopyVertices[inputCopyIndices[i * 3 + 1]];
+		Vertex::PosNormalTexTan v2 = inputCopyVertices[inputCopyIndices[i * 3 + 2]];
 
 		//
 		// Generate the midpoints.
 		//
 
-		Vertex::PosNormalTex m0, m1, m2;
+		Vertex::PosNormalTexTan m0, m1, m2;
 
 		// For subdivision, we just care about the position component.  We derive the other
 		// vertex components in CreateGeosphere.
@@ -517,7 +543,7 @@ void Jaraffe::GeometryGenerator::Subdivide(std::vector<Vertex::PosNormalTex>& _v
 	}
 }
 
-void Jaraffe::GeometryGenerator::BuildCylinderTopCap(float _bottomRadius, float _topRadius, float _height, UINT _sliceCount, UINT _stackCount, std::vector<Vertex::PosNormalTex>& _vertices, std::vector<UINT>& _indices)
+void Jaraffe::GeometryGenerator::BuildCylinderTopCap(float _bottomRadius, float _topRadius, float _height, UINT _sliceCount, UINT _stackCount, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	UINT baseIndex = (UINT)_vertices.size();
 
@@ -535,11 +561,11 @@ void Jaraffe::GeometryGenerator::BuildCylinderTopCap(float _bottomRadius, float 
 		float v = z / _height + 0.5f;
 		float u = x / _height + 0.5f;
 
-		_vertices.push_back(Vertex::PosNormalTex(x, y, z, 0.0f, 1.0f, 0.0f, u, v));
+		_vertices.push_back(Vertex::PosNormalTexTan(x, y, z, 0.0f, 1.0f, 0.0f, u, v, 1.0f, 0.0f, 0.0f, 1.0f));
 	}
 
 	// Cap center vertex.
-	_vertices.push_back(Vertex::PosNormalTex(0.0f, y, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 0.5f));
+	_vertices.push_back(Vertex::PosNormalTexTan(0.0f, y, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f));
 
 	// Index of center vertex.
 	UINT centerIndex = (UINT)_vertices.size() - 1;
@@ -552,7 +578,7 @@ void Jaraffe::GeometryGenerator::BuildCylinderTopCap(float _bottomRadius, float 
 	}
 }
 
-void Jaraffe::GeometryGenerator::BuildCylinderBottomCap(float _bottomRadius, float _topRadius, float _height, UINT _sliceCount, UINT _stackCount, std::vector<Vertex::PosNormalTex>& _vertices, std::vector<UINT>& _indices)
+void Jaraffe::GeometryGenerator::BuildCylinderBottomCap(float _bottomRadius, float _topRadius, float _height, UINT _sliceCount, UINT _stackCount, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	// 
 	// Build bottom cap.
@@ -573,11 +599,11 @@ void Jaraffe::GeometryGenerator::BuildCylinderBottomCap(float _bottomRadius, flo
 		float u = x / _height + 0.5f;
 		float v = z / _height + 0.5f;
 
-		_vertices.push_back(Vertex::PosNormalTex(x, y, z, 0.0f, -1.0f, 0.0f, u, v));
+		_vertices.push_back(Vertex::PosNormalTexTan(x, y, z, 0.0f, -1.0f, 0.0f, u, v, 1.0f, 0.0f, 0.0f, 1.0f));
 	}
 
 	// Cap center vertex.
-	_vertices.push_back(Vertex::PosNormalTex(0.0f, y, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.5f));
+	_vertices.push_back(Vertex::PosNormalTexTan(0.0f, y, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f));
 
 	// Cache the index of center vertex.
 	UINT centerIndex = (UINT)_vertices.size() - 1;

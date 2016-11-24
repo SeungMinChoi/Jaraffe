@@ -57,10 +57,10 @@ Jaraffe::BasicEffect::BasicEffect(ID3D11Device * device, const std::wstring & fi
 	Light2TexTech = mFX->GetTechniqueByName("Light2Tex");
 	Light3TexTech = mFX->GetTechniqueByName("Light3Tex");
 
-	Light0TexAlphaClipTech = mFX->GetTechniqueByName("Light0TexAlphaClip");
-	Light1TexAlphaClipTech = mFX->GetTechniqueByName("Light1TexAlphaClip");
-	Light2TexAlphaClipTech = mFX->GetTechniqueByName("Light2TexAlphaClip");
-	Light3TexAlphaClipTech = mFX->GetTechniqueByName("Light3TexAlphaClip");
+	Light0TexNorma = mFX->GetTechniqueByName("Light0TexNormal");
+	Light1TexNorma = mFX->GetTechniqueByName("Light1TexNormal");
+	Light2TexNorma = mFX->GetTechniqueByName("Light2TexNormal");
+	Light3TexNorma = mFX->GetTechniqueByName("Light3TexNormal");
 
 	WorldViewProj		= mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
 	World				= mFX->GetVariableByName("gWorld")->AsMatrix();
@@ -70,6 +70,7 @@ Jaraffe::BasicEffect::BasicEffect(ID3D11Device * device, const std::wstring & fi
 	DirLights			= mFX->GetVariableByName("gDirLights");
 	Mat					= mFX->GetVariableByName("gMaterial");
 	DiffuseMap			= mFX->GetVariableByName("gDiffuseMap")->AsShaderResource();
+	NormalMap			= mFX->GetVariableByName("gNormalMap")->AsShaderResource();
 
 	Time				= mFX->GetVariableByName("gTime")->AsScalar();
 }

@@ -45,7 +45,7 @@ HRESULT Jaraffe::CScene::Init()
 			cast->Ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 			cast->Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 			cast->Specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-			cast->Direction = XMFLOAT3(-0.707f, 0.0f, 0.707f);
+			cast->Direction = XMFLOAT3(-0.707f, -0.30f, 0.707f);
 		}
 
 		GameObject* m_DirectionalLight = GameObject::Create();
@@ -60,6 +60,7 @@ HRESULT Jaraffe::CScene::Init()
 		Jaraffe::Material* pMat = new Jaraffe::Material();
 		Jaraffe::Texture* pTex = new Jaraffe::Texture();
 		pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/WireFence.dds"));
+
 		pMat->m_RSState = Jaraffe::RenderStates::GetRasterizerStates()->BackFaceCull();
 		pMat->m_MainTexture = pTex;
 
@@ -87,10 +88,13 @@ HRESULT Jaraffe::CScene::Init()
 	// ---- T E S T _ B O X 2 ---- //
 	{
 		Jaraffe::Material* pMat = new Jaraffe::Material();
-		Jaraffe::Texture* pTex = new Jaraffe::Texture();
-		pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/darkbrickdxt1.dds"));
-		pMat->m_RSState = Jaraffe::RenderStates::GetRasterizerStates()->BackFaceCull();
-		pMat->m_MainTexture = pTex;
+		{
+			Jaraffe::Texture* pTex = new Jaraffe::Texture();
+			pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/darkbrickdxt1.dds"));
+
+			pMat->m_RSState = Jaraffe::RenderStates::GetRasterizerStates()->BackFaceCull();
+			pMat->m_MainTexture = pTex;
+		}
 
 		MeshRenderer* pBoxMeshRenderer = new MeshRenderer();
 		pBoxMeshRenderer->SetMaterial(pMat);
@@ -103,6 +107,43 @@ HRESULT Jaraffe::CScene::Init()
 
 		Transform* transform = new Transform();
 		transform->SetPosition(3.0f, 0.0f, 0.0f);
+		transform->SetRotation(0.0f, 0.0f, 0.0f);
+
+		GameObject* m_pTestBox = GameObject::Create();
+		m_pTestBox->InsertComponent(transform);
+		m_pTestBox->InsertComponent(pBoxMeshRenderer);
+		m_pTestBox->InsertComponent(pBoxMesh);
+
+		m_ObjectList.push_back(m_pTestBox);
+	}
+
+	// ---- T E S T _ B O X 3 ---- //
+	{
+		Jaraffe::Material* pMat = new Jaraffe::Material();
+		{
+			Jaraffe::Texture* pTex = new Jaraffe::Texture();
+			pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/gravel_a.dds"));
+
+			Jaraffe::Texture* pTexNormal = new Jaraffe::Texture();
+			pTexNormal->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/TestBumpMap.png"));
+			//pTexNormal->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/TestBumpMap2.dds"));
+
+			pMat->m_RSState = Jaraffe::RenderStates::GetRasterizerStates()->BackFaceCull();
+			pMat->m_MainTexture = pTex;
+			pMat->m_BumpTexture = pTexNormal;
+		}
+
+		MeshRenderer* pBoxMeshRenderer = new MeshRenderer();
+		pBoxMeshRenderer->SetMaterial(pMat);
+
+		Mesh* pBoxMesh = new Mesh();
+		float w2 = 1.0f;
+		float h2 = 1.0f;
+		float d2 = 1.0f;
+		Jaraffe::GeometryGenerator::CreateBox(w2, h2, d2, pBoxMesh->GetVertices(), pBoxMesh->GetIndices());
+
+		Transform* transform = new Transform();
+		transform->SetPosition(0.0f, 0.0f, 0.0f);
 		transform->SetRotation(0.0f, 0.0f, 0.0f);
 
 		GameObject* m_pTestBox = GameObject::Create();

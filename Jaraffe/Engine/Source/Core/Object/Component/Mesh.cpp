@@ -16,8 +16,8 @@ Jaraffe::Component::Mesh::~Mesh()
 void Jaraffe::Component::Mesh::Init()
 {
 	// 1)
-	m_pInputLayout	= InputLayouts::PosNormalTex;
-	m_Stride		= sizeof(Vertex::PosNormalTex);
+	m_pInputLayout	= InputLayouts::PosNormalTexTan;
+	m_Stride		= sizeof(Vertex::PosNormalTexTan);
 	m_VertexCount	= (UINT)m_pVertices.size();
 	m_IndexCount	= (UINT)m_pIndices.size();
 

@@ -22,17 +22,19 @@ cbuffer cbPerObject
 
 struct VertexIn
 {
-	float3 PosL    : POSITION;
-	float3 NormalL : NORMAL;
-	float2 Tex     : TEXCOORD;
+	float3 PosL		: POSITION;
+	float3 NormalL	: NORMAL;
+	float2 Tex		: TEXCOORD;
+	float4 TangentL : TANGENT;
 };
 
 struct VertexOut
 {
-	float4 PosH    : SV_POSITION;
-	float3 PosW    : POSITION;
-	float3 NormalW : NORMAL;
-	float2 Tex     : TEXCOORD;
+	float4 PosH		: SV_POSITION;
+	float3 PosW		: POSITION;
+	float3 NormalW	: NORMAL;
+	float4 TangentW : TANGENT;
+	float2 Tex		: TEXCOORD;
 };
 
 SamplerState samAnisotropic
@@ -44,15 +46,24 @@ SamplerState samAnisotropic
 	AddressV = WRAP;
 };
 
+SamplerState samLinear
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = WRAP;
+	AddressV = WRAP;
+};
+
 Texture2D gDiffuseMap;
+Texture2D gNormalMap;
 
 VertexOut VS(VertexIn vin)
 {
 	VertexOut vout;
 
 	// Transform to world space space.
-	vout.PosW = mul(float4(vin.PosL, 1.0f), gWorld).xyz;
-	vout.NormalW = mul(vin.NormalL, (float3x3)gWorldInvTranspose);
+	vout.PosW		= mul(float4(vin.PosL, 1.0f), gWorld).xyz;
+	vout.NormalW	= mul(vin.NormalL, (float3x3)gWorldInvTranspose);
+	vout.TangentW	= mul(vin.TangentL, gWorld);
 
 	// Transform to homogeneous clip space.
 	vout.PosH = mul(float4(vin.PosL, 1.0f), gWorldViewProj);
@@ -63,7 +74,7 @@ VertexOut VS(VertexIn vin)
 	return vout;
 }
 
-float4 PS(VertexOut pin, uniform int gLightCount, uniform bool gUseTexure, uniform bool gAlphaClip) : SV_Target
+float4 PS(VertexOut pin, uniform int gLightCount, uniform bool gUseTexure, uniform bool gUseNomalMap) : SV_Target
 {
 	// Interpolating normal can unnormalize it, so normalize it.
     pin.NormalW = normalize(pin.NormalW);
@@ -84,13 +95,21 @@ float4 PS(VertexOut pin, uniform int gLightCount, uniform bool gUseTexure, unifo
 		// Sample texture.
 		texColor = gDiffuseMap.Sample( samAnisotropic, pin.Tex );
 
-		if (gAlphaClip)
-		{
-			// Discard pixel if texture alpha < 0.1.  Note that we do this
-			// test as soon as possible so that we can potentially exit the shader 
-			// early, thereby skipping the rest of the shader code.
-			clip(texColor.a - 0.1f);
-		}
+		// Discard pixel if texture alpha < 0.1.  Note that we do this
+		// test as soon as possible so that we can potentially exit the shader 
+		// early, thereby skipping the rest of the shader code.
+		clip(texColor.a - 0.1f);
+	}
+
+	//
+	// Normal mapping
+	//
+
+	float3 bumpedNormalW;
+	if (gUseNomalMap)
+	{
+		float3 normalMapSample = gNormalMap.Sample(samLinear, pin.Tex).rgb;
+		bumpedNormalW = NormalSampleToWorldSpace(normalMapSample, pin.NormalW, pin.TangentW);
 	}
 	 
 	//
@@ -110,8 +129,10 @@ float4 PS(VertexOut pin, uniform int gLightCount, uniform bool gUseTexure, unifo
 		for(int i = 0; i < gLightCount; ++i)
 		{
 			float4 A, D, S;
-			ComputeDirectionalLight(gMaterial, gDirLights[i], pin.NormalW, toEye, 
-				A, D, S);
+			if (gUseNomalMap)
+				ComputeDirectionalLight(gMaterial, gDirLights[i], bumpedNormalW, toEye, A, D, S);
+			else
+				ComputeDirectionalLight(gMaterial, gDirLights[i], pin.NormalW, toEye, A, D, S);
 
 			ambient += A;
 			diffuse += D;
@@ -198,7 +219,7 @@ technique11 Light3Tex
 	}
 }
 
-technique11 Light0TexAlphaClip
+technique11 Light0TexNormal
 {
 	pass P0
 	{
@@ -208,7 +229,7 @@ technique11 Light0TexAlphaClip
 	}
 }
 
-technique11 Light1TexAlphaClip
+technique11 Light1TexNormal
 {
 	pass P0
 	{
@@ -218,7 +239,7 @@ technique11 Light1TexAlphaClip
 	}
 }
 
-technique11 Light2TexAlphaClip
+technique11 Light2TexNormal
 {
 	pass P0
 	{
@@ -228,7 +249,7 @@ technique11 Light2TexAlphaClip
 	}
 }
 
-technique11 Light3TexAlphaClip
+technique11 Light3TexNormal
 {
 	pass P0
 	{

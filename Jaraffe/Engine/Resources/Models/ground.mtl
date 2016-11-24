@@ -11,4 +11,4 @@ newmtl floor
 	Kd 0.5882 0.5882 0.5882
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Kd floor.dds
+	map_Kd gravel_a.dds

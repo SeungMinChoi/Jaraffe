@@ -8,6 +8,7 @@ namespace Vertex
 	{
 		PosColor,
 		PosNormalTex,
+		PosNormalTexTan,
 	};
 
 	struct BasicVertex
@@ -50,6 +51,30 @@ namespace Vertex
 		XMFLOAT3 Normal;
 		XMFLOAT2 Tex;
 	};
+
+	// Basic 48Byte Struct
+	struct PosNormalTexTan : BasicVertex
+	{
+		PosNormalTexTan() : BasicVertex() {}
+		PosNormalTexTan(XMFLOAT3 pos, XMFLOAT3 normal, XMFLOAT2 tex, XMFLOAT4 tan)
+			: BasicVertex(),
+			Pos(pos), Normal(normal), Tex(tex), Tan(tan) {}
+		PosNormalTexTan(XMFLOAT3& pos, XMFLOAT3& normal, XMFLOAT2& tex, XMFLOAT4& tan)
+			: BasicVertex(),
+			Pos(pos), Normal(normal), Tex(tex), Tan(tan) {}
+		PosNormalTexTan(
+			float px, float py, float pz,
+			float nx, float ny, float nz,
+			float u, float v,
+			float tx, float ty, float tz, float tw)
+			: BasicVertex(),
+			Pos(px, py, pz), Normal(nx, ny, nz), Tex(u, v), Tan(tx, ty, tz, tw) {}
+
+		XMFLOAT3 Pos;
+		XMFLOAT3 Normal;
+		XMFLOAT2 Tex;
+		XMFLOAT4 Tan;
+	};
 }
 
 class InputLayoutDesc
@@ -57,6 +82,7 @@ class InputLayoutDesc
 public:
 	static const D3D11_INPUT_ELEMENT_DESC PosColor[2];
 	static const D3D11_INPUT_ELEMENT_DESC PosNormalTex[3];
+	static const D3D11_INPUT_ELEMENT_DESC PosNormalTexTan[4];
 };
 
 class InputLayouts
@@ -67,6 +93,7 @@ public:
 
 	static ID3D11InputLayout* PosColor;
 	static ID3D11InputLayout* PosNormalTex;
+	static ID3D11InputLayout* PosNormalTexTan;
 };
 
 }

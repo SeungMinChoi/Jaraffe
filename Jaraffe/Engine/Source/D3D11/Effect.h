@@ -58,6 +58,7 @@ public:
 	void SetDirLights(const void* lights) { DirLights->SetRawValue(lights, 0, 3 * sizeof(Jaraffe::Light::DirectionalLight)); }
 	void SetMaterial(const Jaraffe::Light::Material& mat) { Mat->SetRawValue(&mat, 0, sizeof(Jaraffe::Light::Material)); }
 	void SetDiffuseMap(ID3D11ShaderResourceView* tex) { DiffuseMap->SetResource(tex); }
+	void SetNormalMap(ID3D11ShaderResourceView* tex) { NormalMap->SetResource(tex); }
 	void SetTime(const float& f) { Time->SetFloat(f); }
 
 	ID3DX11EffectTechnique* Light1Tech;
@@ -69,10 +70,10 @@ public:
 	ID3DX11EffectTechnique* Light2TexTech;
 	ID3DX11EffectTechnique* Light3TexTech;
 
-	ID3DX11EffectTechnique* Light0TexAlphaClipTech;
-	ID3DX11EffectTechnique* Light1TexAlphaClipTech;
-	ID3DX11EffectTechnique* Light2TexAlphaClipTech;
-	ID3DX11EffectTechnique* Light3TexAlphaClipTech;
+	ID3DX11EffectTechnique* Light0TexNorma;
+	ID3DX11EffectTechnique* Light1TexNorma;
+	ID3DX11EffectTechnique* Light2TexNorma;
+	ID3DX11EffectTechnique* Light3TexNorma;
 
 	ID3DX11EffectMatrixVariable* WorldViewProj;
 	ID3DX11EffectMatrixVariable* World;
@@ -84,6 +85,7 @@ public:
 	ID3DX11EffectScalarVariable* Time;
 
 	ID3DX11EffectShaderResourceVariable* DiffuseMap;
+	ID3DX11EffectShaderResourceVariable* NormalMap;
 };
 
 #pragma endregion

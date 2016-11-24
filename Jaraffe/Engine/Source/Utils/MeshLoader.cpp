@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MeshLoader.h"
 
-bool Jaraffe::MeshLoader::OBJLoad(IN const std::wstring& _filePath, OUT std::vector<Vertex::PosNormalTex>& _vertices, OUT std::vector<UINT>& _indices, OUT Jaraffe::Material& _material)
+bool Jaraffe::MeshLoader::OBJLoad(IN const std::wstring& _filePath, OUT std::vector<Vertex::PosNormalTexTan>& _vertices, OUT std::vector<UINT>& _indices, OUT Jaraffe::Material& _material)
 {
 	// 버텍스 버퍼를 만들기위한 임시 버퍼들...
 	std::vector<XMFLOAT3>	m_V;
@@ -132,7 +132,7 @@ bool Jaraffe::MeshLoader::OBJLoad(IN const std::wstring& _filePath, OUT std::vec
 	// 정점 만들기.
 	for (int i = 0; i < VertsTotalCnt; ++i)
 	{
-		Vertex::PosNormalTex vertexTemp;
+		Vertex::PosNormalTexTan vertexTemp;
 		vertexTemp.Pos = m_V[PosIndex[i]];
 		vertexTemp.Tex = m_VT[TexIndex[i]];
 		vertexTemp.Normal = m_VN[NormalIndex[i]];
@@ -212,7 +212,7 @@ void Jaraffe::MeshLoader::ProcessMtl(IN LPCWSTR _wfilename, OUT Jaraffe::Materia
 	fileIn.close();
 }
 
-void Jaraffe::MeshLoader::ComputeNomalAndTangent(IN const int& _triangleCnt, IN const int& _vertexCnt, OUT std::vector<Vertex::PosNormalTex>& _vertices, OUT std::vector<UINT>& _indices)
+void Jaraffe::MeshLoader::ComputeNomalAndTangent(IN const int& _triangleCnt, IN const int& _vertexCnt, OUT std::vector<Vertex::PosNormalTexTan>& _vertices, OUT std::vector<UINT>& _indices)
 {
 	std::vector<XMFLOAT3> tempNormal;
 
@@ -297,9 +297,9 @@ void Jaraffe::MeshLoader::ComputeNomalAndTangent(IN const int& _triangleCnt, IN 
 		_vertices[i].Normal.y = XMVectorGetY(normalSum);
 		_vertices[i].Normal.z = XMVectorGetZ(normalSum);
 
-		//vertices[i].tangent.x = XMVectorGetX(tangentSum);
-		//vertices[i].tangent.y = XMVectorGetY(tangentSum);
-		//vertices[i].tangent.z = XMVectorGetZ(tangentSum);
+		_vertices[i].Tan.x = XMVectorGetX(tangentSum);
+		_vertices[i].Tan.y = XMVectorGetY(tangentSum);
+		_vertices[i].Tan.z = XMVectorGetZ(tangentSum);
 
 		normalSum = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 		tangentSum = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
