@@ -1,10 +1,10 @@
 #pragma once
 
-namespace Jaraffe 
+namespace JF 
 {
 
 // TODO : 임시 셋팅.
-class Material : public Jaraffe::Object
+class Material : public JF::Object
 {
 //=============================================================================
 // Constructor/Destructor)
@@ -17,9 +17,9 @@ public:
 // Public Members)
 //=============================================================================
 public:
-	Jaraffe::Light::Material	m_Material;
-	Jaraffe::Texture*			m_MainTexture	= nullptr;
-	Jaraffe::Texture*			m_BumpTexture	= nullptr;
+	JF::Light::Material	m_Material;
+	JF::Texture*			m_MainTexture	= nullptr;
+	JF::Texture*			m_BumpTexture	= nullptr;
 
 	ID3D11RasterizerState*		m_RSState		= nullptr;
 	ID3D11BlendState*			m_BlendState	= nullptr;

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Jaraffe
+namespace JF
 {
 
 class Texture

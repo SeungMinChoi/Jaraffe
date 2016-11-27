@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Jaraffe
+namespace JF
 {
 namespace Component
 {
@@ -37,7 +37,7 @@ public:
 // public Functions) 
 //=============================================================================
 public:
-	std::vector<Jaraffe::Vertex::PosNormalTexTan>&	GetVertices()	{ return m_pVertices; }
+	std::vector<JF::Vertex::PosNormalTexTan>&	GetVertices()	{ return m_pVertices; }
 	std::vector<UINT>&								GetIndices()	{ return m_pIndices; }
 
 	ID3D11InputLayout*	GetInputLayout()	{ return m_pInputLayout; }
@@ -55,7 +55,7 @@ protected:
 	UINT											m_VertexCount;
 	UINT											m_IndexCount;
 
-	std::vector<Jaraffe::Vertex::PosNormalTexTan>	m_pVertices;
+	std::vector<JF::Vertex::PosNormalTexTan>		m_pVertices;
 	std::vector<UINT>								m_pIndices;
 
 	ID3D11Buffer*									m_pVB;			// Vertex Buffer

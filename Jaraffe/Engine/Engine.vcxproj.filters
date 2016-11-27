@@ -7,11 +7,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\RHI\D3D11\D3DDevice.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="App\Main_Win.cpp" />
-    <ClCompile Include="Source\Scene\Scene.cpp" />
-    <ClCompile Include="Source\Utils\GameTimer.cpp" />
     <ClCompile Include="Source\D3D11\Vertex.cpp" />
     <ClCompile Include="Source\D3D11\Effect.cpp" />
     <ClCompile Include="Source\Utils\D3DUtil.cpp" />
@@ -30,19 +26,22 @@
     <ClCompile Include="Source\Core\Object\Object.cpp" />
     <ClCompile Include="Source\Core\Object\Material.cpp" />
     <ClCompile Include="Source\Core\Object\Texture.cpp" />
-    <ClCompile Include="Source\PhysX\PhysXDevice.cpp" />
     <ClCompile Include="Source\Core\Object\Component\ColisionBox.cpp" />
     <ClCompile Include="Source\Core\Object\Component\Colision.cpp" />
     <ClCompile Include="Source\Utils\GeometryGenerator.cpp" />
     <ClCompile Include="Source\Utils\MeshLoader.cpp" />
-    <ClCompile Include="Source\D3D11\Input.cpp" />
     <ClCompile Include="Source\Core\Object\Component\SkyBox.cpp" />
+    <ClCompile Include="App\JFWindowsApp.cpp" />
+    <ClCompile Include="Source\Core\Platform\PlatformWindow\OS\JFPlatformWindows.cpp" />
+    <ClCompile Include="Source\Core\Common\Timer\GameTimer.cpp" />
+    <ClCompile Include="Source\Core\Device\DirectX11\JFDeviceDirectX11.cpp" />
+    <ClCompile Include="Source\Core\PhysX\PhysXDevice.cpp" />
+    <ClCompile Include="Source\Core\Scene\Scene.cpp" />
+    <ClCompile Include="Source\Core\Manager\Input\Input.cpp" />
+    <ClCompile Include="FrameworkMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\RHI\D3D11\D3DDevice.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Source\Scene\Scene.h" />
-    <ClInclude Include="Source\Utils\GameTimer.h" />
     <ClInclude Include="Source\D3D11\Vertex.h" />
     <ClInclude Include="Source\D3D11\Effect.h" />
     <ClInclude Include="Source\Utils\D3DUtil.h" />
@@ -50,7 +49,6 @@
     <ClInclude Include="Source\D3D11\RenderStates.h" />
     <ClInclude Include="Source\Core\Object\Component\Transform.h" />
     <ClInclude Include="Source\Core\Object\Component\Camera.h" />
-    <ClInclude Include="Source\Core\GenericPlatform\GenericPlatform.h" />
     <ClInclude Include="Source\Core\Object\Component\Renderer.h" />
     <ClInclude Include="Source\Core\Object\Component\MeshRenderer.h" />
     <ClInclude Include="Source\Core\Object\Component\Light.h" />
@@ -63,14 +61,25 @@
     <ClInclude Include="Source\Core\Object\Object.h" />
     <ClInclude Include="Source\Core\Object\Material.h" />
     <ClInclude Include="Source\Core\Object\Texture.h" />
-    <ClInclude Include="Source\PhysX\PhysXDevice.h" />
     <ClInclude Include="Source\Core\Object\Component\ColisionBox.h" />
     <ClInclude Include="Source\Core\Object\Component\Colision.h" />
     <ClInclude Include="Source\Utils\GeometryGenerator.h" />
     <ClInclude Include="Source\Utils\MeshLoader.h" />
-    <ClInclude Include="Source\D3D11\Input.h" />
-    <ClInclude Include="Source\D3D11\InterfacePointers.h" />
     <ClInclude Include="Source\Core\Object\Component\SkyBox.h" />
+    <ClInclude Include="Source\Core\Common\Exception\JFException.h" />
+    <ClInclude Include="App\JFWindowsApp.h" />
+    <ClInclude Include="Source\Core\Platform\PlatformWindow\OS\JFPlatformWindows.h" />
+    <ClInclude Include="Source\Core\Common\GenericPlatformType.h" />
+    <ClInclude Include="Source\Core\Common\GlobalValues.h" />
+    <ClInclude Include="Source\Core\Common\Timer\GameTimer.h" />
+    <ClInclude Include="Source\Core\Device\DirectX11\InterfacePointers.h" />
+    <ClInclude Include="Source\Core\Device\DirectX11\JFDeviceDirectX11.h" />
+    <ClInclude Include="Source\Core\Common\Utile\JFUtile.h" />
+    <ClInclude Include="Source\Core\PhysX\PhysXDevice.h" />
+    <ClInclude Include="Source\Core\Scene\Scene.h" />
+    <ClInclude Include="Source\Core\Manager\Input\Input.h" />
+    <ClInclude Include="App\JFApp.h" />
+    <ClInclude Include="Source\Core\Common\ForwardDeclaration.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Source\Shader\Basic.fx" />

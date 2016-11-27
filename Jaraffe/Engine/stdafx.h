@@ -31,18 +31,6 @@
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 #define STRICT							// Use strict declarations for Windows types
 
-// Windows Header Files:
-#include <windows.h>
-#include <windowsx.h>
-#include <commctrl.h>
-#include <psapi.h>
-
-// C RunTime Header Files
-#include <stdlib.h>
-#include <malloc.h>
-#include <memory.h>
-#include <tchar.h>
-
 // C++ Standard Library Header Files
 #include <functional>
 #include <string>
@@ -59,10 +47,30 @@
 #include <algorithm>
 #include <unordered_map>
 #include <float.h>
+#include <unordered_set>
 
 // MSVC COM Support
 #include <comip.h>
 #include <comdef.h>
+
+// C RunTime Header Files
+#include <stdlib.h>
+#include <memory.h>
+#include <tchar.h>
+
+// Windows Header Files:
+#include <windows.h>
+#include <windowsx.h>
+#include <commctrl.h>
+#include <psapi.h>
+
+//=============================================================================
+// 1) 3rdPartySDK
+//=============================================================================
+
+// JF Project
+#include "JFCommonClasses.h"
+#include "JFObjectClasses.h"
 
 // DirectX11
 #pragma warning( push )
@@ -72,66 +80,84 @@
 #include <D3Dcompiler.h>
 #include <DirectXMath.h>
 #include <xnamath.h>
+
+#include "d3dx11effect.h"
 #pragma warning( pop )
 
-// DirectX11 Utile
-#include "d3dx11effect.h"
-
-// PhsyX
-#include <unordered_set>
-
+// Physice
 #include "PxPhysics.h"
 #include "PxPhysicsAPI.h"
 
-//Debug 
-#if defined(DEBUG) || defined(_DEBUG)
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
-#endif
+//=============================================================================
+// 2) Common
+//=============================================================================
+#include "Source/Core/Common/GlobalValues.h"
+#include "Source/Core/Common/Exception/JFException.h"
+#include "Source/Core/Common/Utile/JFUtile.h"
+#include "Source/Core/Common/Timer/GameTimer.h"
+#include "Source/Core/Common/GenericPlatformType.h"
+#include "Source/Core/Common/ForwardDeclaration.h"
 
-// Boost
+//=============================================================================
+// 3) Manager
+//=============================================================================
+#include "Source/Core/Manager/Input/Input.h"
 
-// Defines
-#include "JFCommonClasses.h"
+//=============================================================================
+// 4) Platforms
+//=============================================================================
+#include "Source/Core/Platform/PlatformWindow/OS/JFPlatformWindows.h"
 
-//
-#include "JFObjectClasses.h"
+//=============================================================================
+// 5) Device
+//=============================================================================
 
-// Platform
-#include "Source/Core/GenericPlatform/GenericPlatform.h"
+// DirectX11
+#include "Source/Core/Device/DirectX11/InterfacePointers.h"
+#include "Source/Core/Device/DirectX11/JFDeviceDirectX11.h"
 
-// Interface
+//=============================================================================
+// 6) PhysX Mapping Classes
+//=============================================================================
+#include "Source/Core/PhysX/PhysXDevice.h"
 
-// 
-#include "Source/D3D11/InterfacePointers.h"
+//=============================================================================
+// 7) Utiles
+//=============================================================================
 #include "Source/D3D11/LightHelper.h"
 #include "Source/D3D11/Effect.h"
 #include "Source/D3D11/Vertex.h"
 #include "Source/D3D11/RenderStates.h"
 #include "Source/D3D11/TextureMgr.h"
-#include "Source/D3D11/Input.h"
 
-// Renderer
-#include "Source/RHI/D3D11/D3DDevice.h"
-
-// Utils
-#include "Source/Utils/GameTimer.h"
 #include "Source/Utils/D3DUtil.h"
 #include "Source/Utils/MathHelper.h"
 #include "Source/Utils/GeometryGenerator.h"
 #include "Source/Utils/MeshLoader.h"
 
-// Object
+//=============================================================================
+// 8) App
+//=============================================================================
+#include "App/JFApp.h"
+#include "App/JFWindowsApp.h"
+
+//=============================================================================
+// 9) Object
+//=============================================================================
 #include "Source/Core/Object/Object.h"
 #include "Source/Core/Object/Texture.h"
 #include "Source/Core/Object/Material.h"
 
-// Component Basic
+//=============================================================================
+// 10) Basic Component 
+//=============================================================================
 #include "Source/Core/Object/Component/Interface/CommonComponent.h"
 #include "Source/Core/Object/Component/Interface/BaseComponent.h"
 #include "Source/Core/Object/GameObject/GameObject.h"
 
-// Components
+//=============================================================================
+// 11) Components
+//=============================================================================
 #include "Source/Core/Object/Component/Transform.h"
 #include "Source/Core/Object/Component/Camera.h"
 #include "Source/Core/Object/Component/Renderer.h"
@@ -142,10 +168,16 @@
 #include "Source/Core/Object/Component/ColisionBox.h"
 #include "Source/Core/Object/Component/SkyBox.h"
 
-// Geometry
+//=============================================================================
+// 12) Scene
+//=============================================================================
+#include "Source/Core/Scene/Scene.h"
 
-// PhysX Class's
-#include "Source/PhysX/PhysXDevice.h"
+// Debug
+#if defined(DEBUG) || defined(_DEBUG)
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
+#endif
 
 // Libs
 #ifdef _DEBUG

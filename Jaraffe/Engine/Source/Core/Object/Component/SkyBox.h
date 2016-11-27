@@ -4,7 +4,7 @@
 // *SkyMap Component*
 // 1. 카메라가 존재하는곳에만 부착가능한 컴포넌트 이다.
 //---------------------------------------------------------------------------------
-namespace Jaraffe
+namespace JF
 {
 namespace Component
 {
@@ -15,7 +15,7 @@ class SkyBox : public Mesh
 	// Constructor/Destructor)
 	//=============================================================================
 public:
-	SkyBox(float _skySphereRadius, Jaraffe::Texture* _pTexture);
+	SkyBox(float _skySphereRadius, JF::Texture* _pTexture);
 	virtual ~SkyBox();
 
 	//=============================================================================
@@ -31,12 +31,12 @@ public:
 	virtual void Init();
 	virtual void Render();
 
-	void SetMainTexture(Jaraffe::Texture* _pTexture) { m_pMainTexture = _pTexture; }
+	void SetMainTexture(JF::Texture* _pTexture) { m_pMainTexture = _pTexture; }
 
 private:
 	float			m_SkySphereRadius;
 
-	Jaraffe::Texture* m_pMainTexture;
+	JF::Texture* m_pMainTexture;
 };
 
 }

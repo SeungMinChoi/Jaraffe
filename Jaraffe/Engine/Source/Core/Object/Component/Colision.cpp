@@ -2,17 +2,17 @@
 #include "Colision.h"
 
 // Static Member DECLARE
-DECLARE_IDENTIFIER(Jaraffe::Component::Colision);
+DECLARE_IDENTIFIER(JF::Component::Colision);
 
-Jaraffe::Component::Colision::Colision()
+JF::Component::Colision::Colision()
 {
 }
 
-Jaraffe::Component::Colision::~Colision()
+JF::Component::Colision::~Colision()
 {
 }
 
-void Jaraffe::Component::Colision::Release()
+void JF::Component::Colision::Release()
 {
 
 }

@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "Camera.h"
 
-DECLARE_IDENTIFIER(Jaraffe::Component::Camera);
+DECLARE_IDENTIFIER(JF::Component::Camera);
 
-Jaraffe::Component::Camera* Jaraffe::Component::Camera::g_pMainCamera;
+JF::Component::Camera* JF::Component::Camera::g_pMainCamera;
 
-Jaraffe::Component::Camera::Camera()
+JF::Component::Camera::Camera(int _width, int _height)
 : m_Theta(1.5f * XM_PI)
 , m_Phi(0.25f * XM_PI)
 , m_Radius(5.0f)
@@ -14,28 +14,29 @@ Jaraffe::Component::Camera::Camera()
 , m_vLookAt(0.0f, 0.0f, 0.0f)
 , m_Aspect(1.0f)
 , m_NearZ(1.0f)
-, m_FarZ(3000.0f)
+, m_FarZ(10000.0f)
 , m_FovY(0.25f * XM_PI)
 {
 	XMMATRIX I = XMMatrixIdentity();
 	XMStoreFloat4x4(&m_View, I);
 	XMStoreFloat4x4(&m_Proj, I);
-}
 
-Jaraffe::Component::Camera::~Camera()
-{
-}
-
-void Jaraffe::Component::Camera::Init()
-{
 	// 뷰 행렬과 투영행렬을 계산한다.
-	CalculationProj();
+	CalculationProj(_width, _height);
 }
 
-void Jaraffe::Component::Camera::Update(float t)
+JF::Component::Camera::~Camera()
+{
+}
+
+void JF::Component::Camera::Init()
+{
+}
+
+void JF::Component::Camera::Update(float t)
 {
 	// Transform 이 없다면 무의미하므로 리턴.
-	auto* pTransform = GetOwner()->GetComponent<Jaraffe::Component::Transform>();
+	auto* pTransform = GetOwner()->GetComponent<JF::Component::Transform>();
 	if (pTransform == nullptr)
 		return;
 
@@ -116,47 +117,41 @@ void Jaraffe::Component::Camera::Update(float t)
 	m_View(3, 3) = 1.0f;
 }
 
-void Jaraffe::Component::Camera::Render()
+void JF::Component::Camera::Render()
 {
 }
 
-void Jaraffe::Component::Camera::Release()
+void JF::Component::Camera::Release()
 {
 }
 
-void Jaraffe::Component::Camera::CalculationProj()
+void JF::Component::Camera::CalculationProj(int _width, int _height)
 {
-	// 현재 화면의 크기를 구한뒤 투영행렬을 계산한다.
-	RECT rc		= gRENDERER->GetScreenRectSize();
-	UINT width	= rc.right - rc.left;
-	UINT height = rc.bottom - rc.top;
-	m_Aspect	= width / (FLOAT)height;
-
 	// Initialize the projection matrix
-	XMStoreFloat4x4(&m_Proj, XMMatrixPerspectiveFovLH(m_FovY, m_Aspect, m_NearZ, m_FarZ));
+	XMStoreFloat4x4(&m_Proj, XMMatrixPerspectiveFovLH(m_FovY, static_cast<float>(_width) / _height, m_NearZ, m_FarZ));
 }
 
-XMMATRIX Jaraffe::Component::Camera::GetView() const
+XMMATRIX JF::Component::Camera::GetView() const
 {
 	return XMLoadFloat4x4(&m_View);
 }
 
-XMMATRIX Jaraffe::Component::Camera::GetProj() const
+XMMATRIX JF::Component::Camera::GetProj() const
 {
 	return XMLoadFloat4x4(&m_Proj);
 }
 
-XMMATRIX Jaraffe::Component::Camera::GetViewProj() const
+XMMATRIX JF::Component::Camera::GetViewProj() const
 {
 	return XMMatrixMultiply(GetView(), GetProj());
 }
 
-XMFLOAT3 Jaraffe::Component::Camera::GetEyePos() const
+XMFLOAT3 JF::Component::Camera::GetEyePos() const
 {
 	return m_vEye;
 }
 
-void Jaraffe::Component::Camera::SetMainCamera(Camera* p_pCamera)
+void JF::Component::Camera::SetMainCamera(Camera* p_pCamera)
 {
-	Jaraffe::Component::Camera::g_pMainCamera = p_pCamera;
+	g_pMainCamera = p_pCamera;
 }

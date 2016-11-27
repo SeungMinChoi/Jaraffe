@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "GeometryGenerator.h"
 
-void Jaraffe::GeometryGenerator::CreateBox(float _width, float _height, float _depth, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
+void JF::GeometryGenerator::CreateBox(float _width, float _height, float _depth, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	//
 	// Create the vertices.
@@ -84,7 +84,7 @@ void Jaraffe::GeometryGenerator::CreateBox(float _width, float _height, float _d
 	_indices.assign(&i[0], &i[36]);
 }
 
-void Jaraffe::GeometryGenerator::CreateSphere(float _radius, UINT _sliceCount, UINT _stackCount, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
+void JF::GeometryGenerator::CreateSphere(float _radius, UINT _sliceCount, UINT _stackCount, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	_vertices.clear();
 	_indices.clear();
@@ -195,10 +195,10 @@ void Jaraffe::GeometryGenerator::CreateSphere(float _radius, UINT _sliceCount, U
 	}
 }
 
-void Jaraffe::GeometryGenerator::CreateGeosphere(float _radius, UINT _numSubdivisions, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
+void JF::GeometryGenerator::CreateGeosphere(float _radius, UINT _numSubdivisions, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	// Put a cap on the number of subdivisions.
-	_numSubdivisions = Jaraffe::Util::MathHelper::Min(_numSubdivisions, 5u);
+	_numSubdivisions = JF::Util::MathHelper::Min(_numSubdivisions, 5u);
 
 	// Approximate a sphere by tessellating an icosahedron.
 
@@ -248,7 +248,7 @@ void Jaraffe::GeometryGenerator::CreateGeosphere(float _radius, UINT _numSubdivi
 		XMStoreFloat3(&_vertices[i].Normal, n);
 
 		// Derive texture coordinates from spherical coordinates.
-		float theta = Jaraffe::Util::MathHelper::AngleFromXY(
+		float theta = JF::Util::MathHelper::AngleFromXY(
 			_vertices[i].Pos.x,
 			_vertices[i].Pos.z);
 
@@ -268,7 +268,7 @@ void Jaraffe::GeometryGenerator::CreateGeosphere(float _radius, UINT _numSubdivi
 	}
 }
 
-void Jaraffe::GeometryGenerator::CreateCylinder(float _bottomRadius, float _topRadius, float _height, UINT _sliceCount, UINT _stackCount, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
+void JF::GeometryGenerator::CreateCylinder(float _bottomRadius, float _topRadius, float _height, UINT _sliceCount, UINT _stackCount, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	_vertices.clear();
 	_indices.clear();
@@ -361,7 +361,7 @@ void Jaraffe::GeometryGenerator::CreateCylinder(float _bottomRadius, float _topR
 	BuildCylinderBottomCap(_bottomRadius, _topRadius, _height, _sliceCount, _stackCount, _vertices, _indices);
 }
 
-void Jaraffe::GeometryGenerator::CreateGrid(float _width, float _depth, UINT _m, UINT _n, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
+void JF::GeometryGenerator::CreateGrid(float _width, float _depth, UINT _m, UINT _n, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	UINT vertexCount = _m*_n;
 	UINT faceCount = (_m - 1)*(_n - 1) * 2;
@@ -422,7 +422,7 @@ void Jaraffe::GeometryGenerator::CreateGrid(float _width, float _depth, UINT _m,
 	}
 }
 
-void Jaraffe::GeometryGenerator::CreateFullscreenQuad(std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
+void JF::GeometryGenerator::CreateFullscreenQuad(std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	_vertices.resize(4);
 	_indices.resize(6);
@@ -461,7 +461,7 @@ void Jaraffe::GeometryGenerator::CreateFullscreenQuad(std::vector<Vertex::PosNor
 	_indices[5] = 3;
 }
 
-void Jaraffe::GeometryGenerator::Subdivide(std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
+void JF::GeometryGenerator::Subdivide(std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	// Save a copy of the input geometry.
 	std::vector<Vertex::PosNormalTexTan> inputCopyVertices;
@@ -543,7 +543,7 @@ void Jaraffe::GeometryGenerator::Subdivide(std::vector<Vertex::PosNormalTexTan>&
 	}
 }
 
-void Jaraffe::GeometryGenerator::BuildCylinderTopCap(float _bottomRadius, float _topRadius, float _height, UINT _sliceCount, UINT _stackCount, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
+void JF::GeometryGenerator::BuildCylinderTopCap(float _bottomRadius, float _topRadius, float _height, UINT _sliceCount, UINT _stackCount, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	UINT baseIndex = (UINT)_vertices.size();
 
@@ -578,7 +578,7 @@ void Jaraffe::GeometryGenerator::BuildCylinderTopCap(float _bottomRadius, float 
 	}
 }
 
-void Jaraffe::GeometryGenerator::BuildCylinderBottomCap(float _bottomRadius, float _topRadius, float _height, UINT _sliceCount, UINT _stackCount, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
+void JF::GeometryGenerator::BuildCylinderBottomCap(float _bottomRadius, float _topRadius, float _height, UINT _sliceCount, UINT _stackCount, std::vector<Vertex::PosNormalTexTan>& _vertices, std::vector<UINT>& _indices)
 {
 	// 
 	// Build bottom cap.

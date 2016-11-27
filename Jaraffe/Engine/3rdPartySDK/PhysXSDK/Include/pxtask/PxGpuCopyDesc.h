@@ -21,7 +21,7 @@ namespace physx
 PX_PUSH_PACK_DEFAULT
 
 /**
- * \brief Input descriptor for the GpuDispatcher's built-in copy kernel
+ * \brief JFCInput descriptor for the GpuDispatcher's built-in copy kernel
  *
  * All host memory involved in copy transactions must be page-locked.
  * If more than one descriptor is passed to the copy kernel in one launch,
@@ -30,7 +30,7 @@ PX_PUSH_PACK_DEFAULT
 struct PxGpuCopyDesc
 {
 	/**
-	 * \brief Input descriptor for the GpuDispatcher's built-in copy kernel
+	 * \brief JFCInput descriptor for the GpuDispatcher's built-in copy kernel
 	 */
 	enum CopyType
 	{

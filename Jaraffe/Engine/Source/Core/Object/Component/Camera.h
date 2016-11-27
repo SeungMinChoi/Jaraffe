@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Jaraffe
+namespace JF
 {
 namespace Component
 {
@@ -11,7 +11,7 @@ public:
 //=============================================================================
 // Constructor/Destructor)
 //=============================================================================
-	Camera();
+	Camera(int _width, int _height);
 	virtual ~Camera();
 
 //=============================================================================
@@ -33,7 +33,7 @@ public:
 // Public Functions) 
 //=============================================================================
 public:
-	void			CalculationProj();
+	void			CalculationProj(int _width, int _height);
 
 	XMMATRIX		GetView() const;
 	XMMATRIX		GetProj() const;

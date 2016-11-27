@@ -1,19 +1,19 @@
 #include "stdafx.h"
 #include "SkyBox.h"
 
-DECLARE_IDENTIFIER(Jaraffe::Component::SkyBox);
+DECLARE_IDENTIFIER(JF::Component::SkyBox);
 
-Jaraffe::Component::SkyBox::SkyBox(float _skySphereRadius, Jaraffe::Texture* _pTexture)
+JF::Component::SkyBox::SkyBox(float _skySphereRadius, JF::Texture* _pTexture)
 {
 	m_SkySphereRadius	= _skySphereRadius;
 	m_pMainTexture		= _pTexture;
 }
 
-Jaraffe::Component::SkyBox::~SkyBox()
+JF::Component::SkyBox::~SkyBox()
 {
 }
 
-void Jaraffe::Component::SkyBox::Init()
+void JF::Component::SkyBox::Init()
 {
 	// 1)
 	GeometryGenerator::CreateSphere(m_SkySphereRadius, 30, 30, m_pVertices, m_pIndices);
@@ -22,7 +22,7 @@ void Jaraffe::Component::SkyBox::Init()
 	Mesh::Init();
 }
 
-void Jaraffe::Component::SkyBox::Render()
+void JF::Component::SkyBox::Render()
 {
 	// Declear)
 	float blendFactors[] = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -38,14 +38,14 @@ void Jaraffe::Component::SkyBox::Render()
 		return;
 
 	// Set Layout And Topology
-	gRENDERER->GetDC()->IASetInputLayout(m_pInputLayout);
-	gRENDERER->GetDC()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	gRENDERER->DeviceContext()->IASetInputLayout(m_pInputLayout);
+	gRENDERER->DeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Set VertexBuffer And IndexBuffer
 	UINT stride = m_Stride;
 	UINT offset = 0;
-	gRENDERER->GetDC()->IASetVertexBuffers(0, 1, &m_pVB, &stride, &offset);
-	gRENDERER->GetDC()->IASetIndexBuffer(m_pIB, DXGI_FORMAT_R32_UINT, 0);
+	gRENDERER->DeviceContext()->IASetVertexBuffers(0, 1, &m_pVB, &stride, &offset);
+	gRENDERER->DeviceContext()->IASetIndexBuffer(m_pIB, DXGI_FORMAT_R32_UINT, 0);
 
 	// center Sky about eye in world space
 	XMFLOAT3 eyePos = pTransform->GetPosition();
@@ -60,12 +60,12 @@ void Jaraffe::Component::SkyBox::Render()
 	tech->GetDesc(&techDesc);
 	for (UINT p = 0; p < techDesc.Passes; ++p)
 	{
-		tech->GetPassByIndex(p)->Apply(0, gRENDERER->GetDC());
+		tech->GetPassByIndex(p)->Apply(0, gRENDERER->DeviceContext());
 
-		gRENDERER->GetDC()->DrawIndexed(m_IndexCount, 0, 0);
+		gRENDERER->DeviceContext()->DrawIndexed(m_IndexCount, 0, 0);
 	}
 
 	// 기본 랜더상태로 복원한다.
-	gRENDERER->GetDC()->RSSetState(0);
-	gRENDERER->GetDC()->OMSetBlendState(0, blendFactors, 0xffffffff);
+	gRENDERER->DeviceContext()->RSSetState(0);
+	gRENDERER->DeviceContext()->OMSetBlendState(0, blendFactors, 0xffffffff);
 }

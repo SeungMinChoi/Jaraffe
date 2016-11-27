@@ -2,15 +2,15 @@
 #include "Light.h"
 
 // Static Member DECLARE
-DECLARE_IDENTIFIER(Jaraffe::Component::Light);
-std::vector<Light*> Jaraffe::Component::Light::m_vLights;
+DECLARE_IDENTIFIER(JF::Component::Light);
+std::vector<Light*> JF::Component::Light::m_vLights;
 
-Jaraffe::Component::Light::Light()
+JF::Component::Light::Light()
 {
 	m_vLights.push_back(this);
 }
 
-Jaraffe::Component::Light::~Light()
+JF::Component::Light::~Light()
 {
 	Light* pthisLight = this;
 	auto iterFind = std::find_if(m_vLights.begin(), m_vLights.end(), [pthisLight](const Light* rhs)
@@ -27,17 +27,17 @@ Jaraffe::Component::Light::~Light()
 	m_vLights.erase(iterFind);
 }
 
-void Jaraffe::Component::Light::Init()
+void JF::Component::Light::Init()
 {
 
 }
 
-void Jaraffe::Component::Light::Release()
+void JF::Component::Light::Release()
 {
 	SafeDelete(m_pLight);
 }
 
-Jaraffe::Light::BasicLight* Jaraffe::Component::Light::SetLightType(Jaraffe::Light::LightType p_LightType)
+JF::Light::BasicLight* JF::Component::Light::SetLightType(JF::Light::LightType p_LightType)
 {
 	//
 	m_LightType = p_LightType;
@@ -48,28 +48,28 @@ Jaraffe::Light::BasicLight* Jaraffe::Component::Light::SetLightType(Jaraffe::Lig
 	// 
 	switch (m_LightType)
 	{
-	case Jaraffe::Light::LightType::Directional:
-		m_pLight = new Jaraffe::Light::DirectionalLight;
+	case JF::Light::LightType::Directional:
+		m_pLight = new JF::Light::DirectionalLight;
 		break;
 
-	case Jaraffe::Light::LightType::Point:
-		m_pLight = new Jaraffe::Light::PointLight;
+	case JF::Light::LightType::Point:
+		m_pLight = new JF::Light::PointLight;
 		break;
 
-	case Jaraffe::Light::LightType::Spot:
-		m_pLight = new Jaraffe::Light::SpotLight;
+	case JF::Light::LightType::Spot:
+		m_pLight = new JF::Light::SpotLight;
 		break;
 	}
 
 	return m_pLight;
 }
 
-Jaraffe::Light::BasicLight* Jaraffe::Component::Light::GetLight()
+JF::Light::BasicLight* JF::Component::Light::GetLight()
 {
 	return m_pLight;
 }
 
-Jaraffe::Light::DirectionalLight* Jaraffe::Component::Light::GetDirectionalLight()
+JF::Light::DirectionalLight* JF::Component::Light::GetDirectionalLight()
 {
-	return (Jaraffe::Light::DirectionalLight*)m_pLight;
+	return (JF::Light::DirectionalLight*)m_pLight;
 }

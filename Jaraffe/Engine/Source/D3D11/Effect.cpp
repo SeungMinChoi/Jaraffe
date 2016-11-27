@@ -3,7 +3,7 @@
 
 #pragma region Effect
 
-Jaraffe::Effect::Effect(ID3D11Device* device, const std::wstring& filename)
+JF::Effect::Effect(ID3D11Device* device, const std::wstring& filename)
 	: mFX(0)
 {
 	auto fin = JFAPI::FILE::Open(filename.c_str(), eFILE_OPERATION::READ);
@@ -18,7 +18,7 @@ Jaraffe::Effect::Effect(ID3D11Device* device, const std::wstring& filename)
 		0, device, &mFX));
 }
 
-Jaraffe::Effect::~Effect()
+JF::Effect::~Effect()
 {
 	ReleaseCOM(mFX);
 }
@@ -27,7 +27,7 @@ Jaraffe::Effect::~Effect()
 
 #pragma region SimpleEffect
 
-Jaraffe::SimpleEffect::SimpleEffect(ID3D11Device * device, const std::wstring & filename)
+JF::SimpleEffect::SimpleEffect(ID3D11Device * device, const std::wstring & filename)
 	: Effect(device, filename)
 {
 	// Techniques
@@ -37,7 +37,7 @@ Jaraffe::SimpleEffect::SimpleEffect(ID3D11Device * device, const std::wstring & 
 	WorldViewProj = mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
 }
 
-Jaraffe::SimpleEffect::~SimpleEffect()
+JF::SimpleEffect::~SimpleEffect()
 {
 }
 
@@ -45,7 +45,7 @@ Jaraffe::SimpleEffect::~SimpleEffect()
 
 #pragma region BasicEffect
 
-Jaraffe::BasicEffect::BasicEffect(ID3D11Device * device, const std::wstring & filename)
+JF::BasicEffect::BasicEffect(ID3D11Device * device, const std::wstring & filename)
 	: Effect(device, filename)
 {
 	Light1Tech = mFX->GetTechniqueByName("Light1");
@@ -75,7 +75,7 @@ Jaraffe::BasicEffect::BasicEffect(ID3D11Device * device, const std::wstring & fi
 	Time				= mFX->GetVariableByName("gTime")->AsScalar();
 }
 
-Jaraffe::BasicEffect::~BasicEffect()
+JF::BasicEffect::~BasicEffect()
 {
 }
 
@@ -83,7 +83,7 @@ Jaraffe::BasicEffect::~BasicEffect()
 
 #pragma region SkyEffect
 
-Jaraffe::SkyEffect::SkyEffect(ID3D11Device* device, const std::wstring& filename)
+JF::SkyEffect::SkyEffect(ID3D11Device* device, const std::wstring& filename)
 	: Effect(device, filename)
 {
 	SkyTech			= mFX->GetTechniqueByName("SkyTech");
@@ -91,7 +91,7 @@ Jaraffe::SkyEffect::SkyEffect(ID3D11Device* device, const std::wstring& filename
 	SkyBox			= mFX->GetVariableByName("gCubeMap")->AsShaderResource();
 }
 
-Jaraffe::SkyEffect::~SkyEffect()
+JF::SkyEffect::~SkyEffect()
 {
 }
 
@@ -100,18 +100,18 @@ Jaraffe::SkyEffect::~SkyEffect()
 #pragma region Effects
 
 // Static Values
-Jaraffe::SimpleEffect*	Jaraffe::Effects::SimpleFX = 0;
-Jaraffe::BasicEffect*	Jaraffe::Effects::BasicFX = 0;
-Jaraffe::SkyEffect*		Jaraffe::Effects::CubeMapFX = 0;
+JF::SimpleEffect*	JF::Effects::SimpleFX = 0;
+JF::BasicEffect*	JF::Effects::BasicFX = 0;
+JF::SkyEffect*		JF::Effects::CubeMapFX = 0;
 
-void Jaraffe::Effects::InitAll(ID3D11Device * device)
+void JF::Effects::InitAll(ID3D11Device * device)
 {
 	SimpleFX	= new SimpleEffect(device, L"Source/Shader/Color.fxo");
 	BasicFX		= new BasicEffect(device, L"Source/Shader/Basic.fxo");
 	CubeMapFX	= new SkyEffect(device, L"Source/Shader/CubeMap.fxo");
 }
 
-void Jaraffe::Effects::DestroyAll()
+void JF::Effects::DestroyAll()
 {
 	SafeDelete(SimpleFX);
 	SafeDelete(BasicFX);

@@ -2,30 +2,32 @@
 #include "ColisionBox.h"
 
 // Static Member DECLARE
-DECLARE_IDENTIFIER(Jaraffe::Component::ColisionBox);
+DECLARE_IDENTIFIER(JF::Component::ColisionBox);
 
-Jaraffe::Component::ColisionBox::ColisionBox()
+JF::Component::ColisionBox::ColisionBox(JF::JFCPhysXDevice* _pxDevice)
 {
 	m_Center	= XMFLOAT3(0, 0, 0);
 	m_Size		= XMFLOAT3(1, 1, 1);
+
+	m_pPXDevice = _pxDevice;
 }
 
-Jaraffe::Component::ColisionBox::~ColisionBox()
+JF::Component::ColisionBox::~ColisionBox()
 {
 }
 
-void Jaraffe::Component::ColisionBox::Init()
+void JF::Component::ColisionBox::Init()
 {
 	// 1) 
-	auto* pTransform	= GetOwner()->GetComponent<Jaraffe::Component::Transform>();
+	auto* pTransform	= GetOwner()->GetComponent<JF::Component::Transform>();
 	XMFLOAT4X4& rMatrix	= pTransform->GetTransformMatrix();
 
 	assert(pTransform != nullptr);
 
 	// 2) 
-	m_pShape = PhysXDevice::GetInstance()->GetPhysics()->createShape(
+	m_pShape = m_pPXDevice->GetPhysics()->createShape(
 		PxBoxGeometry(m_Size.x, m_Size.y, m_Size.z),
-		*PhysXDevice::GetInstance()->GetMaterial());
+		*m_pPXDevice->GetMaterial());
 	
 	// 3)
 	PxTransform localTm( PxMat44(
@@ -36,11 +38,11 @@ void Jaraffe::Component::ColisionBox::Init()
 	));
 
 	// 4)
-	m_pRigidBody = PhysXDevice::GetInstance()->GetPhysics()->createRigidDynamic(localTm);
+	m_pRigidBody = m_pPXDevice->GetPhysics()->createRigidDynamic(localTm);
 	m_pRigidBody->attachShape(*m_pShape);
 	PxRigidBodyExt::updateMassAndInertia(*m_pRigidBody, 10.0f);
 	m_pRigidBody->setLinearVelocity(PxVec3(0, 10, 2.0f));
-	PhysXDevice::GetInstance()->GetScene()->addActor(*m_pRigidBody);
+	m_pPXDevice->GetScene()->addActor(*m_pRigidBody);
 
 	// 5)
 	float cX = 0.0f;
@@ -52,7 +54,7 @@ void Jaraffe::Component::ColisionBox::Init()
 	float eZ = 1.0f;
 
 	// 정점 
-	Jaraffe::Vertex::PosColor  vertices[] =
+	JF::Vertex::PosColor  vertices[] =
 	{
 		// 1, 1, 1	(0)
 		{ XMFLOAT3(cX + eX, cY + eY, cZ + eZ), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
@@ -86,35 +88,35 @@ void Jaraffe::Component::ColisionBox::Init()
 	m_indexCnt = ARRAYSIZE(indices);
 
 	// Create 
-	Jaraffe::Util::Mesh::CreateVertexBuffer(&vertices[0], sizeof(Jaraffe::Vertex::PosColor) * m_VertexSize, &m_VertBuff);
-	Jaraffe::Util::Mesh::CreateIndexBuffer(&indices[0], sizeof(UINT) * m_indexCnt, &m_IndexBuff);
+	gRENDERER->CreateVertexBuffer(&vertices[0], sizeof(JF::Vertex::PosColor) * m_VertexSize, &m_VertBuff);
+	gRENDERER->CreateIndexBuffer(&indices[0], sizeof(UINT) * m_indexCnt, &m_IndexBuff);
 }
 
-void Jaraffe::Component::ColisionBox::Update(float t)
+void JF::Component::ColisionBox::Update(float t)
 {
 
 }
 
-void Jaraffe::Component::ColisionBox::Render()
+void JF::Component::ColisionBox::Render()
 {
 	// Declear)
 	float blendFactors[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	// Get)
-	auto* pTransform = GetOwner()->GetComponent<Jaraffe::Component::Transform>();
+	auto* pTransform = GetOwner()->GetComponent<JF::Component::Transform>();
 
 	// Check)
 	RETURN_IF(pTransform == nullptr, );
 
 	// Set Layout And Topology
-	gRENDERER->GetDC()->IASetInputLayout(InputLayouts::PosColor);
-	gRENDERER->GetDC()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	gRENDERER->DeviceContext()->IASetInputLayout(InputLayouts::PosColor);
+	gRENDERER->DeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	// Set VertexBuffer And IndexBuffer
-	UINT stride = sizeof(Jaraffe::Vertex::PosColor);
+	UINT stride = sizeof(JF::Vertex::PosColor);
 	UINT offset = 0;
-	gRENDERER->GetDC()->IASetVertexBuffers(0, 1, &m_VertBuff, &stride, &offset);
-	gRENDERER->GetDC()->IASetIndexBuffer(m_IndexBuff, DXGI_FORMAT_R32_UINT, 0);
+	gRENDERER->DeviceContext()->IASetVertexBuffers(0, 1, &m_VertBuff, &stride, &offset);
+	gRENDERER->DeviceContext()->IASetIndexBuffer(m_IndexBuff, DXGI_FORMAT_R32_UINT, 0);
 
 	// worldViewProj 행렬을 구한다.
 	XMFLOAT3 rPosition	= XMFLOAT3(pTransform->GetPosition().x + m_Center.x, pTransform->GetPosition().y + m_Center.y, pTransform->GetPosition().z + m_Center.z);
@@ -141,22 +143,22 @@ void Jaraffe::Component::ColisionBox::Render()
 	Tech->GetDesc(&techDesc);
 	for (UINT p = 0; p < techDesc.Passes; ++p)
 	{
-		Tech->GetPassByIndex(p)->Apply(0, gRENDERER->GetDC());
-		gRENDERER->GetDC()->DrawIndexed(m_indexCnt, 0, 0);
+		Tech->GetPassByIndex(p)->Apply(0, gRENDERER->DeviceContext());
+		gRENDERER->DeviceContext()->DrawIndexed(m_indexCnt, 0, 0);
 	}
 
 	// 기본 랜더상태로 복원한다.
-	gRENDERER->GetDC()->RSSetState(0);
-	gRENDERER->GetDC()->OMSetBlendState(0, blendFactors, 0xffffffff);
+	gRENDERER->DeviceContext()->RSSetState(0);
+	gRENDERER->DeviceContext()->OMSetBlendState(0, blendFactors, 0xffffffff);
 }
 
-void Jaraffe::Component::ColisionBox::Release()
+void JF::Component::ColisionBox::Release()
 {
 	ReleaseCOM(m_VertBuff);
 	ReleaseCOM(m_IndexBuff);
 }
 
-void Jaraffe::Component::ColisionBox::SethalfExtents(XMFLOAT3 _vhalfExtents)
+void JF::Component::ColisionBox::SethalfExtents(XMFLOAT3 _vhalfExtents)
 {
 	// 1)
 	m_Size = _vhalfExtents;

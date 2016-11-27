@@ -1,20 +1,20 @@
 #include "stdafx.h"
 #include "GameObject.h"
 
-Jaraffe::GameObject::GameObject()
+JF::GameObject::GameObject()
 {
 }
 
-Jaraffe::GameObject::~GameObject()
+JF::GameObject::~GameObject()
 {
 }
 
-Jaraffe::GameObject* Jaraffe::GameObject::Create()
+JF::GameObject* JF::GameObject::Create()
 {
-	return new Jaraffe::GameObject();
+	return new JF::GameObject();
 }
 
-void Jaraffe::GameObject::Init()
+void JF::GameObject::Init()
 {
 	for each (auto component in m_mapComponents)
 	{
@@ -22,7 +22,7 @@ void Jaraffe::GameObject::Init()
 	}
 }
 
-void Jaraffe::GameObject::Update(float t)
+void JF::GameObject::Update(float t)
 {
 	for each (auto component in m_mapComponents)
 	{
@@ -30,28 +30,28 @@ void Jaraffe::GameObject::Update(float t)
 	}
 }
 
-void Jaraffe::GameObject::Render()
+void JF::GameObject::Render()
 {
-	auto pRenderer = GetComponent<Jaraffe::Component::Renderer>();
+	auto pRenderer = GetComponent<JF::Component::Renderer>();
 	if (pRenderer != nullptr)
 	{
 		pRenderer->Render();
 	}
 
-	auto pCubeMap = GetComponent<Jaraffe::Component::SkyBox>();
+	auto pCubeMap = GetComponent<JF::Component::SkyBox>();
 	if (pCubeMap != nullptr)
 	{
 		pCubeMap->Render();
 	}
 
-	auto pColision = GetComponent<Jaraffe::Component::Colision>();
+	auto pColision = GetComponent<JF::Component::Colision>();
 	if (pColision != nullptr)
 	{
 		pColision->Render();
 	}
 }
 
-void Jaraffe::GameObject::Release()
+void JF::GameObject::Release()
 {
 	for each (auto component in m_mapComponents)
 	{

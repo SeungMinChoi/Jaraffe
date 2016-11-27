@@ -5,10 +5,10 @@
 #include "stdafx.h"
 #include "MathHelper.h"
 
-const float Jaraffe::Util::MathHelper::Infinity = FLT_MAX;
-const float Jaraffe::Util::MathHelper::Pi       = 3.1415926535f;
+const float JF::Util::MathHelper::Infinity = FLT_MAX;
+const float JF::Util::MathHelper::Pi       = 3.1415926535f;
 
-float Jaraffe::Util::MathHelper::AngleFromXY(float x, float y)
+float JF::Util::MathHelper::AngleFromXY(float x, float y)
 {
 	float theta = 0.0f;
  
@@ -30,7 +30,7 @@ float Jaraffe::Util::MathHelper::AngleFromXY(float x, float y)
 	return theta;
 }
 
-XMVECTOR Jaraffe::Util::MathHelper::RandUnitVec3()
+XMVECTOR JF::Util::MathHelper::RandUnitVec3()
 {
 	XMVECTOR One  = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	XMVECTOR Zero = XMVectorZero();
@@ -52,7 +52,7 @@ XMVECTOR Jaraffe::Util::MathHelper::RandUnitVec3()
 	}
 }
 
-XMVECTOR Jaraffe::Util::MathHelper::RandHemisphereUnitVec3(XMVECTOR n)
+XMVECTOR JF::Util::MathHelper::RandHemisphereUnitVec3(XMVECTOR n)
 {
 	XMVECTOR One  = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	XMVECTOR Zero = XMVectorZero();

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Jaraffe
+namespace JF
 {
 namespace Component
 {
@@ -31,20 +31,20 @@ public:
 // public Funtions) 
 //=============================================================================
 public:
-	Jaraffe::Light::BasicLight*			SetLightType(Jaraffe::Light::LightType p_LightType);
+	JF::Light::BasicLight*			SetLightType(JF::Light::LightType p_LightType);
 	
-	Jaraffe::Light::BasicLight*			GetLight();
-	Jaraffe::Light::DirectionalLight*	GetDirectionalLight();
+	JF::Light::BasicLight*			GetLight();
+	JF::Light::DirectionalLight*	GetDirectionalLight();
 
 //=============================================================================
 // Private Members) 
 //=============================================================================
 private:
 	// 라이팅 타입.
-	Jaraffe::Light::LightType m_LightType = Jaraffe::Light::LightType::Directional;
+	JF::Light::LightType m_LightType = JF::Light::LightType::Directional;
 
 	// 
-	Jaraffe::Light::BasicLight* m_pLight = nullptr;
+	JF::Light::BasicLight* m_pLight = nullptr;
 
 //=============================================================================
 // public static Members) 

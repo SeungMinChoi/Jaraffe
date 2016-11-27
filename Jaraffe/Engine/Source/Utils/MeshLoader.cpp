@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MeshLoader.h"
 
-bool Jaraffe::MeshLoader::OBJLoad(IN const std::wstring& _filePath, OUT std::vector<Vertex::PosNormalTexTan>& _vertices, OUT std::vector<UINT>& _indices, OUT Jaraffe::Material& _material)
+bool JF::MeshLoader::OBJLoad(IN const std::wstring& _filePath, OUT std::vector<Vertex::PosNormalTexTan>& _vertices, OUT std::vector<UINT>& _indices, OUT JF::Material& _material)
 {
 	// 버텍스 버퍼를 만들기위한 임시 버퍼들...
 	std::vector<XMFLOAT3>	m_V;
@@ -146,7 +146,7 @@ bool Jaraffe::MeshLoader::OBJLoad(IN const std::wstring& _filePath, OUT std::vec
 	return true;
 }
 
-void Jaraffe::MeshLoader::ProcessMtl(IN LPCWSTR _wfilename, OUT Jaraffe::Material& _material)
+void JF::MeshLoader::ProcessMtl(IN LPCWSTR _wfilename, OUT JF::Material& _material)
 {
 	std::wifstream fileIn(_wfilename);	// 해당 경로에 있는 파일을 연다.
 
@@ -194,7 +194,7 @@ void Jaraffe::MeshLoader::ProcessMtl(IN LPCWSTR _wfilename, OUT Jaraffe::Materia
 			{
 				fileIn >> checkString;
 
-				_material.m_MainTexture = new Jaraffe::Texture();
+				_material.m_MainTexture = new JF::Texture();
 				_material.m_MainTexture->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/" + checkString));
 			}
 		}
@@ -212,7 +212,7 @@ void Jaraffe::MeshLoader::ProcessMtl(IN LPCWSTR _wfilename, OUT Jaraffe::Materia
 	fileIn.close();
 }
 
-void Jaraffe::MeshLoader::ComputeNomalAndTangent(IN const int& _triangleCnt, IN const int& _vertexCnt, OUT std::vector<Vertex::PosNormalTexTan>& _vertices, OUT std::vector<UINT>& _indices)
+void JF::MeshLoader::ComputeNomalAndTangent(IN const int& _triangleCnt, IN const int& _vertexCnt, OUT std::vector<Vertex::PosNormalTexTan>& _vertices, OUT std::vector<UINT>& _indices)
 {
 	std::vector<XMFLOAT3> tempNormal;
 

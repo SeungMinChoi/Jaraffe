@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "Object.h"
 
-Jaraffe::Object::Object()
+JF::Object::Object()
 {
 }
 
-Jaraffe::Object::~Object()
+JF::Object::~Object()
 {
 }

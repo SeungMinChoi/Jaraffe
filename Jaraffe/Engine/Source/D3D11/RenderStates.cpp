@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "RenderStates.h"
 
-namespace Jaraffe
+namespace JF
 {
 	BlendStates*		RenderStates::m_BlendStates;
 	SamplerStates*		RenderStates::m_SamplerStates;

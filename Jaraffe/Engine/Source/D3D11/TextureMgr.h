@@ -1,8 +1,8 @@
 #pragma once
 
-#define gTEXTUREMGR Jaraffe::TextureMgr::GetInstance()
+#define gTEXTUREMGR JF::TextureMgr::GetInstance()
 
-namespace Jaraffe
+namespace JF
 {
 
 class TextureMgr
@@ -11,13 +11,6 @@ class TextureMgr
 // Singletone)
 //=============================================================================
 	SINGLETONE(TextureMgr)
-
-//=============================================================================
-// Not Use Operators)
-//=============================================================================
-private:
-	TextureMgr(const TextureMgr& rhs);
-	TextureMgr& operator=(const TextureMgr& rhs);
 
 //=============================================================================
 // Public Functions) 

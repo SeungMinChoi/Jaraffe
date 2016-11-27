@@ -6,7 +6,7 @@
 
 #pragma once
 
-namespace Jaraffe
+namespace JF
 {
 namespace Util
 {

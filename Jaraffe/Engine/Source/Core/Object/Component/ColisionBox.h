@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Jaraffe
+namespace JF
 {
 namespace Component
 {
@@ -11,7 +11,7 @@ class ColisionBox : public Colision
 // Constructor/Destructor)
 //=============================================================================
 public:
-	ColisionBox();
+	ColisionBox(JF::JFCPhysXDevice* _pxDevice);
 	virtual ~ColisionBox();
 
 //=============================================================================
@@ -30,6 +30,9 @@ public:
 	virtual void	Release();
 
 	void SethalfExtents(XMFLOAT3 _vhalfExtents);
+
+private:
+	JF::JFCPhysXDevice* m_pPXDevice;
 };
 
 }

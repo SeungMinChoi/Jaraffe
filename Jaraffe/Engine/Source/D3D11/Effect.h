@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Jaraffe
+namespace JF
 {
 
 #pragma region Effect
@@ -55,8 +55,8 @@ public:
 	void SetWorldInvTranspose(CXMMATRIX M) { WorldInvTranspose->SetMatrix(reinterpret_cast<const float*>(&M)); }
 	void SetTexTransform(CXMMATRIX M) { TexTransform->SetMatrix(reinterpret_cast<const float*>(&M)); }
 	void SetEyePosW(const XMFLOAT3& v) { EyePosW->SetRawValue(&v, 0, sizeof(XMFLOAT3)); }
-	void SetDirLights(const void* lights) { DirLights->SetRawValue(lights, 0, 3 * sizeof(Jaraffe::Light::DirectionalLight)); }
-	void SetMaterial(const Jaraffe::Light::Material& mat) { Mat->SetRawValue(&mat, 0, sizeof(Jaraffe::Light::Material)); }
+	void SetDirLights(const void* lights) { DirLights->SetRawValue(lights, 0, 3 * sizeof(JF::Light::DirectionalLight)); }
+	void SetMaterial(const JF::Light::Material& mat) { Mat->SetRawValue(&mat, 0, sizeof(JF::Light::Material)); }
 	void SetDiffuseMap(ID3D11ShaderResourceView* tex) { DiffuseMap->SetResource(tex); }
 	void SetNormalMap(ID3D11ShaderResourceView* tex) { NormalMap->SetResource(tex); }
 	void SetTime(const float& f) { Time->SetFloat(f); }

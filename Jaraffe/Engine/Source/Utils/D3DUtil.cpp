@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "D3DUtil.h"
 
-ID3D11ShaderResourceView* Jaraffe::Util::Texture::CreateTexture2DArraySRV(
+ID3D11ShaderResourceView* JF::Util::Texture::CreateTexture2DArraySRV(
 	ID3D11Device* device, ID3D11DeviceContext* context,
 	std::vector<std::wstring>& filenames,
 	DXGI_FORMAT format,
@@ -112,7 +112,7 @@ ID3D11ShaderResourceView* Jaraffe::Util::Texture::CreateTexture2DArraySRV(
 	return texArraySRV;
 }
 
-ID3D11ShaderResourceView* Jaraffe::Util::Texture::CreateRandomTexture1DSRV(ID3D11Device* device)
+ID3D11ShaderResourceView* JF::Util::Texture::CreateRandomTexture1DSRV(ID3D11Device* device)
 {
 	// 
 	// Create the random data.

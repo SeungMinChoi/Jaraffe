@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "BaseComponent.h"
 
-DECLARE_IDENTIFIER(Jaraffe::Component::BaseComponent);
+DECLARE_IDENTIFIER(JF::Component::BaseComponent);
 
-Jaraffe::Component::BaseComponent::BaseComponent()
+JF::Component::BaseComponent::BaseComponent()
 {
 }
 
-Jaraffe::Component::BaseComponent::~BaseComponent()
+JF::Component::BaseComponent::~BaseComponent()
 {
 }

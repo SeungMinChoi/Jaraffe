@@ -1,12 +1,12 @@
 #pragma once
 
-namespace Jaraffe
+namespace JF
 {
 class GameObject;
 
 namespace Component
 {
-class BaseComponent : public Jaraffe::Object
+class BaseComponent : public JF::Object
 {
 //=============================================================================
 // Constructor/Destructor)

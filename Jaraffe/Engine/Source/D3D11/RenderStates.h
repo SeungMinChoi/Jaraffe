@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Jaraffe
+namespace JF
 {
 
 class BlendStates;
@@ -17,10 +17,10 @@ public:
 	static void DestroyAll();
 
 public:
-	static BlendStates* GetBlendStates()				{ return m_BlendStates; }
-	static SamplerStates* GetSamplerStates()			{ return m_SamplerStates; }
-	static RasterizerStates* GetRasterizerStates()		{ return m_ResterizerStates; }
-	static DepthStencilStates* GetDepthStencilStates()	{ return m_DepthStencilStates; }
+	static BlendStates*			GetBlendStates()			{ return m_BlendStates; }
+	static SamplerStates*		GetSamplerStates()			{ return m_SamplerStates; }
+	static RasterizerStates*	GetRasterizerStates()		{ return m_ResterizerStates; }
+	static DepthStencilStates*	GetDepthStencilStates()		{ return m_DepthStencilStates; }
 
 protected:
 	static BlendStates*			m_BlendStates;

@@ -1,34 +1,34 @@
 #include "stdafx.h"
 #include "MeshRenderer.h"
 
-DECLARE_IDENTIFIER(Jaraffe::Component::MeshRenderer);
+DECLARE_IDENTIFIER(JF::Component::MeshRenderer);
 
-Jaraffe::Component::MeshRenderer::MeshRenderer()
+JF::Component::MeshRenderer::MeshRenderer()
 {
 }
 
-Jaraffe::Component::MeshRenderer::~MeshRenderer()
+JF::Component::MeshRenderer::~MeshRenderer()
 {
 }
 
-void Jaraffe::Component::MeshRenderer::Init()
-{
-
-}
-
-void Jaraffe::Component::MeshRenderer::Update(float t)
+void JF::Component::MeshRenderer::Init()
 {
 
 }
 
-void Jaraffe::Component::MeshRenderer::Render()
+void JF::Component::MeshRenderer::Update(float t)
+{
+
+}
+
+void JF::Component::MeshRenderer::Render()
 {
 	// Declear)
 	float blendFactors[] = {0.0f, 0.0f, 0.0f, 0.0f};
 
 	// Get)
-	auto* pTransform	= GetOwner()->GetComponent<Jaraffe::Component::Transform>();
-	auto* pMesh			= GetOwner()->GetComponent<Jaraffe::Component::Mesh>();
+	auto* pTransform	= GetOwner()->GetComponent<JF::Component::Transform>();
+	auto* pMesh			= GetOwner()->GetComponent<JF::Component::Mesh>();
 	auto* pMarerial		= GetMaterial(); 
 
 	// Check)
@@ -36,14 +36,14 @@ void Jaraffe::Component::MeshRenderer::Render()
 	RETURN_IF(pMesh == nullptr,			);
 
 	// Set Layout And Topology
-	gRENDERER->GetDC()->IASetInputLayout(pMesh->m_pInputLayout);
-	gRENDERER->GetDC()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	gRENDERER->DeviceContext()->IASetInputLayout(pMesh->m_pInputLayout);
+	gRENDERER->DeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Set VertexBuffer And IndexBuffer
 	UINT stride = pMesh->m_Stride;
 	UINT offset = 0;
-	gRENDERER->GetDC()->IASetVertexBuffers(0, 1, &pMesh->m_pVB, &stride, &offset);
-	gRENDERER->GetDC()->IASetIndexBuffer(pMesh->m_pIB, DXGI_FORMAT_R32_UINT, 0);
+	gRENDERER->DeviceContext()->IASetVertexBuffers(0, 1, &pMesh->m_pVB, &stride, &offset);
+	gRENDERER->DeviceContext()->IASetIndexBuffer(pMesh->m_pIB, DXGI_FORMAT_R32_UINT, 0);
 
 	// worldViewProj 행렬을 구한다.
 	XMMATRIX world	= XMLoadFloat4x4(&pTransform->GetTransformMatrix());
@@ -51,11 +51,11 @@ void Jaraffe::Component::MeshRenderer::Render()
 	XMMATRIX proj	= Camera::g_pMainCamera->GetProj();
 	XMMATRIX worldViewProj = world * view * proj;
 
-	XMMATRIX worldInvTranspose = Jaraffe::Util::MathHelper::InverseTranspose(world);
+	XMMATRIX worldInvTranspose = JF::Util::MathHelper::InverseTranspose(world);
 
 	// 셰이더에 상수값 설정.
 	Effects::BasicFX->SetEyePosW(Camera::g_pMainCamera->GetEyePos());
-	Effects::BasicFX->SetDirLights(Jaraffe::Component::Light::m_vLights[0]->GetDirectionalLight());		// TODO : 라이팅 리펙토링 1순위. 구조 생각중.
+	Effects::BasicFX->SetDirLights(JF::Component::Light::m_vLights[0]->GetDirectionalLight());		// TODO : 라이팅 리펙토링 1순위. 구조 생각중.
 
 	Effects::BasicFX->SetWorldViewProj(worldViewProj);
 	Effects::BasicFX->SetWorld(world);
@@ -71,11 +71,11 @@ void Jaraffe::Component::MeshRenderer::Render()
 
 	// 레스터라이즈 상태를 셋팅한다.
 	if(pMarerial->m_RSState != nullptr)
-		gRENDERER->GetDC()->RSSetState(pMarerial->m_RSState);
+		gRENDERER->DeviceContext()->RSSetState(pMarerial->m_RSState);
 
 	// 블렌드 스테이트 상태를 셋팅한다.
 	if(pMarerial->m_BlendState != nullptr)
-		gRENDERER->GetDC()->OMSetBlendState(pMarerial->m_BlendState, blendFactors, 0xffffffff);
+		gRENDERER->DeviceContext()->OMSetBlendState(pMarerial->m_BlendState, blendFactors, 0xffffffff);
 
 	// 
 	ID3DX11EffectTechnique* tech = pMarerial->m_BumpTexture == nullptr ? Effects::BasicFX->Light1TexTech : Effects::BasicFX->Light1TexNorma;
@@ -83,18 +83,18 @@ void Jaraffe::Component::MeshRenderer::Render()
 	tech->GetDesc(&techDesc);
 	for (UINT p = 0; p < techDesc.Passes; ++p)
 	{
-		tech->GetPassByIndex(p)->Apply(0, gRENDERER->GetDC());
+		tech->GetPassByIndex(p)->Apply(0, gRENDERER->DeviceContext());
 
 		// 색인 36개로 상자를 그린다.
-		gRENDERER->GetDC()->DrawIndexed(pMesh->m_IndexCount, 0, 0);
+		gRENDERER->DeviceContext()->DrawIndexed(pMesh->m_IndexCount, 0, 0);
 	}
 
 	// 기본 랜더상태로 복원한다.
-	gRENDERER->GetDC()->RSSetState(0);
-	gRENDERER->GetDC()->OMSetBlendState(0, blendFactors, 0xffffffff);
+	gRENDERER->DeviceContext()->RSSetState(0);
+	gRENDERER->DeviceContext()->OMSetBlendState(0, blendFactors, 0xffffffff);
 }
 
-void Jaraffe::Component::MeshRenderer::Release()
+void JF::Component::MeshRenderer::Release()
 {
 
 }

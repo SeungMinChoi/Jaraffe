@@ -1,8 +1,8 @@
 #pragma once
 
-using namespace Jaraffe::Component;
+using namespace JF::Component;
 
-namespace Jaraffe
+namespace JF
 {
 
 class GameObject
@@ -52,7 +52,7 @@ private:
 #pragma region Template Functions
 
 template<class _component_t>
-void Jaraffe::GameObject::InsertComponent(_component_t* p_newComponent)
+void JF::GameObject::InsertComponent(_component_t* p_newComponent)
 {
 	size_t componentId = get_component<_component_t>::type::GetComponentID();
 	if (m_mapComponents.find(componentId) != m_mapComponents.end())
@@ -63,7 +63,7 @@ void Jaraffe::GameObject::InsertComponent(_component_t* p_newComponent)
 }
 
 template<class _component_t>
-void Jaraffe::GameObject::RemoveComponent()
+void JF::GameObject::RemoveComponent()
 {
 	size_t componentId = get_component<_component_t>::type::GetComponentID();
 	auto iterFind = m_mapComponents.find(componentId);
@@ -75,7 +75,7 @@ void Jaraffe::GameObject::RemoveComponent()
 }
 
 template<class _component_t>
-_component_t* Jaraffe::GameObject::GetComponent(void)
+_component_t* JF::GameObject::GetComponent(void)
 {
 	size_t componentId = get_component<_component_t>::type::GetComponentID();
 	if (m_mapComponents.find(componentId) == m_mapComponents.end())
