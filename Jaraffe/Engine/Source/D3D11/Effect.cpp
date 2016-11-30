@@ -81,6 +81,77 @@ JF::BasicEffect::~BasicEffect()
 
 #pragma endregion 
 
+#pragma region LightPrePassGeometyBufferEffect
+
+JF::LightPrePassGeometyBufferEffect::LightPrePassGeometyBufferEffect(ID3D11Device * device, const std::wstring & filename)
+	: Effect(device, filename)
+{
+	BasicTech		= mFX->GetTechniqueByName("Basic");
+	Basic_NoNormal	= mFX->GetTechniqueByName("Basic_NoNormal");
+	
+	World			= mFX->GetVariableByName("gWorld")->AsMatrix();
+	WorldView		= mFX->GetVariableByName("gWorldView")->AsMatrix();
+	WorldViewProj	= mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
+	NormalMap		= mFX->GetVariableByName("gNormalMap")->AsShaderResource();
+}
+
+JF::LightPrePassGeometyBufferEffect::~LightPrePassGeometyBufferEffect()
+{
+}
+
+#pragma endregion 
+
+#pragma region LightPrePassLightBufferEffect
+
+JF::LightPrePassLightBufferEffect::LightPrePassLightBufferEffect(ID3D11Device * device, const std::wstring & filename)
+	: Effect(device, filename)
+{
+	DirectionalLightTech	= mFX->GetTechniqueByName("DirectionalLight");
+	PointLightTech			= mFX->GetTechniqueByName("PointLight");
+	SpotLightTech			= mFX->GetTechniqueByName("Spotlight");
+
+	LightPos				= mFX->GetVariableByName("LightPos")->AsVector();
+	LightColor				= mFX->GetVariableByName("LightColor")->AsVector();
+	LightDirection			= mFX->GetVariableByName("LightDirection")->AsVector();
+	SpotlightAngles			= mFX->GetVariableByName("SpotLightAngles")->AsVector();
+	LightRange				= mFX->GetVariableByName("LightRange")->AsVector();
+
+	CameraPos				= mFX->GetVariableByName("CameraPos")->AsVector();
+
+	NormalTexture			= mFX->GetVariableByName("gNormalTexture")->AsShaderResource();
+	PositionTexture			= mFX->GetVariableByName("gPositionTexture")->AsShaderResource();
+}
+
+JF::LightPrePassLightBufferEffect::~LightPrePassLightBufferEffect()
+{
+}
+
+#pragma endregion 
+
+#pragma region LightPrePassGeometry
+
+JF::LightPrePassGeometry::LightPrePassGeometry(ID3D11Device * device, const std::wstring & filename)
+	: Effect(device, filename)
+{
+	BasicTech		= mFX->GetTechniqueByName("Basic");
+
+	World			= mFX->GetVariableByName("gWorld")->AsMatrix();
+	WorldView		= mFX->GetVariableByName("gWorldView")->AsMatrix();
+	WorldViewProj	= mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
+
+	SpecularAlbedo	= mFX->GetVariableByName("SpecularAlbedo")->AsVector();
+
+	DiffuseMap		= mFX->GetVariableByName("DiffuseMap")->AsShaderResource();
+	LightTexture	= mFX->GetVariableByName("LightTexture")->AsShaderResource();
+}
+
+JF::LightPrePassGeometry::~LightPrePassGeometry()
+{
+}
+
+
+#pragma endregion
+
 #pragma region SkyEffect
 
 JF::SkyEffect::SkyEffect(ID3D11Device* device, const std::wstring& filename)
@@ -100,15 +171,22 @@ JF::SkyEffect::~SkyEffect()
 #pragma region Effects
 
 // Static Values
-JF::SimpleEffect*	JF::Effects::SimpleFX = 0;
-JF::BasicEffect*	JF::Effects::BasicFX = 0;
-JF::SkyEffect*		JF::Effects::CubeMapFX = 0;
+JF::SimpleEffect*						JF::Effects::SimpleFX = 0;
+JF::BasicEffect*						JF::Effects::BasicFX = 0;
+JF::SkyEffect*							JF::Effects::CubeMapFX = 0;
+JF::LightPrePassGeometyBufferEffect*	JF::Effects::LightPrePassGeometyBufferFX = 0;
+JF::LightPrePassLightBufferEffect*		JF::Effects::LightPrePassLightBufferFX = 0;
+JF::LightPrePassGeometry*				JF::Effects::LightPrePassGeometryFX = 0;
+
 
 void JF::Effects::InitAll(ID3D11Device * device)
 {
-	SimpleFX	= new SimpleEffect(device, L"Source/Shader/Color.fxo");
-	BasicFX		= new BasicEffect(device, L"Source/Shader/Basic.fxo");
-	CubeMapFX	= new SkyEffect(device, L"Source/Shader/CubeMap.fxo");
+	SimpleFX					= new SimpleEffect(device, L"Source/Shader/Color.fxo");
+	BasicFX						= new BasicEffect(device, L"Source/Shader/Basic.fxo");
+	CubeMapFX					= new SkyEffect(device, L"Source/Shader/CubeMap.fxo");
+	LightPrePassGeometyBufferFX = new LightPrePassGeometyBufferEffect(device, L"Source/Shader/LightPrePass/LightPrePassGeometryBuffer.fxo");
+	LightPrePassLightBufferFX	= new LightPrePassLightBufferEffect(device, L"Source/Shader/LightPrePass/LightPrePassLightBuffer.fxo");
+	LightPrePassGeometryFX		= new LightPrePassGeometry(device, L"Source/Shader/LightPrePass/LightPrePassGeometry.fxo");
 }
 
 void JF::Effects::DestroyAll()
@@ -116,6 +194,9 @@ void JF::Effects::DestroyAll()
 	SafeDelete(SimpleFX);
 	SafeDelete(BasicFX);
 	SafeDelete(CubeMapFX);
+	SafeDelete(LightPrePassGeometyBufferFX);
+	SafeDelete(LightPrePassLightBufferFX);
+	SafeDelete(LightPrePassGeometryFX);
 }
 
 #pragma endregion

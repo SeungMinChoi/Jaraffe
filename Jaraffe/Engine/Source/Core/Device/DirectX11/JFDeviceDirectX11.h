@@ -22,14 +22,15 @@ namespace JF
 		void Reset();
 		void Present();
 
+		void AutoRander(std::vector<JF::GameObject*>& _objectList);
+
 		// Get)
 		ID3D11Device*					Device()					const	{ return m_pDevice.GetInterfacePtr(); };
 		ID3D11DeviceContext*			DeviceContext()				const	{ return m_pDeviceContext.GetInterfacePtr(); };
 		IDXGISwapChain*					SwapChain()					const	{ return m_pSwapChain.GetInterfacePtr(); };
 		ID3D11RenderTargetView*			BackBuffer()				const	{ return m_pBackBufferRTView.GetInterfacePtr(); };
-		ID3D11DepthStencilView*			DepthStencilView()			const	{ return m_pAutoDSView; };
-		ID3D11ShaderResourceView*		DepthStencilSRView()		const	{ return m_pAutoDSSRView; };
-
+		ID3D11DepthStencilView*			DepthStencilView()			const	{ return m_pAutoDSView.GetInterfacePtr(); };
+		ID3D11ShaderResourceView*		DepthStencilSRView()		const	{ return m_pAutoDSSRView.GetInterfacePtr(); };
 		const bool						FullScreen()				const	{ return m_bFullScreen; };
 		const UINT						BackBufferWidth()			const	{ return m_nBackBufferWidth; };
 		const UINT						BackBufferHeight()			const	{ return m_nBackBufferHeight; };
@@ -49,6 +50,11 @@ namespace JF
 		void AfterReset();
 		void CheckForSuitableOutput();
 		void PrepareFullScreenSettings();
+
+		// Light Pre Pass Rander
+		void LightPrePassGeometryBufferRander(std::vector<JF::GameObject*>& _objectList);
+		void LightPrePassLightBufferRander();
+		void LightPrePassGeometryRander(std::vector<JF::GameObject*>& _objectList);
 
 	//=============================================================================
 	// Protected Members)
@@ -70,6 +76,19 @@ namespace JF
 		// Shader 에서 사용할 DepthStencil 텍스쳐
 		bool							m_bUseAutoDSAsSR;
 		ID3D11ShaderResourceViewPtr		m_pAutoDSSRView;
+
+		// G-Buffers
+		ID3D11Texture2DPtr				m_pGBufferTexture[2];
+		ID3D11RenderTargetViewPtr		m_pGBufferRTView[2];
+		ID3D11ShaderResourceViewPtr		m_pGBufferSRView[2];
+
+		// Light Buffer
+		ID3D11Texture2DPtr				m_pLightBufferTexture;
+		ID3D11RenderTargetViewPtr		m_pLightBufferRTView;
+		ID3D11ShaderResourceViewPtr		m_pLightBufferSRView;
+
+		// Temp
+		JF::Component::Mesh*			m_BoxMesh;
 
 		// 
 		IDXGIFactory1Ptr                m_pFactory;

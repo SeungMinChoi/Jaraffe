@@ -98,7 +98,7 @@ HRESULT JF::JFCScene::Init()
 		JF::Material* pMat = new JF::Material();
 		{
 			JF::Texture* pTex = new JF::Texture();
-			pTex->SetTexture(gTEXTUREMGR->CreateTexture( L"Resources/Textures/darkbrickdxt1.dds"));
+			pTex->SetTexture(gTEXTUREMGR->CreateTexture( L"Resources/Textures/WoodCrate01.dds"));
 
 			pMat->m_RSState = JF::RenderStates::GetRasterizerStates()->BackFaceCull();
 			pMat->m_MainTexture = pTex;
@@ -225,16 +225,19 @@ void JF::JFCScene::Update()
 void JF::JFCScene::Render()
 {
 	// 1) Back Buffer BackGround Clear.
-	gRENDERER->DeviceContext()->ClearRenderTargetView(gRENDERER->BackBuffer(), reinterpret_cast<const float*>(&JF::Util::Colors::Blue) );
+	//gRENDERER->DeviceContext()->ClearRenderTargetView(gRENDERER->BackBuffer(), reinterpret_cast<const float*>(&JF::Util::Colors::Blue) );
 
 	// 2) Depth And Stencil View Clear.
-	gRENDERER->DeviceContext()->ClearDepthStencilView(gRENDERER->DepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	//gRENDERER->DeviceContext()->ClearDepthStencilView(gRENDERER->DepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	// 3) All Renderer Render
-	for (size_t i = 0; i < m_ObjectList.size(); i++)
-	{
-		m_ObjectList[i]->Render();
-	}
+	// 3)
+	gRENDERER->AutoRander(m_ObjectList);
+
+	// 4) All Renderer Render
+	//for (size_t i = 0; i < m_ObjectList.size(); i++)
+	//{
+	//	m_ObjectList[i]->Render();
+	//}
 }
 
 void JF::JFCScene::Release()

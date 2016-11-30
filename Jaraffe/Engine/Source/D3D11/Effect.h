@@ -90,6 +90,99 @@ public:
 
 #pragma endregion
 
+#pragma region LightPrePassGeometyBufferEffect
+
+class LightPrePassGeometyBufferEffect : public Effect
+{
+public:
+	LightPrePassGeometyBufferEffect(ID3D11Device* device, const std::wstring& filename);
+	virtual ~LightPrePassGeometyBufferEffect();
+
+	void SetWorld(CXMMATRIX M)			{ World->SetMatrix(reinterpret_cast<const float*>(&M)); }
+	void SetWorldView(CXMMATRIX M)		{ WorldView->SetMatrix(reinterpret_cast<const float*>(&M)); }
+	void SetWorldViewProj(CXMMATRIX M)	{ WorldViewProj->SetMatrix(reinterpret_cast<const float*>(&M)); }
+	void SetNormalMap(ID3D11ShaderResourceView* tex) { NormalMap->SetResource(tex); }
+
+	ID3DX11EffectTechnique* BasicTech;
+	ID3DX11EffectTechnique* Basic_NoNormal;
+
+	ID3DX11EffectMatrixVariable* World;
+	ID3DX11EffectMatrixVariable* WorldView;
+	ID3DX11EffectMatrixVariable* WorldViewProj;
+
+	ID3DX11EffectShaderResourceVariable* NormalMap;
+};
+
+#pragma endregion
+
+#pragma region LightPrePassLightBufferEffect
+
+class LightPrePassLightBufferEffect : public Effect
+{
+public:
+	LightPrePassLightBufferEffect(ID3D11Device* device, const std::wstring& filename);
+	virtual ~LightPrePassLightBufferEffect();
+
+	void SetLightPos(const XMFLOAT3& v)			{ LightPos->SetRawValue(&v, 0, sizeof(XMFLOAT3)); }
+	void SetLightColor(const XMFLOAT3& v)		{ LightColor->SetRawValue(&v, 0, sizeof(XMFLOAT3)); }
+	void SetLightDirection(const XMFLOAT3& v)	{ LightDirection->SetRawValue(&v, 0, sizeof(XMFLOAT3)); }
+	void SetSpotlightAngles(const XMFLOAT2& v)	{ SpotlightAngles->SetRawValue(&v, 0, sizeof(XMFLOAT2)); }
+	void SetLightRange(const XMFLOAT4& v)		{ LightRange->SetRawValue(&v, 0, sizeof(XMFLOAT4)); }
+
+	void SetCameraPos(const XMFLOAT3& v)		{ CameraPos->SetRawValue(&v, 0, sizeof(XMFLOAT3)); }
+
+	void SetNormalTexture(ID3D11ShaderResourceView* tex) { NormalTexture->SetResource(tex); }
+	void SetPositionTexture(ID3D11ShaderResourceView* tex) { PositionTexture->SetResource(tex); }
+
+	ID3DX11EffectTechnique* DirectionalLightTech;
+	ID3DX11EffectTechnique* PointLightTech;
+	ID3DX11EffectTechnique* SpotLightTech;
+
+	ID3DX11EffectVectorVariable* LightPos;
+	ID3DX11EffectVectorVariable* LightColor;
+	ID3DX11EffectVectorVariable* LightDirection;
+	ID3DX11EffectVectorVariable* SpotlightAngles;
+	ID3DX11EffectVectorVariable* LightRange;
+
+	ID3DX11EffectVectorVariable* CameraPos;
+
+	ID3DX11EffectShaderResourceVariable* NormalTexture;
+	ID3DX11EffectShaderResourceVariable* PositionTexture;
+};
+
+#pragma endregion
+
+#pragma region LightPrePassGeometry
+
+class LightPrePassGeometry : public Effect
+{
+public:
+	LightPrePassGeometry(ID3D11Device* device, const std::wstring& filename);
+	virtual ~LightPrePassGeometry();
+
+	void SetWorld(CXMMATRIX M)							{ World->SetMatrix(reinterpret_cast<const float*>(&M)); }
+	void SetWorldView(CXMMATRIX M)						{ WorldView->SetMatrix(reinterpret_cast<const float*>(&M)); }
+	void SetWorldViewProj(CXMMATRIX M)					{ WorldViewProj->SetMatrix(reinterpret_cast<const float*>(&M)); }
+
+	void SetSpecularAlbedo(const XMFLOAT3& v)			{ SpecularAlbedo->SetRawValue(&v, 0, sizeof(XMFLOAT3)); }
+
+	void SetDiffuseMap(ID3D11ShaderResourceView* tex)	{ DiffuseMap->SetResource(tex); }
+	void SetLightTexture(ID3D11ShaderResourceView* tex) { LightTexture->SetResource(tex); }
+
+	ID3DX11EffectTechnique* BasicTech;
+
+	ID3DX11EffectMatrixVariable* World;
+	ID3DX11EffectMatrixVariable* WorldView;
+	ID3DX11EffectMatrixVariable* WorldViewProj;
+
+	ID3DX11EffectVectorVariable* SpecularAlbedo;
+
+	ID3DX11EffectShaderResourceVariable* DiffuseMap;
+	ID3DX11EffectShaderResourceVariable* LightTexture;
+};
+
+#pragma endregion
+
 #pragma region SkyEffect
 
 class SkyEffect : public Effect
@@ -121,6 +214,10 @@ public:
 	static SimpleEffect* SimpleFX;
 	static BasicEffect* BasicFX;
 	static SkyEffect* CubeMapFX;
+
+	static LightPrePassGeometyBufferEffect* LightPrePassGeometyBufferFX;
+	static LightPrePassLightBufferEffect*	LightPrePassLightBufferFX;
+	static LightPrePassGeometry*			LightPrePassGeometryFX;
 };
 
 #pragma endregion

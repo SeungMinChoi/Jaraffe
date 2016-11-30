@@ -85,6 +85,9 @@
     <CustomBuild Include="Source\Shader\Basic.fx" />
     <CustomBuild Include="Source\Shader\Color.fx" />
     <CustomBuild Include="Source\Shader\CubeMap.fx" />
+    <CustomBuild Include="Source\Shader\LightPrePass\LightPrePassGeometryBuffer.fx" />
+    <CustomBuild Include="Source\Shader\LightPrePass\LightPrePassLightBuffer.fx" />
+    <CustomBuild Include="Source\Shader\LightPrePass\LightPrePassGeometry.fx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\LightHelper.fx" />

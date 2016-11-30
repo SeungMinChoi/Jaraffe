@@ -146,9 +146,14 @@ XMMATRIX JF::Component::Camera::GetViewProj() const
 	return XMMatrixMultiply(GetView(), GetProj());
 }
 
-XMFLOAT3 JF::Component::Camera::GetEyePos() const
+XMFLOAT3 JF::Component::Camera::GetEyePos()
 {
-	return m_vEye;
+	// Transform 이 없다면 무의미하므로 리턴.
+	auto* pTransform = GetOwner()->GetComponent<JF::Component::Transform>();
+	if (pTransform == nullptr)
+		return m_vEye;
+
+	return pTransform->GetPosition();
 }
 
 void JF::Component::Camera::SetMainCamera(Camera* p_pCamera)

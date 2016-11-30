@@ -36,6 +36,7 @@ public:
 //=============================================================================
 // Public Functions) 
 //=============================================================================
+public:
 	JF::Material* GetMaterial();
 	void SetMaterial(JF::Material* p_pMaterial);
 

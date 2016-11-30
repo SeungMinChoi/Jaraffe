@@ -3,4 +3,11 @@
 namespace JF
 {
 	class JFCScene;
+
+	class GameObject;
+
+	namespace Component
+	{
+		class Mesh;
+	}
 }

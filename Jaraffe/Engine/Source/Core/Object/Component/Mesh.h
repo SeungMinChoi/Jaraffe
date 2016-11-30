@@ -38,13 +38,15 @@ public:
 //=============================================================================
 public:
 	std::vector<JF::Vertex::PosNormalTexTan>&	GetVertices()	{ return m_pVertices; }
-	std::vector<UINT>&								GetIndices()	{ return m_pIndices; }
+	std::vector<UINT>&							GetIndices()	{ return m_pIndices; }
 
 	ID3D11InputLayout*	GetInputLayout()	{ return m_pInputLayout; }
 	UINT				GetStride()			{ return m_Stride; }
 
 	ID3D11Buffer*		GetVB()				{ return m_pVB; }
 	ID3D11Buffer*		GetIB()				{ return m_pIB; }
+
+	int					GetIndexCount()		{ return m_IndexCount; }
 
 //=============================================================================
 // protected Members) 

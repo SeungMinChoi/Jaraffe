@@ -41,9 +41,9 @@ void JF::InputLayouts::InitAll(ID3D11Device * device)
 	HR(device->CreateInputLayout(InputLayoutDesc::PosColor, 2,
 		passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &PosColor));
 
-	Effects::BasicFX->Light1TexTech->GetPassByIndex(0)->GetDesc(&passDesc);
-	HR(device->CreateInputLayout(InputLayoutDesc::PosNormalTex, 3,
-		passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &PosNormalTex));
+	//Effects::BasicFX->Light1TexTech->GetPassByIndex(0)->GetDesc(&passDesc);
+	//HR(device->CreateInputLayout(InputLayoutDesc::PosNormalTex, 3,
+	//	passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &PosNormalTex));
 
 	Effects::BasicFX->Light1TexTech->GetPassByIndex(0)->GetDesc(&passDesc);
 	HR(device->CreateInputLayout(InputLayoutDesc::PosNormalTexTan, 4,

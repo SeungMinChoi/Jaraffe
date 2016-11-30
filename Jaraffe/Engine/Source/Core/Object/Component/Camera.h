@@ -39,7 +39,7 @@ public:
 	XMMATRIX		GetProj() const;
 	XMMATRIX		GetViewProj() const;
 
-	XMFLOAT3		GetEyePos() const;
+	XMFLOAT3		GetEyePos();
 
 //=============================================================================
 // Public static Functions) 
