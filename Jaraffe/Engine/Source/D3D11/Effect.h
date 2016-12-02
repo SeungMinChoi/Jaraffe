@@ -127,7 +127,7 @@ public:
 	void SetLightColor(const XMFLOAT3& v)		{ LightColor->SetRawValue(&v, 0, sizeof(XMFLOAT3)); }
 	void SetLightDirection(const XMFLOAT3& v)	{ LightDirection->SetRawValue(&v, 0, sizeof(XMFLOAT3)); }
 	void SetSpotlightAngles(const XMFLOAT2& v)	{ SpotlightAngles->SetRawValue(&v, 0, sizeof(XMFLOAT2)); }
-	void SetLightRange(const XMFLOAT4& v)		{ LightRange->SetRawValue(&v, 0, sizeof(XMFLOAT4)); }
+	void SetLightRange(const float& f)			{ LightRange->SetFloat(f); }
 
 	void SetCameraPos(const XMFLOAT3& v)		{ CameraPos->SetRawValue(&v, 0, sizeof(XMFLOAT3)); }
 
@@ -142,7 +142,7 @@ public:
 	ID3DX11EffectVectorVariable* LightColor;
 	ID3DX11EffectVectorVariable* LightDirection;
 	ID3DX11EffectVectorVariable* SpotlightAngles;
-	ID3DX11EffectVectorVariable* LightRange;
+	ID3DX11EffectScalarVariable* LightRange;
 
 	ID3DX11EffectVectorVariable* CameraPos;
 

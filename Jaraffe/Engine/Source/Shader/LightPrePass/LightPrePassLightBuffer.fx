@@ -7,7 +7,7 @@ cbuffer cbLightParams
 	float3 LightColor;
 	float3 LightDirection;
 	float2 SpotLightAngles;
-	float4 LightRange;
+	float LightRange;
 };
 
 cbuffer cbCameraParams
@@ -40,7 +40,7 @@ float4 CalcLighting(in float3 normal, in float3 position, in float specularPower
 
 		// 광원과의 거리에 기초해서 감쇠 계수를 구한다.
 		float dist = length(L);
-		attenuation = max(0, 1.0f - (dist / LightRange.x));
+		attenuation = max(0, 1.0f - (dist / LightRange));
 
 		L /= dist;
 	}
@@ -67,8 +67,7 @@ float4 CalcLighting(in float3 normal, in float3 position, in float specularPower
 	float specular = pow(saturate(dot(normal, H)), specularPower) * attenuation * nDotL;
 
 	// 분산광 색상과 반영광 세기를 출력한다.
-	float3 ambient = float3(0.2f, 0.2f, 0.2f);
-	return float4(diffuse + ambient, specular);
+	return float4(diffuse, specular);
 }
 
 float4 VS(in float3 position : POSITION) : SV_Position

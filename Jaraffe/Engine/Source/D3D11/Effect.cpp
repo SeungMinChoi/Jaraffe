@@ -114,7 +114,7 @@ JF::LightPrePassLightBufferEffect::LightPrePassLightBufferEffect(ID3D11Device * 
 	LightColor				= mFX->GetVariableByName("LightColor")->AsVector();
 	LightDirection			= mFX->GetVariableByName("LightDirection")->AsVector();
 	SpotlightAngles			= mFX->GetVariableByName("SpotLightAngles")->AsVector();
-	LightRange				= mFX->GetVariableByName("LightRange")->AsVector();
+	LightRange				= mFX->GetVariableByName("LightRange")->AsScalar();
 
 	CameraPos				= mFX->GetVariableByName("CameraPos")->AsVector();
 

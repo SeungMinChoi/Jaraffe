@@ -23,6 +23,8 @@ void JF::Component::MeshRenderer::Update(float t)
 
 void JF::Component::MeshRenderer::Render()
 {
+	/*
+	
 	// Declear)
 	float blendFactors[] = {0.0f, 0.0f, 0.0f, 0.0f};
 
@@ -92,6 +94,7 @@ void JF::Component::MeshRenderer::Render()
 	// 기본 랜더상태로 복원한다.
 	gRENDERER->DeviceContext()->RSSetState(0);
 	gRENDERER->DeviceContext()->OMSetBlendState(0, blendFactors, 0xffffffff);
+	*/
 }
 
 void JF::Component::MeshRenderer::Release()

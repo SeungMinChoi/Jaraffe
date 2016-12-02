@@ -12,6 +12,8 @@ class GameObject
 //=============================================================================
 private:
 	GameObject();
+
+public:
 	virtual ~GameObject();
 
 public:

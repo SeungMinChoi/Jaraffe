@@ -43,13 +43,9 @@ public:
 	PointLight() { ZeroMemory(this, sizeof(this)); }
 
 public:
-	// Packed into 4D vector: (Position, Range)
-	XMFLOAT3 Position;
-	float Range;
-
-	// Packed into 4D vector: (A0, A1, A2, Pad)
+	// Packed into 4D vector: (A0, A1, A2, Range)
 	XMFLOAT3 Att;
-	float Pad; // Pad the last float so we can set an array of lights if we wanted.
+	float Range;
 };
 
 struct SpotLight : BasicLight
@@ -58,17 +54,13 @@ public:
 	SpotLight() { ZeroMemory(this, sizeof(this)); }
 
 public:
-	// Packed into 4D vector: (Position, Range)
-	XMFLOAT3 Position;
-	float Range;
-
 	// Packed into 4D vector: (Direction, Spot)
 	XMFLOAT3 Direction;
 	float Spot;
 
 	// Packed into 4D vector: (Att, Pad)
 	XMFLOAT3 Att;
-	float Pad; // Pad the last float so we can set an array of lights if we wanted.
+	float Range;
 };
 
 struct Material

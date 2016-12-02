@@ -32,12 +32,6 @@ void JF::GameObject::Update(float t)
 
 void JF::GameObject::Render()
 {
-	auto pRenderer = GetComponent<JF::Component::Renderer>();
-	if (pRenderer != nullptr)
-	{
-		pRenderer->Render();
-	}
-
 	auto pCubeMap = GetComponent<JF::Component::SkyBox>();
 	if (pCubeMap != nullptr)
 	{
@@ -56,5 +50,6 @@ void JF::GameObject::Release()
 	for each (auto component in m_mapComponents)
 	{
 		component.second->Release();
+		SafeDelete(component.second);
 	}
 }

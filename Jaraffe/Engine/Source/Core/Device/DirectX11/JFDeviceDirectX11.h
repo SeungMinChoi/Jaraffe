@@ -53,7 +53,7 @@ namespace JF
 
 		// Light Pre Pass Rander
 		void LightPrePassGeometryBufferRander(std::vector<JF::GameObject*>& _objectList);
-		void LightPrePassLightBufferRander();
+		void LightPrePassLightBufferRander(std::vector<JF::GameObject*>& _objectList);
 		void LightPrePassGeometryRander(std::vector<JF::GameObject*>& _objectList);
 
 	//=============================================================================
@@ -88,6 +88,7 @@ namespace JF
 		ID3D11ShaderResourceViewPtr		m_pLightBufferSRView;
 
 		// Temp
+		
 		JF::Component::Mesh*			m_BoxMesh;
 
 		// 

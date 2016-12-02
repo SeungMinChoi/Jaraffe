@@ -6,6 +6,7 @@ namespace Vertex
 {
 	enum class VertexType
 	{
+		Position,
 		PosColor,
 		PosNormalTex,
 		PosNormalTexTan,
@@ -14,6 +15,17 @@ namespace Vertex
 	struct BasicVertex
 	{
 		BasicVertex(){}
+	};
+
+	struct Position : BasicVertex
+	{
+		Position() : BasicVertex() {}
+		Position(XMFLOAT3 pos)
+			: BasicVertex(), Pos(pos) {}
+		Position(float px, float py, float pz)
+			: BasicVertex(), Pos(px, py, pz) {}
+
+		XMFLOAT3 Pos;
 	};
 
 	// PosColor 24Byte Struct
@@ -80,6 +92,7 @@ namespace Vertex
 class InputLayoutDesc
 {
 public:
+	static const D3D11_INPUT_ELEMENT_DESC Position[1];
 	static const D3D11_INPUT_ELEMENT_DESC PosColor[2];
 	static const D3D11_INPUT_ELEMENT_DESC PosNormalTex[3];
 	static const D3D11_INPUT_ELEMENT_DESC PosNormalTexTan[4];
@@ -91,6 +104,7 @@ public:
 	static void InitAll(ID3D11Device* device);
 	static void DestroyAll();
 
+	static ID3D11InputLayout* Position;
 	static ID3D11InputLayout* PosColor;
 	static ID3D11InputLayout* PosNormalTex;
 	static ID3D11InputLayout* PosNormalTexTan;

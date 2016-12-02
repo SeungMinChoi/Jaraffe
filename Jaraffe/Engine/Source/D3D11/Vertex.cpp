@@ -3,6 +3,11 @@
 
 #pragma region InputLayoutDesc
 
+const D3D11_INPUT_ELEMENT_DESC JF::InputLayoutDesc::Position[1] =
+{
+	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+};
+
 const D3D11_INPUT_ELEMENT_DESC JF::InputLayoutDesc::PosColor[2] =
 {
 	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -29,6 +34,7 @@ const D3D11_INPUT_ELEMENT_DESC JF::InputLayoutDesc::PosNormalTexTan[4] =
 #pragma region cInputLayouts
 
 // Static Values
+ID3D11InputLayout* JF::InputLayouts::Position = 0;
 ID3D11InputLayout* JF::InputLayouts::PosColor = 0;
 ID3D11InputLayout* JF::InputLayouts::PosNormalTex = 0;
 ID3D11InputLayout* JF::InputLayouts::PosNormalTexTan = 0;
@@ -36,6 +42,10 @@ ID3D11InputLayout* JF::InputLayouts::PosNormalTexTan = 0;
 void JF::InputLayouts::InitAll(ID3D11Device * device)
 {
 	D3DX11_PASS_DESC passDesc;
+	
+	Effects::LightPrePassLightBufferFX->DirectionalLightTech->GetPassByIndex(0)->GetDesc(&passDesc);
+	HR(device->CreateInputLayout(InputLayoutDesc::Position, 1,
+		passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &Position));
 
 	Effects::SimpleFX->ColorTech->GetPassByIndex(0)->GetDesc(&passDesc);
 	HR(device->CreateInputLayout(InputLayoutDesc::PosColor, 2,
@@ -52,6 +62,7 @@ void JF::InputLayouts::InitAll(ID3D11Device * device)
 
 void JF::InputLayouts::DestroyAll()
 {
+	ReleaseCOM(Position);
 	ReleaseCOM(PosColor);
 	ReleaseCOM(PosNormalTex);
 	ReleaseCOM(PosNormalTexTan);

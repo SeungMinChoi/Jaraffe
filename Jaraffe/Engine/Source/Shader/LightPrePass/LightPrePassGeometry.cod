@@ -170,15 +170,16 @@ fxgroup
                 #line 67
                 ld_indexable(texture2d)(float,float,float,float) r1.xyzw, r1.xyzw, t1.xyzw  // lighting<0:Inf,1:Inf,2:Inf,3:Inf>
                 
-                #line 70
+                #line 71
+                add r1.xyz, r1.xyzx, l(0.500000, 0.500000, 0.500000, 0.000000)
                 mul r0.xyz, r0.xyzx, r1.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mul r0.w, r1.w, cb0[0].x  // specular<0:NaN:Inf>
                 
-                #line 74
+                #line 75
                 add o0.xyz, r0.wwww, r0.xyzx  // PS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov o0.w, l(1.000000)  // PS<3: 1f>
                 ret 
-                // Approximately 10 instruction slots used
+                // Approximately 11 instruction slots used
                             
             };
         }

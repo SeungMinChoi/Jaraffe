@@ -9,5 +9,6 @@ namespace JF
 	namespace Component
 	{
 		class Mesh;
+		class Light;
 	}
 }

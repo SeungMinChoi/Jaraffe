@@ -43,57 +43,56 @@ HRESULT JF::JFCScene::Init()
 		m_ObjectList.push_back(m_pMainCamera);
 	}
 
-	// 2) Create Directional Light 1
+	// 2) Directional Light 1
 	{
-		JF::Component::Light* pMainLight = new JF::Component::Light();
-		auto plight = pMainLight->SetLightType(JF::Light::LightType::Directional);
+		JF::Component::Light* directionalLight = new JF::Component::Light();
+		auto* plight = directionalLight->SetLightType(JF::Light::LightType::Directional);
 		if (plight != nullptr)
 		{
 			auto cast = (JF::Light::DirectionalLight*)plight;
-			cast->Ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-			cast->Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-			cast->Specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+			cast->Ambient	= XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+			cast->Diffuse	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+			cast->Specular	= XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 			cast->Direction = XMFLOAT3(-0.707f, -0.30f, 0.707f);
 		}
 
-		GameObject* m_DirectionalLight = GameObject::Create();
-		m_DirectionalLight->InsertComponent(new Transform);
-		m_DirectionalLight->InsertComponent(pMainLight);
-
-		m_ObjectList.push_back(m_DirectionalLight);
-	}
-
-	// ---- T E S T _ B O X 1 ---- //
-	{
-		JF::Material* pMat = new JF::Material();
-		JF::Texture* pTex = new JF::Texture();
-		pTex->SetTexture(gTEXTUREMGR->CreateTexture( L"Resources/Textures/WireFence.dds"));
-
-		pMat->m_RSState = JF::RenderStates::GetRasterizerStates()->BackFaceCull();
-		pMat->m_MainTexture = pTex;
-
-		MeshRenderer* pBoxMeshRenderer = new MeshRenderer();
-		pBoxMeshRenderer->SetMaterial(pMat);
-
-		Mesh* pBoxMesh = new Mesh();
-		float w2 = 1.0f;
-		float h2 = 1.0f;
-		float d2 = 1.0f;
-		JF::GeometryGenerator::CreateBox(w2, h2, d2, pBoxMesh->GetVertices(), pBoxMesh->GetIndices());
-
 		GameObject* m_pTestBox = GameObject::Create();
 		m_pTestBox->InsertComponent(new Transform);
-		m_pTestBox->InsertComponent(pBoxMeshRenderer);
-		m_pTestBox->InsertComponent(pBoxMesh);
-
-		ColisionBox* pColisionBox = new ColisionBox(m_pApp->GetPXDevice());
-		pColisionBox->SethalfExtents(XMFLOAT3(0.5f, 0.5f, 0.5f));
-		m_pTestBox->InsertComponent(pColisionBox);
+		m_pTestBox->InsertComponent(directionalLight);
 
 		m_ObjectList.push_back(m_pTestBox);
 	}
 
-	// ---- T E S T _ B O X 2 ---- //
+	// 2) Point Light 1
+	{
+		int offsetX = 0;
+		int offsetZ = 0;
+		for (int i = 0; i < 50; ++i)
+		{
+			offsetX = i % 5;
+			offsetZ = i / 10;
+
+			auto* pLight = new JF::Component::Light();
+			auto* pPointLight = pLight->SetLightType(JF::Light::LightType::Point);
+			if (pPointLight != nullptr)
+			{
+				auto cast = (JF::Light::PointLight*)pPointLight;
+				cast->Diffuse	= XMFLOAT4(JF::Util::MathHelper::RandF() * 2, JF::Util::MathHelper::RandF() * 2, JF::Util::MathHelper::RandF() * 2, 1.0f);
+				cast->Range		= 10.0f;
+			}
+
+			auto* plightPos = new Transform();
+			plightPos->SetPosition(offsetX * 20.0f - 40.0f, 0.0f, offsetZ * 20.0f - 40.0f);
+
+			GameObject* pNewGameObject = GameObject::Create();
+			pNewGameObject->InsertComponent(plightPos);
+			pNewGameObject->InsertComponent(pLight);
+
+			m_ObjectList.push_back(pNewGameObject);
+		}
+	}
+
+	// ---- T E S T _ B O X 1 ---- //
 	{
 		JF::Material* pMat = new JF::Material();
 		{
@@ -121,6 +120,36 @@ HRESULT JF::JFCScene::Init()
 		m_pTestBox->InsertComponent(transform);
 		m_pTestBox->InsertComponent(pBoxMeshRenderer);
 		m_pTestBox->InsertComponent(pBoxMesh);
+
+		m_ObjectList.push_back(m_pTestBox);
+	}
+
+	// ---- T E S T _ B O X 2---- //
+	{
+		JF::Material* pMat = new JF::Material();
+		JF::Texture* pTex = new JF::Texture();
+		pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/WireFence.dds"));
+
+		pMat->m_RSState = JF::RenderStates::GetRasterizerStates()->BackFaceCull();
+		pMat->m_MainTexture = pTex;
+
+		MeshRenderer* pBoxMeshRenderer = new MeshRenderer();
+		pBoxMeshRenderer->SetMaterial(pMat);
+
+		Mesh* pBoxMesh = new Mesh();
+		float w2 = 1.0f;
+		float h2 = 1.0f;
+		float d2 = 1.0f;
+		JF::GeometryGenerator::CreateBox(w2, h2, d2, pBoxMesh->GetVertices(), pBoxMesh->GetIndices());
+
+		GameObject* m_pTestBox = GameObject::Create();
+		m_pTestBox->InsertComponent(new Transform);
+		m_pTestBox->InsertComponent(pBoxMeshRenderer);
+		m_pTestBox->InsertComponent(pBoxMesh);
+
+		ColisionBox* pColisionBox = new ColisionBox(m_pApp->GetPXDevice());
+		pColisionBox->SethalfExtents(XMFLOAT3(0.5f, 0.5f, 0.5f));
+		m_pTestBox->InsertComponent(pColisionBox);
 
 		m_ObjectList.push_back(m_pTestBox);
 	}
@@ -160,6 +189,27 @@ HRESULT JF::JFCScene::Init()
 		m_pTestBox->InsertComponent(pBoxMesh);
 
 		m_ObjectList.push_back(m_pTestBox);
+	}
+
+	// ---- T E S T _ M O D E L 1 ---- //
+	{
+		JF::Material* pMat = new JF::Material();
+		Transform* groundtransform = new Transform;
+		groundtransform->SetScale(0.5f, 0.5f, 0.5f);
+		groundtransform->SetPosition(20.0f, -3.0f, 0.0f);
+
+		Mesh* pGroundMesh = new Mesh();
+		JF::MeshLoader::OBJLoad(L"Resources/Models/Rock02.obj", pGroundMesh->GetVertices(), pGroundMesh->GetIndices(), *pMat);
+
+		GameObject* m_pTestGround = GameObject::Create();
+		m_pTestGround->InsertComponent(groundtransform);
+
+		MeshRenderer* pMeshRenderer = new MeshRenderer();
+		pMeshRenderer->SetMaterial(pMat);
+		m_pTestGround->InsertComponent(pMeshRenderer);
+		m_pTestGround->InsertComponent(pGroundMesh);
+
+		m_ObjectList.push_back(m_pTestGround);
 	}
 
 	// ---- T E S T _ G R O U N D ---- //
@@ -209,10 +259,17 @@ void JF::JFCScene::Update()
 	m_pApp->GetPXDevice()->GetScene()->fetchResults(true);
 
 	// test
+	for (size_t i = 0; i < m_ObjectList.size(); i++)
 	{
-		m_ObjectList[3]->GetComponent<Transform>()->Roll(deltaTime);
-		m_ObjectList[3]->GetComponent<Transform>()->Pitch(deltaTime);
-		m_ObjectList[3]->GetComponent<Transform>()->Yaw(deltaTime);
+		auto* boxRenderer = m_ObjectList[i]->GetComponent<MeshRenderer>();
+		if(boxRenderer == nullptr)
+			continue;
+
+		m_ObjectList[i]->GetComponent<Transform>()->Roll(deltaTime);
+		m_ObjectList[i]->GetComponent<Transform>()->Pitch(deltaTime);
+		m_ObjectList[i]->GetComponent<Transform>()->Yaw(deltaTime);
+
+		break;
 	}
 
 	// 2) All GameObject Update
@@ -224,20 +281,8 @@ void JF::JFCScene::Update()
 
 void JF::JFCScene::Render()
 {
-	// 1) Back Buffer BackGround Clear.
-	//gRENDERER->DeviceContext()->ClearRenderTargetView(gRENDERER->BackBuffer(), reinterpret_cast<const float*>(&JF::Util::Colors::Blue) );
-
-	// 2) Depth And Stencil View Clear.
-	//gRENDERER->DeviceContext()->ClearDepthStencilView(gRENDERER->DepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-	// 3)
+	// 1)
 	gRENDERER->AutoRander(m_ObjectList);
-
-	// 4) All Renderer Render
-	//for (size_t i = 0; i < m_ObjectList.size(); i++)
-	//{
-	//	m_ObjectList[i]->Render();
-	//}
 }
 
 void JF::JFCScene::Release()
@@ -246,6 +291,7 @@ void JF::JFCScene::Release()
 	for (size_t i = 0; i < m_ObjectList.size(); i++)
 	{
 		m_ObjectList[i]->Release();
+		SafeDelete(m_ObjectList[i]);
 	}
 	m_ObjectList.clear();
 

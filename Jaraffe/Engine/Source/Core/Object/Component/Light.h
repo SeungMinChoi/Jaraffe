@@ -33,8 +33,10 @@ public:
 public:
 	JF::Light::BasicLight*			SetLightType(JF::Light::LightType p_LightType);
 	
-	JF::Light::BasicLight*			GetLight();
-	JF::Light::DirectionalLight*	GetDirectionalLight();
+	const JF::Light::LightType&				GetLightType()				const	{ return m_LightType; }
+	const JF::Light::DirectionalLight*		GetDirectionalLight()				{ return static_cast<JF::Light::DirectionalLight*>(m_pLight); }
+	const JF::Light::PointLight*			GetPointLight()						{ return static_cast<JF::Light::PointLight*>(m_pLight); }
+	const JF::Light::SpotLight*				GetSpotLight()						{ return static_cast<JF::Light::SpotLight*>(m_pLight); }
 
 //=============================================================================
 // Private Members) 
@@ -45,12 +47,6 @@ private:
 
 	// 
 	JF::Light::BasicLight* m_pLight = nullptr;
-
-//=============================================================================
-// public static Members) 
-//=============================================================================
-public:
-	static std::vector<Light*> m_vLights;
 };
 
 }

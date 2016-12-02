@@ -9,7 +9,7 @@ cbuffer cbLightParams
     float3  LightColor;                 // Offset:   16, size:   12
     float3  LightDirection;             // Offset:   32, size:   12
     float2  SpotLightAngles;            // Offset:   48, size:    8
-    float4  LightRange;                 // Offset:   64, size:   16
+    float   LightRange;                 // Offset:   56, size:    4
 }
 
 cbuffer cbCameraParams
@@ -59,7 +59,7 @@ fxgroup
                 dcl_input v0.xyz
                 dcl_output_siv o0.xyzw, position
                 
-                #line 77 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
+                #line 76 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
                 mov o0.xyz, v0.xyzx  // VS<0,1,2>
                 mov o0.w, l(1.000000)  // VS<3: 1f>
                 ret 
@@ -81,7 +81,7 @@ fxgroup
                 //   float3 LightColor;                 // Offset:   16 Size:    12
                 //   float3 LightDirection;             // Offset:   32 Size:    12
                 //   float2 SpotLightAngles;            // Offset:   48 Size:     8 [unused]
-                //   float4 LightRange;                 // Offset:   64 Size:    16 [unused]
+                //   float LightRange;                  // Offset:   56 Size:     4 [unused]
                 //
                 // }
                 //
@@ -127,7 +127,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 4
                 
-                #line 87 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
+                #line 86 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
                 nop 
                 mov r0.xy, v0.xyxx  // screenPos<0,1>
                 
@@ -140,7 +140,7 @@ fxgroup
                 ld_indexable(texture2d)(float,float,float,float) r0.xyz, r0.xyzw, t1.xyzw
                 mov r0.xyz, r0.xyzx  // position<0:Inf,1:Inf,2:Inf>
                 
-                #line 87
+                #line 86
                 mov r1.xyz, r1.xyzx  // normal<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // position<0:Inf,1:Inf,2:Inf>
                 mov r1.w, r1.w  // specularPower<0:Inf>
@@ -173,14 +173,14 @@ fxgroup
                 mul r0.x, r0.x, r1.w
                 exp r0.x, r0.x
                 mul r0.x, r0.x, l(1.000000)
-                mul r0.w, r0.w, r0.x  // specular<0:NaN:Inf>
+                mul r3.w, r0.w, r0.x  // specular<0:NaN:Inf>
                 
-                #line 71
-                add r0.xyz, r3.xyzx, l(0.200000, 0.200000, 0.200000, 0.000000)  // CalcLighting<0,1,2>
-                mov r0.w, r0.w  // CalcLighting<3:NaN:Inf>
+                #line 70
+                mov r3.xyz, r3.xyzx  // CalcLighting<0,1,2>
+                mov r3.w, r3.w  // CalcLighting<3:NaN:Inf>
                 
-                #line 89
-                mov o0.xyzw, r0.xyzw  // PS<0,1,2,3:NaN:Inf>
+                #line 88
+                mov o0.xyzw, r3.xyzw  // PS<0,1,2,3:NaN:Inf>
                 ret 
                 // Approximately 40 instruction slots used
                             
@@ -217,7 +217,7 @@ fxgroup
                 dcl_input v0.xyz
                 dcl_output_siv o0.xyzw, position
                 
-                #line 77 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
+                #line 76 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
                 mov o0.xyz, v0.xyzx  // VS<0,1,2>
                 mov o0.w, l(1.000000)  // VS<3: 1f>
                 ret 
@@ -239,7 +239,7 @@ fxgroup
                 //   float3 LightColor;                 // Offset:   16 Size:    12
                 //   float3 LightDirection;             // Offset:   32 Size:    12 [unused]
                 //   float2 SpotLightAngles;            // Offset:   48 Size:     8 [unused]
-                //   float4 LightRange;                 // Offset:   64 Size:    16
+                //   float LightRange;                  // Offset:   56 Size:     4
                 //
                 // }
                 //
@@ -277,7 +277,7 @@ fxgroup
                 //
                 ps_5_0
                 dcl_globalFlags refactoringAllowed
-                dcl_constantbuffer cb0[5], immediateIndexed
+                dcl_constantbuffer cb0[4], immediateIndexed
                 dcl_constantbuffer cb1[1], immediateIndexed
                 dcl_resource_texture2d (float,float,float,float) t0
                 dcl_resource_texture2d (float,float,float,float) t1
@@ -285,7 +285,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 4
                 
-                #line 87 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
+                #line 86 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
                 nop 
                 mov r0.xy, v0.xyxx  // screenPos<0,1>
                 
@@ -298,7 +298,7 @@ fxgroup
                 ld_indexable(texture2d)(float,float,float,float) r0.xyz, r0.xyzw, t1.xyzw
                 mov r0.xyz, r0.xyzx  // position<0:Inf,1:Inf,2:Inf>
                 
-                #line 87
+                #line 86
                 mov r1.xyz, r1.xyzx  // normal<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // position<0:Inf,1:Inf,2:Inf>
                 mov r1.w, r1.w  // specularPower<0:Inf>
@@ -314,7 +314,7 @@ fxgroup
                 #line 42
                 dp3 r0.w, r2.xyzx, r2.xyzx
                 sqrt r0.w, r0.w  // dist<0:NaN:Inf>
-                div r2.w, r0.w, cb0[4].x
+                div r2.w, r0.w, cb0[3].z
                 mov r2.w, -r2.w
                 add r2.w, r2.w, l(1.000000)
                 max r2.w, r2.w, l(0.000000)  // attenuation<0:Inf:[-0f,1.#INFf]>
@@ -340,14 +340,14 @@ fxgroup
                 mul r0.x, r0.x, r1.w
                 exp r0.x, r0.x
                 mul r0.x, r2.w, r0.x
-                mul r0.w, r0.w, r0.x  // specular<0:NaN:Inf>
+                mul r3.w, r0.w, r0.x  // specular<0:NaN:Inf>
                 
-                #line 71
-                add r0.xyz, r3.xyzx, l(0.200000, 0.200000, 0.200000, 0.000000)  // CalcLighting<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                mov r0.w, r0.w  // CalcLighting<3:NaN:Inf>
+                #line 70
+                mov r3.xyz, r3.xyzx  // CalcLighting<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r3.w, r3.w  // CalcLighting<3:NaN:Inf>
                 
-                #line 89
-                mov o0.xyzw, r0.xyzw  // PS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                #line 88
+                mov o0.xyzw, r3.xyzw  // PS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 ret 
                 // Approximately 47 instruction slots used
                             
@@ -384,7 +384,7 @@ fxgroup
                 dcl_input v0.xyz
                 dcl_output_siv o0.xyzw, position
                 
-                #line 77 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
+                #line 76 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
                 mov o0.xyz, v0.xyzx  // VS<0,1,2>
                 mov o0.w, l(1.000000)  // VS<3: 1f>
                 ret 
@@ -406,7 +406,7 @@ fxgroup
                 //   float3 LightColor;                 // Offset:   16 Size:    12
                 //   float3 LightDirection;             // Offset:   32 Size:    12
                 //   float2 SpotLightAngles;            // Offset:   48 Size:     8
-                //   float4 LightRange;                 // Offset:   64 Size:    16
+                //   float LightRange;                  // Offset:   56 Size:     4
                 //
                 // }
                 //
@@ -444,7 +444,7 @@ fxgroup
                 //
                 ps_5_0
                 dcl_globalFlags refactoringAllowed
-                dcl_constantbuffer cb0[5], immediateIndexed
+                dcl_constantbuffer cb0[4], immediateIndexed
                 dcl_constantbuffer cb1[1], immediateIndexed
                 dcl_resource_texture2d (float,float,float,float) t0
                 dcl_resource_texture2d (float,float,float,float) t1
@@ -452,7 +452,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 5
                 
-                #line 87 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
+                #line 86 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
                 nop 
                 mov r0.xy, v0.xyxx  // screenPos<0,1>
                 
@@ -465,7 +465,7 @@ fxgroup
                 ld_indexable(texture2d)(float,float,float,float) r0.xyz, r0.xyzw, t1.xyzw
                 mov r0.xyz, r0.xyzx  // position<0:Inf,1:Inf,2:Inf>
                 
-                #line 87
+                #line 86
                 mov r1.xyz, r1.xyzx  // normal<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // position<0:Inf,1:Inf,2:Inf>
                 mov r1.w, r1.w  // specularPower<0:Inf>
@@ -481,7 +481,7 @@ fxgroup
                 #line 42
                 dp3 r0.w, r2.xyzx, r2.xyzx
                 sqrt r0.w, r0.w  // dist<0:NaN:Inf>
-                div r2.w, r0.w, cb0[4].x
+                div r2.w, r0.w, cb0[3].z
                 mov r2.w, -r2.w
                 add r2.w, r2.w, l(1.000000)
                 max r2.w, r2.w, l(0.000000)  // attenuation<0:Inf:[-0f,1.#INFf]>
@@ -519,14 +519,14 @@ fxgroup
                 mul r0.x, r0.x, r1.w
                 exp r0.x, r0.x
                 mul r0.x, r0.w, r0.x
-                mul r0.w, r2.w, r0.x  // specular<0:NaN:Inf>
+                mul r3.w, r2.w, r0.x  // specular<0:NaN:Inf>
                 
-                #line 71
-                add r0.xyz, r3.xyzx, l(0.200000, 0.200000, 0.200000, 0.000000)  // CalcLighting<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
-                mov r0.w, r0.w  // CalcLighting<3:NaN:Inf>
+                #line 70
+                mov r3.xyz, r3.xyzx  // CalcLighting<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
+                mov r3.w, r3.w  // CalcLighting<3:NaN:Inf>
                 
-                #line 89
-                mov o0.xyzw, r0.xyzw  // PS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
+                #line 88
+                mov o0.xyzw, r3.xyzw  // PS<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf,3:NaN:Inf>
                 ret 
                 // Approximately 57 instruction slots used
                             
