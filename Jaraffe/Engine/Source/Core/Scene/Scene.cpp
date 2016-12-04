@@ -31,7 +31,7 @@ HRESULT JF::JFCScene::Init()
 		Camera::SetMainCamera(newCamera);
 
 		Transform* transform = new Transform();
-		transform->SetPosition(0.0f, 0.0f, -10.0f);
+		transform->SetPosition(-10.0f, 5.0f, -50.0f);
 
 		GameObject* m_pMainCamera = GameObject::Create();
 		m_pMainCamera->InsertComponent(transform);
@@ -58,6 +58,28 @@ HRESULT JF::JFCScene::Init()
 
 		GameObject* m_pTestBox = GameObject::Create();
 		m_pTestBox->InsertComponent(new Transform);
+		m_pTestBox->InsertComponent(directionalLight);
+
+		m_ObjectList.push_back(m_pTestBox);
+	}
+
+	// 2) Spot Light 1
+	{
+		JF::Component::Light* directionalLight = new JF::Component::Light();
+		auto* plight = directionalLight->SetLightType(JF::Light::LightType::Spot);
+		if (plight != nullptr)
+		{
+			auto cast = (JF::Light::SpotLight*)plight;
+			cast->Diffuse	= XMFLOAT4(1.0f, 0.7f, 0.1f, 1.0f);
+			cast->Direction = XMFLOAT3(0.0f, 0.0f, 1.1f);
+			cast->Range = 50.0f;
+		}
+
+		auto* plightPos = new Transform();
+		plightPos->SetPosition(-10.0f, 10.0f, -10.0f);
+
+		GameObject* m_pTestBox = GameObject::Create();
+		m_pTestBox->InsertComponent(plightPos);
 		m_pTestBox->InsertComponent(directionalLight);
 
 		m_ObjectList.push_back(m_pTestBox);
@@ -182,6 +204,38 @@ HRESULT JF::JFCScene::Init()
 		Transform* transform = new Transform();
 		transform->SetPosition(0.0f, 0.0f, 0.0f);
 		transform->SetRotation(0.0f, 0.0f, 0.0f);
+
+		GameObject* m_pTestBox = GameObject::Create();
+		m_pTestBox->InsertComponent(transform);
+		m_pTestBox->InsertComponent(pBoxMeshRenderer);
+		m_pTestBox->InsertComponent(pBoxMesh);
+
+		m_ObjectList.push_back(m_pTestBox);
+	}
+
+	// ---- T E S T _ B O X 4---- //
+	{
+		JF::Material* pMat = new JF::Material();
+		{
+			JF::Texture* pTex = new JF::Texture();
+			pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/gravel_a.dds"));
+
+			pMat->m_MainTexture = pTex;
+		}
+
+		MeshRenderer* pBoxMeshRenderer = new MeshRenderer();
+		pBoxMeshRenderer->SetMaterial(pMat);
+
+		Mesh* pBoxMesh = new Mesh();
+		float w2 = 1.0f;
+		float h2 = 1.0f;
+		float d2 = 1.0f;
+		JF::GeometryGenerator::CreateBox(w2, h2, d2, pBoxMesh->GetVertices(), pBoxMesh->GetIndices());
+
+		Transform* transform = new Transform();
+		transform->SetPosition(-10.0f, 10.0f, 10.0f);
+		transform->SetRotation(0.0f, 0.0f, 0.0f);
+		transform->SetScale(30.0f, 30.0f, 1.0f);
 
 		GameObject* m_pTestBox = GameObject::Create();
 		m_pTestBox->InsertComponent(transform);

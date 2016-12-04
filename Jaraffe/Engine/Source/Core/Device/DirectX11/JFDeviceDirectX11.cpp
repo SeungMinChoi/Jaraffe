@@ -518,7 +518,7 @@ void JF::JFCDeviceDirectX11::LightPrePassLightBufferRander(std::vector<JF::GameO
 				Effects::LightPrePassLightBufferFX->SetLightColor(XMFLOAT3(castingLight->Diffuse.x, castingLight->Diffuse.y, castingLight->Diffuse.z));
 				Effects::LightPrePassLightBufferFX->SetLightRange(castingLight->Range);
 				Effects::LightPrePassLightBufferFX->SetLightDirection(castingLight->Direction);
-				//Effects::LightPrePassLightBufferFX->SetSpotlightAngles(transform->GetPosition());
+				Effects::LightPrePassLightBufferFX->SetSpotlightAngles(XMFLOAT2(1.0f, 1.0f));
 
 				tech = Effects::LightPrePassLightBufferFX->SpotLightTech;
 			}

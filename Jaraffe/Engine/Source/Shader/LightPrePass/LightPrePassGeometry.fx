@@ -67,7 +67,7 @@ float4 PS(in PSInput input) : SV_Target0
 	float4 lighting = LightTexture.Load(sampleIndices);
 
 	// 분산광 반사율과 반영광 반사율을 조명 값에 적용한다.
-	float3 Ambient = float3(0.5f, 0.5f, 0.5f);
+	float3 Ambient = float3(0.2f, 0.2f, 0.2f);
 	float3 diffuse = (lighting.xyz + Ambient) * diffuseAlbedo.rgb;
 	float specular = lighting.w		* SpecularAlbedo;
 

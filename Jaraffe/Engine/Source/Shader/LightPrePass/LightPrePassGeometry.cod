@@ -171,7 +171,7 @@ fxgroup
                 ld_indexable(texture2d)(float,float,float,float) r1.xyzw, r1.xyzw, t1.xyzw  // lighting<0:Inf,1:Inf,2:Inf,3:Inf>
                 
                 #line 71
-                add r1.xyz, r1.xyzx, l(0.500000, 0.500000, 0.500000, 0.000000)
+                add r1.xyz, r1.xyzx, l(0.200000, 0.200000, 0.200000, 0.000000)
                 mul r0.xyz, r0.xyzx, r1.xyzx  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mul r0.w, r1.w, cb0[0].x  // specular<0:NaN:Inf>
                 
