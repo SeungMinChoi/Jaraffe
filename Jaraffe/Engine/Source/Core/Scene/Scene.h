@@ -29,6 +29,8 @@ public:
 protected:
 	JFCApp*							m_pApp;
 	std::vector<JF::GameObject*>	m_ObjectList;
+
+	JF::GameObject*					m_MainLight[MAIN_LIGHT_COUNT];	// 주 라이트 ( 첫번째 라이트만 그림자 표시. )
 };
 
 }

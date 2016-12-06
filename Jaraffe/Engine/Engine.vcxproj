@@ -156,6 +156,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App\JFWindowsApp.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\JFPointLight.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\JFSpotLight.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\JFDirectionalLight.cpp" />
     <ClCompile Include="Source\Core\Device\DirectX11\JFDeviceDirectX11.cpp" />
     <ClCompile Include="Source\Core\Platform\PlatformWindow\OS\JFPlatformWindows.cpp" />
     <ClCompile Include="Source\Core\Object\Component\SkyBox.cpp" />
@@ -168,7 +171,6 @@
     <ClCompile Include="Source\Core\Object\Object.cpp" />
     <ClCompile Include="Source\Core\Object\Material.cpp" />
     <ClCompile Include="Source\Core\Object\Component\Mesh.cpp" />
-    <ClCompile Include="Source\Core\Object\Component\Light.cpp" />
     <ClCompile Include="Source\Core\Object\Component\Renderer.cpp" />
     <ClCompile Include="Source\Core\Object\Component\Interface\BaseComponent.cpp" />
     <ClCompile Include="Source\Core\Object\GameObject\GameObject.cpp" />
@@ -194,6 +196,9 @@
   <ItemGroup>
     <ClInclude Include="App\JFApp.h" />
     <ClInclude Include="App\JFWindowsApp.h" />
+    <ClInclude Include="Source\Core\Object\Component\JFPointLight.h" />
+    <ClInclude Include="Source\Core\Object\Component\JFSpotLight.h" />
+    <ClInclude Include="Source\Core\Object\Component\JFDirectionalLight.h" />
     <ClInclude Include="Source\Core\Common\ForwardDeclaration.h" />
     <ClInclude Include="Source\Core\Common\GlobalValues.h" />
     <ClInclude Include="Source\Core\Common\Utile\JFUtile.h" />
@@ -210,7 +215,6 @@
     <ClInclude Include="Source\Core\Object\Object.h" />
     <ClInclude Include="Source\Core\Object\Material.h" />
     <ClInclude Include="Source\Core\Object\Component\Mesh.h" />
-    <ClInclude Include="Source\Core\Object\Component\Light.h" />
     <ClInclude Include="Source\Core\Object\Component\Renderer.h" />
     <ClInclude Include="Source\Core\Common\GenericPlatformType.h" />
     <ClInclude Include="Source\Core\Object\Component\Interface\CommonComponent.h" />
@@ -233,13 +237,13 @@
     <ClInclude Include="Source\Core\Object\Texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="Source\Shader\Basic.fx">
+    <CustomBuild Include="Source\Shader\ForwardRender\Basic.fx">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc compile for release : %(FullPath)</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)\%(FileName).fxo</Outputs>
     </CustomBuild>
-    <CustomBuild Include="Source\Shader\Color.fx">
+    <CustomBuild Include="Source\Shader\ForwardRender\Color.fx">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc compile for release : %(FullPath)</Message>
@@ -260,7 +264,7 @@
     <Image Include="Resources\mipmaps.dds" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="Source\Shader\CubeMap.fx">
+    <CustomBuild Include="Source\Shader\ForwardRender\CubeMap.fx">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc compile for release : %(FullPath)</Message>
@@ -284,7 +288,23 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="Source\Shader\LightPrePass\LightPrePassGeometry.fx">
+    <CustomBuild Include="Source\Shader\Shadow\ShadowBuffer.fx">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc compile for release : %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)\%(FileName).fxo</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Source\Shader\Debug\DebugTexture.fx">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc compile for release : %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)\%(FileName).fxo</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Source\Shader\ForwardRender\NormalMap.fx">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc compile for release : %(FullPath)</Message>

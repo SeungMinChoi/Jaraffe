@@ -21,7 +21,35 @@ HRESULT JF::JFCScene::Init()
 	m_pApp->GetWindow()->GetClientArea(nClientWidth, nClientHeight);
 	m_pApp->GetPXDevice()->SceneSetting(PxVec3(0.0f, -9.81f, 0.0f), 0.5f, 0.5f, 0.6f);
 
-	// 1) Create MainCamera ( SkyBox 도 붙인다. )
+	// 2) Setting Main Light
+	{
+		m_MainLight[0] = GameObject::Create();
+		m_MainLight[1] = GameObject::Create();
+		m_MainLight[2] = GameObject::Create();
+
+		auto* pdirectionalLightMain = new JFDirectionalLight();
+		pdirectionalLightMain->SetAmbient(0.5f, 0.5f, 0.5f, 1.0f);
+		pdirectionalLightMain->SetDiffuse(1.0f, 0.9f, 0.9f, 1.0f);
+		pdirectionalLightMain->SetSpecular(0.5f, 0.5f, 0.5f, 1.0f);
+		pdirectionalLightMain->SetDirection(-0.57735f, -0.57735f, 0.57735f);
+		m_MainLight[0]->InsertComponent(pdirectionalLightMain);
+
+		auto* pdirectionalLightSub1 = new JFDirectionalLight();
+		pdirectionalLightSub1->SetAmbient(0.0f, 0.0f, 0.0f, 1.0f);
+		pdirectionalLightSub1->SetDiffuse(0.40f, 0.40f, 0.40f, 1.0f);
+		pdirectionalLightSub1->SetSpecular(0.2f, 0.2f, 0.2f, 1.0f);
+		pdirectionalLightSub1->SetDirection(0.707f, -0.707f, 0.0f);
+		m_MainLight[1]->InsertComponent(pdirectionalLightSub1);
+
+		auto* pdirectionalLightSub2 = new JFDirectionalLight();
+		pdirectionalLightSub2->SetAmbient(0.0f, 0.0f, 0.0f, 1.0f);
+		pdirectionalLightSub2->SetDiffuse(0.4f, 0.4f, 0.4f, 1.0f);
+		pdirectionalLightSub2->SetSpecular(0.2f, 0.2f, 0.2f, 1.0f);
+		pdirectionalLightSub2->SetDirection(0.0f, 0.0, -1.0f);
+		m_MainLight[2]->InsertComponent(pdirectionalLightSub2);
+	}
+
+	// 3) Create MainCamera ( SkyBox 도 붙인다. )
 	{
 		JF::Texture* pTex = new JF::Texture();
 		//pTex->SetTexture(gTEXTUREMGR->CreateTexture(L"Resources/Textures/grasscube1024.dds"));
@@ -43,49 +71,24 @@ HRESULT JF::JFCScene::Init()
 		m_ObjectList.push_back(m_pMainCamera);
 	}
 
-	// 2) Directional Light 1
+	// 4) Spot Light
 	{
-		JF::Component::Light* directionalLight = new JF::Component::Light();
-		auto* plight = directionalLight->SetLightType(JF::Light::LightType::Directional);
-		if (plight != nullptr)
-		{
-			auto cast = (JF::Light::DirectionalLight*)plight;
-			cast->Ambient	= XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-			cast->Diffuse	= XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-			cast->Specular	= XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-			cast->Direction = XMFLOAT3(-0.707f, -0.30f, 0.707f);
-		}
-
-		GameObject* m_pTestBox = GameObject::Create();
-		m_pTestBox->InsertComponent(new Transform);
-		m_pTestBox->InsertComponent(directionalLight);
-
-		m_ObjectList.push_back(m_pTestBox);
-	}
-
-	// 2) Spot Light 1
-	{
-		JF::Component::Light* directionalLight = new JF::Component::Light();
-		auto* plight = directionalLight->SetLightType(JF::Light::LightType::Spot);
-		if (plight != nullptr)
-		{
-			auto cast = (JF::Light::SpotLight*)plight;
-			cast->Diffuse	= XMFLOAT4(1.0f, 0.7f, 0.1f, 1.0f);
-			cast->Direction = XMFLOAT3(0.0f, 0.0f, 1.1f);
-			cast->Range = 50.0f;
-		}
+		JF::Component::JFSpotLight* pSpotLight = new JF::Component::JFSpotLight();
+		pSpotLight->SetDiffuse(1.0f, 0.7f, 0.1f, 1.0f);
+		pSpotLight->SetDirection(0.0f, 0.0f, 1.1f);
+		pSpotLight->SetRange(50.0f);
 
 		auto* plightPos = new Transform();
 		plightPos->SetPosition(-10.0f, 10.0f, -10.0f);
 
 		GameObject* m_pTestBox = GameObject::Create();
 		m_pTestBox->InsertComponent(plightPos);
-		m_pTestBox->InsertComponent(directionalLight);
+		m_pTestBox->InsertComponent(pSpotLight);
 
 		m_ObjectList.push_back(m_pTestBox);
 	}
 
-	// 2) Point Light 1
+	// 5) Point Lights ( 50th )
 	{
 		int offsetX = 0;
 		int offsetZ = 0;
@@ -94,21 +97,16 @@ HRESULT JF::JFCScene::Init()
 			offsetX = i % 5;
 			offsetZ = i / 10;
 
-			auto* pLight = new JF::Component::Light();
-			auto* pPointLight = pLight->SetLightType(JF::Light::LightType::Point);
-			if (pPointLight != nullptr)
-			{
-				auto cast = (JF::Light::PointLight*)pPointLight;
-				cast->Diffuse	= XMFLOAT4(JF::Util::MathHelper::RandF() * 2, JF::Util::MathHelper::RandF() * 2, JF::Util::MathHelper::RandF() * 2, 1.0f);
-				cast->Range		= 10.0f;
-			}
+			auto* pPointLight = new JF::Component::JFPointLight();
+			pPointLight->SetDiffuse(JF::Util::MathHelper::RandF() * 2, JF::Util::MathHelper::RandF() * 2, JF::Util::MathHelper::RandF() * 2, 1.0f);
+			pPointLight->SetRange(10.0f);
 
 			auto* plightPos = new Transform();
 			plightPos->SetPosition(offsetX * 20.0f - 40.0f, 0.0f, offsetZ * 20.0f - 40.0f);
 
 			GameObject* pNewGameObject = GameObject::Create();
 			pNewGameObject->InsertComponent(plightPos);
-			pNewGameObject->InsertComponent(pLight);
+			pNewGameObject->InsertComponent(pPointLight);
 
 			m_ObjectList.push_back(pNewGameObject);
 		}
@@ -187,7 +185,6 @@ HRESULT JF::JFCScene::Init()
 			pTexNormal->SetTexture(gTEXTUREMGR->CreateTexture( L"Resources/Textures/TestBumpMap.png"));
 			//pTexNormal->SetTexture(gTEXTUREMGR->CreateTexture( L"Resources/Textures/TestBumpMap2.dds"));
 
-			pMat->m_RSState = JF::RenderStates::GetRasterizerStates()->BackFaceCull();
 			pMat->m_MainTexture = pTex;
 			pMat->m_BumpTexture = pTexNormal;
 		}
@@ -299,6 +296,12 @@ HRESULT JF::JFCScene::Init()
 		m_ObjectList[i]->Init();
 	}
 
+	// Main Lights
+	for (size_t i = 0; i < MAIN_LIGHT_COUNT; i++)
+	{
+		m_MainLight[i]->Init();
+	}
+
 	return S_OK;
 }
 
@@ -331,12 +334,24 @@ void JF::JFCScene::Update()
 	{
 		m_ObjectList[i]->Update(deltaTime);
 	}
+
+	// 3) Main Lights
+	for (int i = 0; i < MAIN_LIGHT_COUNT; ++i)
+	{
+		m_MainLight[i]->Update(deltaTime);
+	}
 }
 
 void JF::JFCScene::Render()
 {
 	// 1)
-	gRENDERER->AutoRander(m_ObjectList);
+	gRENDERER->AutoRander(m_ObjectList, m_MainLight, m_pApp->GetTimer());
+
+	// 2) Debug Render
+	for (size_t i = 0; i < m_ObjectList.size(); i++)
+	{
+		m_ObjectList[i]->Render();
+	}
 }
 
 void JF::JFCScene::Release()
@@ -349,7 +364,14 @@ void JF::JFCScene::Release()
 	}
 	m_ObjectList.clear();
 
-	// 2)
+	// 2) Main Lights
+	for (int i = 0; i < MAIN_LIGHT_COUNT; ++i)
+	{
+		m_MainLight[i]->Release();
+		SafeDelete(m_MainLight[i]);
+	}
+
+	// 3)
 	m_pApp = nullptr;
 }
 

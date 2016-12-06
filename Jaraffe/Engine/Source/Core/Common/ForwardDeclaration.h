@@ -10,5 +10,9 @@ namespace JF
 	{
 		class Mesh;
 		class Light;
+
+		class JFSpotLight;
+		class JFPointLight;
+		class JFDirectionalLight;
 	}
 }

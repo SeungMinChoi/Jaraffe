@@ -22,7 +22,7 @@ namespace JF
 		void Reset();
 		void Present();
 
-		void AutoRander(std::vector<JF::GameObject*>& _objectList);
+		void AutoRander(std::vector<JF::GameObject*>& _objectList, JF::GameObject* _mainLights[MAIN_LIGHT_COUNT], JFCGameTimer* _pTimer);
 
 		// Get)
 		ID3D11Device*					Device()					const	{ return m_pDevice.GetInterfacePtr(); };
@@ -51,10 +51,18 @@ namespace JF
 		void CheckForSuitableOutput();
 		void PrepareFullScreenSettings();
 
-		// Light Pre Pass Rander
-		void LightPrePassGeometryBufferRander(std::vector<JF::GameObject*>& _objectList);
-		void LightPrePassLightBufferRander(std::vector<JF::GameObject*>& _objectList);
-		void LightPrePassGeometryRander(std::vector<JF::GameObject*>& _objectList);
+		// Light Pre Pass Render
+		void LightPrePassGeometryBufferRender(std::vector<JF::GameObject*>& _objectList);
+		void LightPrePassLightBufferRender(std::vector<JF::GameObject*>& _objectList);
+
+		// Shadow Render
+		void ShadowRender(std::vector<JF::GameObject*>& _objectList, JF::GameObject* _mainLights[MAIN_LIGHT_COUNT]);
+
+		// GeometryRender
+		void GeometryRender(std::vector<JF::GameObject*>& _objectList, JF::GameObject* _mainLights[MAIN_LIGHT_COUNT], JFCGameTimer* _pTimer);
+
+		// Test Render
+		void TestRender();
 
 	//=============================================================================
 	// Protected Members)
@@ -66,6 +74,7 @@ namespace JF
 		IDXGISwapChainPtr				m_pSwapChain;
 		ID3D11Texture2DPtr				m_pBackBufferTexture;
 		ID3D11RenderTargetViewPtr		m_pBackBufferRTView;
+		D3D11_VIEWPORT					m_ScreenViewport;
 
 		// DepthStencil 텍스쳐
 		bool							m_bEnableAutoDS;
@@ -76,6 +85,19 @@ namespace JF
 		// Shader 에서 사용할 DepthStencil 텍스쳐
 		bool							m_bUseAutoDSAsSR;
 		ID3D11ShaderResourceViewPtr		m_pAutoDSSRView;
+
+		// 그림자맵
+		ID3D11DepthStencilViewPtr		m_pShadowMapDSView;
+		ID3D11ShaderResourceViewPtr		m_pShadowMapSRView;
+		D3D11_VIEWPORT					m_ShadowMapViewport;
+		XMFLOAT4X4						m_LightView;
+		XMFLOAT4X4						m_LightProj;
+		XMFLOAT4X4						m_ShadowTransform;
+
+		// 그림자맵 설정값들.
+		const UINT						m_nShadowMapSize	= 2048;
+		XMFLOAT3						m_SceneBoundsCenter = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		float							m_SceneBoundsRadius = sqrtf(20000);
 
 		// G-Buffers
 		ID3D11Texture2DPtr				m_pGBufferTexture[2];

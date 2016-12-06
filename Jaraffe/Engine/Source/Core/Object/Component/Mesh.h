@@ -48,6 +48,8 @@ public:
 
 	int					GetIndexCount()		{ return m_IndexCount; }
 
+	XMFLOAT4X4&			GetTexTransform()	{ return m_TexTransform; }
+
 //=============================================================================
 // protected Members) 
 //=============================================================================
@@ -62,6 +64,8 @@ protected:
 
 	ID3D11Buffer*									m_pVB;			// Vertex Buffer
 	ID3D11Buffer*									m_pIB;			// Index Buffer
+
+	XMFLOAT4X4										m_TexTransform;
 };
 
 }

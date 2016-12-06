@@ -78,8 +78,8 @@ PSOutput PS(in VSOutput pin, uniform bool useNormalMap)
 	{
 		// 보간을 거친 접선 공간 기저들을 재정규화한다.
 		float3x3 tangentFrameW = float3x3(normalize(pin.TangentW)
-			, normalize(pin.BitangentW)
-			, normalize(pin.NormalW));
+										, normalize(pin.BitangentW)
+										, normalize(pin.NormalW));
 
 		float3 normalT = gNormalMap.Sample(samAnisotropic, pin.Tex).rgb;
 		normalT = normalize(normalT * 2.0f - 1.0f);

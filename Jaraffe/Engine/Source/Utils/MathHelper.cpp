@@ -5,8 +5,10 @@
 #include "stdafx.h"
 #include "MathHelper.h"
 
-const float JF::Util::MathHelper::Infinity = FLT_MAX;
-const float JF::Util::MathHelper::Pi       = 3.1415926535f;
+const float JF::Util::MathHelper::Infinity	= FLT_MAX;
+const float JF::Util::MathHelper::Pi		= 3.1415926535f;
+const float JF::Util::MathHelper::PiOver2	= Pi / 2.0f;
+const float JF::Util::MathHelper::PiOver4	= Pi / 4.0f;
 
 float JF::Util::MathHelper::AngleFromXY(float x, float y)
 {

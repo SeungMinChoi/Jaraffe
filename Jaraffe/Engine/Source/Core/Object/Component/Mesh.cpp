@@ -5,7 +5,8 @@ DECLARE_IDENTIFIER(JF::Component::Mesh);
 
 JF::Component::Mesh::Mesh()
 {
-
+	XMMATRIX I = XMMatrixIdentity();
+	XMStoreFloat4x4(&m_TexTransform, I);
 }
 
 JF::Component::Mesh::~Mesh()

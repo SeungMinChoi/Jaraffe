@@ -48,34 +48,65 @@ JF::SimpleEffect::~SimpleEffect()
 JF::BasicEffect::BasicEffect(ID3D11Device * device, const std::wstring & filename)
 	: Effect(device, filename)
 {
-	Light1Tech = mFX->GetTechniqueByName("Light1");
-	Light2Tech = mFX->GetTechniqueByName("Light2");
-	Light3Tech = mFX->GetTechniqueByName("Light3");
+	Light1Tech			= mFX->GetTechniqueByName("Light1");
+	Light2Tech			= mFX->GetTechniqueByName("Light2");
+	Light3Tech			= mFX->GetTechniqueByName("Light3");
 
-	Light0TexTech = mFX->GetTechniqueByName("Light0Tex");
-	Light1TexTech = mFX->GetTechniqueByName("Light1Tex");
-	Light2TexTech = mFX->GetTechniqueByName("Light2Tex");
-	Light3TexTech = mFX->GetTechniqueByName("Light3Tex");
-
-	Light0TexNorma = mFX->GetTechniqueByName("Light0TexNormal");
-	Light1TexNorma = mFX->GetTechniqueByName("Light1TexNormal");
-	Light2TexNorma = mFX->GetTechniqueByName("Light2TexNormal");
-	Light3TexNorma = mFX->GetTechniqueByName("Light3TexNormal");
+	Light0TexTech		= mFX->GetTechniqueByName("Light0Tex");
+	Light1TexTech		= mFX->GetTechniqueByName("Light1Tex");
+	Light2TexTech		= mFX->GetTechniqueByName("Light2Tex");
+	Light3TexTech		= mFX->GetTechniqueByName("Light3Tex");
 
 	WorldViewProj		= mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
 	World				= mFX->GetVariableByName("gWorld")->AsMatrix();
 	WorldInvTranspose	= mFX->GetVariableByName("gWorldInvTranspose")->AsMatrix();
 	TexTransform		= mFX->GetVariableByName("gTexTransform")->AsMatrix();
+	ShadowTransform		= mFX->GetVariableByName("gShadowTransform")->AsMatrix();
 	EyePosW				= mFX->GetVariableByName("gEyePosW")->AsVector();
+
 	DirLights			= mFX->GetVariableByName("gDirLights");
 	Mat					= mFX->GetVariableByName("gMaterial");
+
+	LightMap			= mFX->GetVariableByName("gLightMap")->AsShaderResource();
+	ShadowMap			= mFX->GetVariableByName("gShadowMap")->AsShaderResource();
 	DiffuseMap			= mFX->GetVariableByName("gDiffuseMap")->AsShaderResource();
-	NormalMap			= mFX->GetVariableByName("gNormalMap")->AsShaderResource();
 
 	Time				= mFX->GetVariableByName("gTime")->AsScalar();
 }
 
 JF::BasicEffect::~BasicEffect()
+{
+}
+
+#pragma endregion 
+
+#pragma region NormalMapEffect
+
+JF::NormalMapEffect::NormalMapEffect(ID3D11Device * device, const std::wstring & filename)
+	: BasicEffect(device, filename)
+{
+	NormalMap = mFX->GetVariableByName("gNormalMap")->AsShaderResource();
+}
+
+JF::NormalMapEffect::~NormalMapEffect()
+{
+}
+
+#pragma endregion 
+
+#pragma region ShadowBufferEffect
+
+JF::ShadowBufferEffect::ShadowBufferEffect(ID3D11Device * device, const std::wstring & filename)
+	: Effect(device, filename)
+{
+	BuildShadowMapTech			= mFX->GetTechniqueByName("BuildShadowMapTech");
+	BuildShadowMapAlphaClipTech = mFX->GetTechniqueByName("BuildShadowMapAlphaClipTech");
+
+	WorldViewProj	= mFX->GetVariableByName("gLightMVP")->AsMatrix();
+	DiffuseMap		= mFX->GetVariableByName("gDiffuseMap")->AsShaderResource();
+}
+
+JF::ShadowBufferEffect::~ShadowBufferEffect()
 {
 }
 
@@ -128,30 +159,6 @@ JF::LightPrePassLightBufferEffect::~LightPrePassLightBufferEffect()
 
 #pragma endregion 
 
-#pragma region LightPrePassGeometry
-
-JF::LightPrePassGeometry::LightPrePassGeometry(ID3D11Device * device, const std::wstring & filename)
-	: Effect(device, filename)
-{
-	BasicTech		= mFX->GetTechniqueByName("Basic");
-
-	World			= mFX->GetVariableByName("gWorld")->AsMatrix();
-	WorldView		= mFX->GetVariableByName("gWorldView")->AsMatrix();
-	WorldViewProj	= mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
-
-	SpecularAlbedo	= mFX->GetVariableByName("SpecularAlbedo")->AsVector();
-
-	DiffuseMap		= mFX->GetVariableByName("DiffuseMap")->AsShaderResource();
-	LightTexture	= mFX->GetVariableByName("LightTexture")->AsShaderResource();
-}
-
-JF::LightPrePassGeometry::~LightPrePassGeometry()
-{
-}
-
-
-#pragma endregion
-
 #pragma region SkyEffect
 
 JF::SkyEffect::SkyEffect(ID3D11Device* device, const std::wstring& filename)
@@ -168,35 +175,78 @@ JF::SkyEffect::~SkyEffect()
 
 #pragma endregion
 
+#pragma region DebugTexEffect
+
+JF::DebugTexEffect::DebugTexEffect(ID3D11Device* device, const std::wstring& filename)
+	: Effect(device, filename)
+{
+	ViewArgbTech = mFX->GetTechniqueByName("ViewArgbTech");
+	ViewRedTech = mFX->GetTechniqueByName("ViewRedTech");
+	ViewGreenTech = mFX->GetTechniqueByName("ViewGreenTech");
+	ViewBlueTech = mFX->GetTechniqueByName("ViewBlueTech");
+	ViewAlphaTech = mFX->GetTechniqueByName("ViewAlphaTech");
+
+	WorldViewProj = mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
+	Texture = mFX->GetVariableByName("gTexture")->AsShaderResource();
+}
+
+JF::DebugTexEffect::~DebugTexEffect()
+{
+
+}
+
+#pragma endregion
+
+
 #pragma region Effects
 
 // Static Values
 JF::SimpleEffect*						JF::Effects::SimpleFX = 0;
+
 JF::BasicEffect*						JF::Effects::BasicFX = 0;
+JF::NormalMapEffect*					JF::Effects::NormalMapFX = 0;
+
 JF::SkyEffect*							JF::Effects::CubeMapFX = 0;
+
+JF::ShadowBufferEffect*					JF::Effects::ShadowBufferFX = 0;
+
 JF::LightPrePassGeometyBufferEffect*	JF::Effects::LightPrePassGeometyBufferFX = 0;
 JF::LightPrePassLightBufferEffect*		JF::Effects::LightPrePassLightBufferFX = 0;
-JF::LightPrePassGeometry*				JF::Effects::LightPrePassGeometryFX = 0;
 
+JF::DebugTexEffect*						JF::Effects::DebugTextureFX = 0;
 
 void JF::Effects::InitAll(ID3D11Device * device)
 {
-	SimpleFX					= new SimpleEffect(device, L"Source/Shader/Color.fxo");
-	BasicFX						= new BasicEffect(device, L"Source/Shader/Basic.fxo");
-	CubeMapFX					= new SkyEffect(device, L"Source/Shader/CubeMap.fxo");
+	SimpleFX					= new SimpleEffect(device, L"Source/Shader/ForwardRender/Color.fxo");
+
+	BasicFX						= new BasicEffect(device, L"Source/Shader/ForwardRender/Basic.fxo");
+	NormalMapFX					= new NormalMapEffect(device, L"Source/Shader/ForwardRender/NormalMap.fxo");
+
+	CubeMapFX					= new SkyEffect(device, L"Source/Shader/ForwardRender/CubeMap.fxo");
+
+	ShadowBufferFX				= new ShadowBufferEffect(device, L"Source/Shader/Shadow/ShadowBuffer.fxo");
+
 	LightPrePassGeometyBufferFX = new LightPrePassGeometyBufferEffect(device, L"Source/Shader/LightPrePass/LightPrePassGeometryBuffer.fxo");
 	LightPrePassLightBufferFX	= new LightPrePassLightBufferEffect(device, L"Source/Shader/LightPrePass/LightPrePassLightBuffer.fxo");
-	LightPrePassGeometryFX		= new LightPrePassGeometry(device, L"Source/Shader/LightPrePass/LightPrePassGeometry.fxo");
+
+	DebugTextureFX				= new DebugTexEffect(device, L"Source/Shader/Debug/DebugTexture.fxo");
 }
 
 void JF::Effects::DestroyAll()
 {
 	SafeDelete(SimpleFX);
+
 	SafeDelete(BasicFX);
+	SafeDelete(NormalMapFX);
+
 	SafeDelete(CubeMapFX);
+
+	SafeDelete(ShadowBufferFX);
+
 	SafeDelete(LightPrePassGeometyBufferFX);
 	SafeDelete(LightPrePassLightBufferFX);
-	SafeDelete(LightPrePassGeometryFX);
+
+	SafeDelete(DebugTextureFX);
 }
 
 #pragma endregion

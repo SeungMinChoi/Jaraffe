@@ -14,6 +14,13 @@ namespace Util
 class MathHelper
 {
 public:
+	// Constants
+	static const float Pi;
+	static const float PiOver2;
+	static const float PiOver4;
+	static const float Infinity;
+
+public:
 	// Returns random float in [0, 1).
 	static float RandF()
 	{
@@ -101,13 +108,22 @@ public:
 		return XMFLOAT3(-matrix._21, -matrix._22, -matrix._23);
 	}
 
+	// Returns the translation vector from a transform matrix
+	static XMVECTOR TranslationVec(const XMMATRIX& matrix)
+	{
+		return XMLoadFloat3(&XMFLOAT3(matrix._41, matrix._42, matrix._43));
+	}
+
+	// Sets the translation vector in a transform matrix
+	static void SetTranslationVec(XMMATRIX& matrix, const XMVECTOR& translation)
+	{
+		matrix._41 = XMVectorGetX(translation);
+		matrix._42 = XMVectorGetY(translation);
+		matrix._43 = XMVectorGetZ(translation);
+	}
+
 	static XMVECTOR RandUnitVec3();
 	static XMVECTOR RandHemisphereUnitVec3(XMVECTOR n);
-
-	static const float Infinity;
-	static const float Pi;
-
-
 };
 
 }

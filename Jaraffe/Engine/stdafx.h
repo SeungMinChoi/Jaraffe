@@ -162,11 +162,14 @@
 #include "Source/Core/Object/Component/Camera.h"
 #include "Source/Core/Object/Component/Renderer.h"
 #include "Source/Core/Object/Component/MeshRenderer.h"
-#include "Source/Core/Object/Component/Light.h"
 #include "Source/Core/Object/Component/Mesh.h"
 #include "Source/Core/Object/Component/Colision.h"
 #include "Source/Core/Object/Component/ColisionBox.h"
 #include "Source/Core/Object/Component/SkyBox.h"
+
+#include "Source/Core/Object/Component/JFSpotLight.h"
+#include "Source/Core/Object/Component/JFPointLight.h"
+#include "Source/Core/Object/Component/JFDirectionalLight.h"
 
 //=============================================================================
 // 12) Scene

@@ -17,7 +17,6 @@
     <ClCompile Include="Source\Core\Object\Component\Camera.cpp" />
     <ClCompile Include="Source\Core\Object\Component\Renderer.cpp" />
     <ClCompile Include="Source\Core\Object\Component\MeshRenderer.cpp" />
-    <ClCompile Include="Source\Core\Object\Component\Light.cpp" />
     <ClCompile Include="Source\Core\Object\Component\Interface\BaseComponent.cpp" />
     <ClCompile Include="Source\Core\Object\GameObject\GameObject.cpp" />
     <ClCompile Include="Source\Core\Object\Component\Mesh.cpp" />
@@ -39,6 +38,9 @@
     <ClCompile Include="Source\Core\Scene\Scene.cpp" />
     <ClCompile Include="Source\Core\Manager\Input\Input.cpp" />
     <ClCompile Include="FrameworkMain.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\JFDirectionalLight.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\JFPointLight.cpp" />
+    <ClCompile Include="Source\Core\Object\Component\JFSpotLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -51,7 +53,6 @@
     <ClInclude Include="Source\Core\Object\Component\Camera.h" />
     <ClInclude Include="Source\Core\Object\Component\Renderer.h" />
     <ClInclude Include="Source\Core\Object\Component\MeshRenderer.h" />
-    <ClInclude Include="Source\Core\Object\Component\Light.h" />
     <ClInclude Include="Source\Core\Object\Component\Interface\BaseComponent.h" />
     <ClInclude Include="Source\Core\Object\Component\Interface\CommonComponent.h" />
     <ClInclude Include="Source\Core\Object\GameObject\GameObject.h" />
@@ -80,14 +81,19 @@
     <ClInclude Include="Source\Core\Manager\Input\Input.h" />
     <ClInclude Include="App\JFApp.h" />
     <ClInclude Include="Source\Core\Common\ForwardDeclaration.h" />
+    <ClInclude Include="Source\Core\Object\Component\JFDirectionalLight.h" />
+    <ClInclude Include="Source\Core\Object\Component\JFPointLight.h" />
+    <ClInclude Include="Source\Core\Object\Component\JFSpotLight.h" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="Source\Shader\Basic.fx" />
-    <CustomBuild Include="Source\Shader\Color.fx" />
-    <CustomBuild Include="Source\Shader\CubeMap.fx" />
     <CustomBuild Include="Source\Shader\LightPrePass\LightPrePassGeometryBuffer.fx" />
     <CustomBuild Include="Source\Shader\LightPrePass\LightPrePassLightBuffer.fx" />
-    <CustomBuild Include="Source\Shader\LightPrePass\LightPrePassGeometry.fx" />
+    <CustomBuild Include="Source\Shader\Shadow\ShadowBuffer.fx" />
+    <CustomBuild Include="Source\Shader\ForwardRender\Basic.fx" />
+    <CustomBuild Include="Source\Shader\ForwardRender\CubeMap.fx" />
+    <CustomBuild Include="Source\Shader\Debug\DebugTexture.fx" />
+    <CustomBuild Include="Source\Shader\ForwardRender\Color.fx" />
+    <CustomBuild Include="Source\Shader\ForwardRender\NormalMap.fx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\LightHelper.fx" />
