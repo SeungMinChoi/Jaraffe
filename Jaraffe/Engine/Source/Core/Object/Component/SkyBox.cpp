@@ -13,13 +13,13 @@ JF::Component::SkyBox::~SkyBox()
 {
 }
 
-void JF::Component::SkyBox::Init()
+void JF::Component::SkyBox::Reset()
 {
 	// 1)
 	GeometryGenerator::CreateSphere(m_SkySphereRadius, 30, 30, m_pVertices, m_pIndices);
 
 	// 2) Mesh Setting)
-	Mesh::Init();
+	Mesh::Reset();
 }
 
 void JF::Component::SkyBox::Render()

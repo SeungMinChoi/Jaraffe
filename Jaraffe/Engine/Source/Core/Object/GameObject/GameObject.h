@@ -39,7 +39,7 @@ public:
 // Public Functions) 
 //=============================================================================
 public:
-	void Init();
+	void Reset();
 	void Update(float t);
 	void Render();
 	void Release();

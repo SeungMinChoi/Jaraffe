@@ -5,7 +5,7 @@ namespace JF
 namespace Component
 {
 
-// TODO : Init Temp Setting
+// TODO : Reset Temp Setting
 class Mesh : public BaseComponent
 {
 //=============================================================================
@@ -30,7 +30,7 @@ public:
 // override) 
 //=============================================================================
 public:
-	virtual void Init();
+	virtual void Reset();
 	virtual void Release();
 
 //=============================================================================

@@ -11,7 +11,7 @@ JF::Component::MeshRenderer::~MeshRenderer()
 {
 }
 
-void JF::Component::MeshRenderer::Init()
+void JF::Component::MeshRenderer::Reset()
 {
 
 }

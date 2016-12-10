@@ -24,7 +24,7 @@ public:
 // override) 
 //=============================================================================
 public:
-	virtual void	Init();
+	virtual void	Reset();
 	virtual void	Update(float t);
 	virtual void	Render();
 	virtual void	Release();
@@ -38,6 +38,9 @@ public:
 	XMMATRIX		GetView() const;
 	XMMATRIX		GetProj() const;
 	XMMATRIX		GetViewProj() const;
+
+	float			GetFarY() const { return m_FovY; }
+	float			GetFarZ() const { return m_FarZ; }
 
 	XMFLOAT3		GetEyePos();
 

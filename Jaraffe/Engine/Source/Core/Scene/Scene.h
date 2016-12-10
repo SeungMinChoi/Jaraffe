@@ -16,7 +16,7 @@ public:
 // public Method)
 //=============================================================================
 public:
-	virtual HRESULT Init();
+	virtual HRESULT Reset();
 	virtual void	Update();
 	virtual void	Render();
 	virtual void	Release();

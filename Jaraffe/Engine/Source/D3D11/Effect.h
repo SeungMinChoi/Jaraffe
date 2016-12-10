@@ -51,6 +51,7 @@ public:
 
 	void SetWorld				(CXMMATRIX M)						{ World->SetMatrix(reinterpret_cast<const float*>(&M)); }
 	void SetWorldViewProj		(CXMMATRIX M)						{ WorldViewProj->SetMatrix(reinterpret_cast<const float*>(&M)); }
+	void SetWorldViewProjTex	(CXMMATRIX M)						{ WorldViewProjTex->SetMatrix(reinterpret_cast<const float*>(&M)); }
 	void SetWorldInvTranspose	(CXMMATRIX M)						{ WorldInvTranspose->SetMatrix(reinterpret_cast<const float*>(&M)); }
 
 	void SetTexTransform		(CXMMATRIX M)						{ TexTransform->SetMatrix(reinterpret_cast<const float*>(&M)); }
@@ -63,6 +64,7 @@ public:
 
 	void SetTime				(const float& f)					{ Time->SetFloat(f); }
 
+	void SetSSAOMap				(ID3D11ShaderResourceView* tex)		{ SSAOMap->SetResource(tex); }
 	void SetLightMap			(ID3D11ShaderResourceView* tex)		{ LightMap->SetResource(tex); }
 	void SetShadowMap			(ID3D11ShaderResourceView* tex)		{ ShadowMap->SetResource(tex); }
 	void SetDiffuseMap			(ID3D11ShaderResourceView* tex)		{ DiffuseMap->SetResource(tex); }
@@ -76,8 +78,9 @@ public:
 	ID3DX11EffectTechnique* Light2TexTech;
 	ID3DX11EffectTechnique* Light3TexTech;
 
-	ID3DX11EffectMatrixVariable* WorldViewProj;
 	ID3DX11EffectMatrixVariable* World;
+	ID3DX11EffectMatrixVariable* WorldViewProj;
+	ID3DX11EffectMatrixVariable* WorldViewProjTex;
 	ID3DX11EffectMatrixVariable* WorldInvTranspose;
 	ID3DX11EffectMatrixVariable* TexTransform;
 	ID3DX11EffectMatrixVariable* ShadowTransform;
@@ -88,6 +91,7 @@ public:
 
 	ID3DX11EffectScalarVariable* Time;
 
+	ID3DX11EffectShaderResourceVariable* SSAOMap;
 	ID3DX11EffectShaderResourceVariable* LightMap;
 	ID3DX11EffectShaderResourceVariable* ShadowMap;
 	ID3DX11EffectShaderResourceVariable* DiffuseMap;
@@ -132,27 +136,55 @@ public:
 
 #pragma endregion
 
-#pragma region LightPrePassGeometyBufferEffect
+#pragma region GBufferEffect
 
-class LightPrePassGeometyBufferEffect : public Effect
+class GBufferEffect : public Effect
 {
 public:
-	LightPrePassGeometyBufferEffect(ID3D11Device* device, const std::wstring& filename);
-	virtual ~LightPrePassGeometyBufferEffect();
+	GBufferEffect(ID3D11Device* device, const std::wstring& filename);
+	virtual ~GBufferEffect();
 
-	void SetWorld(CXMMATRIX M)			{ World->SetMatrix(reinterpret_cast<const float*>(&M)); }
-	void SetWorldView(CXMMATRIX M)		{ WorldView->SetMatrix(reinterpret_cast<const float*>(&M)); }
-	void SetWorldViewProj(CXMMATRIX M)	{ WorldViewProj->SetMatrix(reinterpret_cast<const float*>(&M)); }
-	void SetNormalMap(ID3D11ShaderResourceView* tex) { NormalMap->SetResource(tex); }
+	void SetWorld(CXMMATRIX M)							{ World->SetMatrix(reinterpret_cast<const float*>(&M)); }
+	void SetWorldView(CXMMATRIX M)						{ WorldView->SetMatrix(reinterpret_cast<const float*>(&M)); }
+	void SetWorldViewProj(CXMMATRIX M)					{ WorldViewProj->SetMatrix(reinterpret_cast<const float*>(&M)); }
+	void SetWorldInvTransposeView(CXMMATRIX M)			{ WorldInvTransposeView->SetMatrix(reinterpret_cast<const float*>(&M)); }
+	
+	void SetNormalMap(ID3D11ShaderResourceView* tex)	{ NormalMap->SetResource(tex); }
+	void SetDiffuseMap(ID3D11ShaderResourceView* tex)	{ DiffuseMap->SetResource(tex); }
 
-	ID3DX11EffectTechnique* BasicTech;
-	ID3DX11EffectTechnique* Basic_NoNormal;
+	ID3DX11EffectTechnique* GetTech(bool _useNormalMap, bool _useAlphaClip)
+	{
+		if (_useNormalMap == true && _useAlphaClip == true)
+		{
+			return GBufferNormalAlphaClipTech;
+		}
+		else if (_useNormalMap == true)
+		{
+			return GBufferNormalTech;
+		}
+		else if (_useAlphaClip == true)
+		{
+			return GBufferAlphaClipTech;
+		}
+		else
+		{
+			return GBufferTech;
+		}
+	}
+
+private:
+	ID3DX11EffectTechnique* GBufferTech;
+	ID3DX11EffectTechnique* GBufferNormalTech;
+	ID3DX11EffectTechnique* GBufferAlphaClipTech;
+	ID3DX11EffectTechnique* GBufferNormalAlphaClipTech;
 
 	ID3DX11EffectMatrixVariable* World;
 	ID3DX11EffectMatrixVariable* WorldView;
 	ID3DX11EffectMatrixVariable* WorldViewProj;
+	ID3DX11EffectMatrixVariable* WorldInvTransposeView;
 
 	ID3DX11EffectShaderResourceVariable* NormalMap;
+	ID3DX11EffectShaderResourceVariable* DiffuseMap;
 };
 
 #pragma endregion
@@ -192,6 +224,75 @@ public:
 	ID3DX11EffectShaderResourceVariable* PositionTexture;
 };
 
+#pragma endregion
+
+#pragma region SSAOBufferEffect
+class SSAOBufferEffect : public Effect
+{
+public:
+	SSAOBufferEffect(ID3D11Device* device, const std::wstring& filename);
+	~SSAOBufferEffect();
+
+	void SetViewToTexSpace(CXMMATRIX M)						{ ViewToTexSpace->SetMatrix(reinterpret_cast<const float*>(&M)); }
+	void SetOffsetVectors(const XMFLOAT4 v[14])				{ OffsetVectors->SetFloatVectorArray(reinterpret_cast<const float*>(v), 0, 14); }
+	void SetFrustumCorners(const XMFLOAT4 v[4])				{ FrustumCorners->SetFloatVectorArray(reinterpret_cast<const float*>(v), 0, 4); }
+	void SetOcclusionRadius(float f)						{ OcclusionRadius->SetFloat(f); }
+	void SetOcclusionFadeStart(float f)						{ OcclusionFadeStart->SetFloat(f); }
+	void SetOcclusionFadeEnd(float f)						{ OcclusionFadeEnd->SetFloat(f); }
+	void SetSurfaceEpsilon(float f)							{ SurfaceEpsilon->SetFloat(f); }
+
+	void SetNormalDepthVMap(ID3D11ShaderResourceView* srv)	{ NormalDepthVMap->SetResource(srv); }
+	void SetRandomVecMap(ID3D11ShaderResourceView* srv)		{ RandomVecMap->SetResource(srv); }
+
+	ID3DX11EffectTechnique* GetTech()						{ return SsaoTech; }
+
+private:
+	ID3DX11EffectTechnique* SsaoTech;
+
+	ID3DX11EffectMatrixVariable* ViewToTexSpace;
+	ID3DX11EffectVectorVariable* OffsetVectors;
+	ID3DX11EffectVectorVariable* FrustumCorners;
+	ID3DX11EffectScalarVariable* OcclusionRadius;
+	ID3DX11EffectScalarVariable* OcclusionFadeStart;
+	ID3DX11EffectScalarVariable* OcclusionFadeEnd;
+	ID3DX11EffectScalarVariable* SurfaceEpsilon;
+
+	ID3DX11EffectShaderResourceVariable* NormalDepthVMap;
+	ID3DX11EffectShaderResourceVariable* RandomVecMap;
+};
+#pragma endregion
+
+#pragma region SSAOBlurEffect
+class SSAOBlurEffect : public Effect
+{
+public:
+	SSAOBlurEffect(ID3D11Device* device, const std::wstring& filename);
+	~SSAOBlurEffect();
+
+	void SetTexelWidth(float f) { TexelWidth->SetFloat(f); }
+	void SetTexelHeight(float f) { TexelHeight->SetFloat(f); }
+
+	void SetInputImage(ID3D11ShaderResourceView* srv) { InputImage->SetResource(srv); }
+	void SetNormalDepthMap(ID3D11ShaderResourceView* srv) { NormalDepthMap->SetResource(srv); }
+
+	ID3DX11EffectTechnique* GetTech(bool _horzBlur)
+	{
+		if (_horzBlur == true)
+			return HorzBlurTech;
+		else
+			return VertBlurTech;
+	}
+
+private:
+	ID3DX11EffectTechnique* HorzBlurTech;
+	ID3DX11EffectTechnique* VertBlurTech;
+
+	ID3DX11EffectScalarVariable* TexelWidth;
+	ID3DX11EffectScalarVariable* TexelHeight;
+
+	ID3DX11EffectShaderResourceVariable* InputImage;
+	ID3DX11EffectShaderResourceVariable* NormalDepthMap;
+};
 #pragma endregion
 
 #pragma region SkyEffect
@@ -250,9 +351,12 @@ public:
 
 	static SkyEffect*		CubeMapFX;
 
-	static ShadowBufferEffect* ShadowBufferFX;
+	static GBufferEffect*					GBufferFX;
 
-	static LightPrePassGeometyBufferEffect* LightPrePassGeometyBufferFX;
+	static SSAOBufferEffect*				SSAOBufferFX;
+	static SSAOBlurEffect*					SSAOBlurFX;
+
+	static ShadowBufferEffect*				ShadowBufferFX;
 	static LightPrePassLightBufferEffect*	LightPrePassLightBufferFX;
 
 	static DebugTexEffect*					DebugTextureFX;

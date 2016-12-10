@@ -16,7 +16,7 @@ namespace JF
 		m_ResterizerStates		= new RasterizerStates();
 		m_DepthStencilStates	= new DepthStencilStates();
 
-		// 2) Init
+		// 2) Reset
 		m_BlendStates->Initialize(device);
 		m_SamplerStates->Initialize(device);
 		m_ResterizerStates->Initialize(device);
@@ -241,11 +241,23 @@ namespace JF
 
 	void DepthStencilStates::Initialize(ID3D11Device* device)
 	{
+		device->CreateDepthStencilState(&EqualsDSSDesc(), &m_EqualsDSS);
 		device->CreateDepthStencilState(&DepthDisabledDesc(), &m_DepthDisabled);
 		device->CreateDepthStencilState(&DepthEnabledDesc(), &m_DepthEnabled);
 		device->CreateDepthStencilState(&ReverseDepthEnabledDesc(), &m_RevDepthEnabled);
 		device->CreateDepthStencilState(&DepthWriteEnabledDesc(), &m_DepthWriteEnabled);
 		device->CreateDepthStencilState(&ReverseDepthWriteEnabledDesc(), &m_RevDepthWriteEnabled);
+	}
+
+	D3D11_DEPTH_STENCIL_DESC DepthStencilStates::EqualsDSSDesc()
+	{
+		D3D11_DEPTH_STENCIL_DESC equalsDesc;
+		ZeroMemory(&equalsDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
+		equalsDesc.DepthEnable = true;
+		equalsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+		equalsDesc.DepthFunc = D3D11_COMPARISON_EQUAL;
+
+		return equalsDesc;
 	}
 
 	D3D11_DEPTH_STENCIL_DESC DepthStencilStates::DepthDisabledDesc()

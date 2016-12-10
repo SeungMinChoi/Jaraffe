@@ -11,7 +11,7 @@ JF::JFCScene::~JFCScene()
 {
 }
 
-HRESULT JF::JFCScene::Init()
+HRESULT JF::JFCScene::Reset()
 {
 	// Declear)
 	int nClientWidth;
@@ -66,7 +66,7 @@ HRESULT JF::JFCScene::Init()
 		m_pMainCamera->InsertComponent(newCamera);
 		m_pMainCamera->InsertComponent(new SkyBox(5000.0f, pTex));
 
-		m_pMainCamera->Init();
+		m_pMainCamera->Reset();
 
 		m_ObjectList.push_back(m_pMainCamera);
 	}
@@ -290,16 +290,16 @@ HRESULT JF::JFCScene::Init()
 
 	//---- E N D   ----
 
-	// All GameObject Init
+	// All GameObject Reset
 	for (size_t i = 0; i < m_ObjectList.size(); i++)
 	{
-		m_ObjectList[i]->Init();
+		m_ObjectList[i]->Reset();
 	}
 
 	// Main Lights
 	for (size_t i = 0; i < MAIN_LIGHT_COUNT; i++)
 	{
-		m_MainLight[i]->Init();
+		m_MainLight[i]->Reset();
 	}
 
 	return S_OK;

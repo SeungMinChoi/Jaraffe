@@ -20,6 +20,7 @@ namespace JF
 		void DeviceDestory();
 
 		void Reset();
+		void AfterReset();
 		void Present();
 
 		void AutoRander(std::vector<JF::GameObject*>& _objectList, JF::GameObject* _mainLights[MAIN_LIGHT_COUNT], JFCGameTimer* _pTimer);
@@ -47,12 +48,13 @@ namespace JF
 	// Protected Methods)
 	//=============================================================================
 	protected:
-		void AfterReset();
 		void CheckForSuitableOutput();
 		void PrepareFullScreenSettings();
 
+		// GBuffer Render
+		void GBufferRender(std::vector<JF::GameObject*>& _objectList);
+		
 		// Light Pre Pass Render
-		void LightPrePassGeometryBufferRender(std::vector<JF::GameObject*>& _objectList);
 		void LightPrePassLightBufferRender(std::vector<JF::GameObject*>& _objectList);
 
 		// Shadow Render
@@ -60,6 +62,10 @@ namespace JF
 
 		// GeometryRender
 		void GeometryRender(std::vector<JF::GameObject*>& _objectList, JF::GameObject* _mainLights[MAIN_LIGHT_COUNT], JFCGameTimer* _pTimer);
+
+		// SSAORender
+		void SSAORender();
+		void SSAOBlurRender(ID3D11ShaderResourceView* _inputSRV, ID3D11RenderTargetView* _outputRTV, bool _horzBlur);
 
 		// Test Render
 		void TestRender();
@@ -100,9 +106,10 @@ namespace JF
 		float							m_SceneBoundsRadius = sqrtf(20000);
 
 		// G-Buffers
-		ID3D11Texture2DPtr				m_pGBufferTexture[2];
-		ID3D11RenderTargetViewPtr		m_pGBufferRTView[2];
-		ID3D11ShaderResourceViewPtr		m_pGBufferSRView[2];
+		JF::RenderMap::JFGBuffer*		m_pGBuffer;
+
+		// SSAO
+		JF::RenderMap::JFSSAO*			m_pSSAO;
 
 		// Light Buffer
 		ID3D11Texture2DPtr				m_pLightBufferTexture;

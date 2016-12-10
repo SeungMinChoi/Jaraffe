@@ -10,7 +10,7 @@ JF::TextureMgr::~TextureMgr()
 	Release();
 }
 
-void JF::TextureMgr::Init()
+void JF::TextureMgr::Reset()
 {
 
 }

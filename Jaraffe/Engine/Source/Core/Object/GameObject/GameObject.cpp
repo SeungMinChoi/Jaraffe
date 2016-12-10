@@ -14,11 +14,11 @@ JF::GameObject* JF::GameObject::Create()
 	return new JF::GameObject();
 }
 
-void JF::GameObject::Init()
+void JF::GameObject::Reset()
 {
 	for each (auto component in m_mapComponents)
 	{
-		component.second->Init();
+		component.second->Reset();
 	}
 }
 

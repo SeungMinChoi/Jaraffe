@@ -88,13 +88,15 @@ class DepthStencilStates
 public:
 	void Initialize(ID3D11Device* device);
 
+	ID3D11DepthStencilState* EqualsDSS()				{ return m_EqualsDSS; }
 	ID3D11DepthStencilState* DepthDisabled()			{ return m_DepthDisabled; }
 	ID3D11DepthStencilState* DepthEnabled()				{ return m_DepthEnabled; }
 	ID3D11DepthStencilState* ReverseDepthEnabled()		{ return m_RevDepthEnabled; }
 	ID3D11DepthStencilState* DepthWriteEnabled()		{ return m_DepthWriteEnabled; }
 	ID3D11DepthStencilState* ReverseDepthWriteEnabled() { return m_RevDepthWriteEnabled; }
-
+	
 protected:
+	D3D11_DEPTH_STENCIL_DESC EqualsDSSDesc();
 	D3D11_DEPTH_STENCIL_DESC DepthDisabledDesc();
 	D3D11_DEPTH_STENCIL_DESC DepthEnabledDesc();
 	D3D11_DEPTH_STENCIL_DESC ReverseDepthEnabledDesc();
@@ -102,6 +104,7 @@ protected:
 	D3D11_DEPTH_STENCIL_DESC ReverseDepthWriteEnabledDesc();
 
 protected:
+	ID3D11DepthStencilStatePtr m_EqualsDSS;
 	ID3D11DepthStencilStatePtr m_DepthDisabled;
 	ID3D11DepthStencilStatePtr m_DepthEnabled;
 	ID3D11DepthStencilStatePtr m_RevDepthEnabled;

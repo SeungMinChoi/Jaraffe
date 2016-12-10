@@ -16,7 +16,7 @@ JF::Component::ColisionBox::~ColisionBox()
 {
 }
 
-void JF::Component::ColisionBox::Init()
+void JF::Component::ColisionBox::Reset()
 {
 	// 1) 
 	auto* pTransform	= GetOwner()->GetComponent<JF::Component::Transform>();

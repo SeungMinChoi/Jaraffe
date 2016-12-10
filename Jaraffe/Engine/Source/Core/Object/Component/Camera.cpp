@@ -29,7 +29,7 @@ JF::Component::Camera::~Camera()
 {
 }
 
-void JF::Component::Camera::Init()
+void JF::Component::Camera::Reset()
 {
 }
 

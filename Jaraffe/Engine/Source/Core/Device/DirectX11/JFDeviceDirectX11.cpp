@@ -75,11 +75,29 @@ void JF::JFCDeviceDirectX11::DeviceInit(HWND _targetWindow)
 		throw JFCException(L"The device doesn't support the minimum feature level required to run this sample (DX" + majorLevel + L"." + minorLevel + L")");
 	}
 
-	AfterReset();
+	// 5) Map 객체들을 생성/셋팅 한다.
+	m_pSSAO		= new JF::RenderMap::JFSSAO();
+	m_pGBuffer	= new JF::RenderMap::JFGBuffer();
+
+	// 6)
+	m_pSSAO->Init(m_pDevice);
+
+	// 7) Scene 전체를 덮을 Box메쉬를 만든다.
+	m_BoxMesh = new JF::Component::Mesh();
+	JF::GeometryGenerator::CreateFullscreenQuad(m_BoxMesh->GetVertices(), m_BoxMesh->GetIndices());
+	m_BoxMesh->Reset();
 }
 
 void JF::JFCDeviceDirectX11::DeviceDestory()
 {
+	// 1) Delete BufferMap
+	SafeDelete(m_pSSAO);
+	SafeDelete(m_pGBuffer);
+
+	// 2)
+	SafeDelete(m_BoxMesh);
+
+	// 3)
 	if (m_pDeviceContext)
 	{
 		m_pDeviceContext->ClearState();
@@ -101,18 +119,9 @@ void JF::JFCDeviceDirectX11::Reset()
 	ReleaseCOM_PTR(m_pShadowMapDSView);
 	ReleaseCOM_PTR(m_pShadowMapSRView);
 
-	for (int i = 0; i < 2; ++i)
-	{
-		ReleaseCOM_PTR(m_pGBufferTexture[i]);
-		ReleaseCOM_PTR(m_pGBufferRTView[i]);
-		ReleaseCOM_PTR(m_pGBufferSRView[i]);
-	}
-
 	ReleaseCOM_PTR(m_pLightBufferTexture);
 	ReleaseCOM_PTR(m_pLightBufferRTView);
 	ReleaseCOM_PTR(m_pLightBufferSRView);
-
-	SafeDelete(m_BoxMesh);
 
 	m_pDeviceContext->ClearState();
 
@@ -140,8 +149,6 @@ void JF::JFCDeviceDirectX11::Reset()
 		mode.ScanlineOrdering			= DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 		JF::Utile::DXCall(m_pSwapChain->ResizeTarget(&mode));
 	}
-
-	AfterReset();
 }
 
 void JF::JFCDeviceDirectX11::Present()
@@ -155,18 +162,32 @@ void JF::JFCDeviceDirectX11::Present()
 void JF::JFCDeviceDirectX11::AutoRander(std::vector<JF::GameObject*>& _objectList, JF::GameObject* _mainLights[MAIN_LIGHT_COUNT], JFCGameTimer* _pTimer)
 {
 	// 1)
-	LightPrePassGeometryBufferRender(_objectList);
+	GBufferRender(_objectList);
 
 	// 2)
-	LightPrePassLightBufferRender(_objectList);
+	SSAORender();
 
 	// 3)
-	ShadowRender(_objectList, _mainLights);
+	m_pDeviceContext->OMSetDepthStencilState(RenderStates::GetDepthStencilStates()->EqualsDSS(), 0);
+	for (int i = 0; i < 4; ++i)
+	{
+		// Ping-pong the two ambient map textures as we apply
+		// horizontal and vertical blur passes.
+		SSAOBlurRender(m_pSSAO->GetAmbient1SRV(), m_pSSAO->GetAmbient2RTV(), true);
+		SSAOBlurRender(m_pSSAO->GetAmbient2SRV(), m_pSSAO->GetAmbient1RTV(), false);
+	}
+	m_pDeviceContext->OMSetDepthStencilState(0, 0);
 
 	// 4)
-	GeometryRender(_objectList, _mainLights, _pTimer);
+	LightPrePassLightBufferRender(_objectList);
+
+	// 5)
+	ShadowRender(_objectList, _mainLights);
 
 	// 6)
+	GeometryRender(_objectList, _mainLights, _pTimer);
+
+	// 7)
 	TestRender();
 }
 
@@ -276,39 +297,32 @@ void JF::JFCDeviceDirectX11::AfterReset()
 		}
 	}
 
-	// 3) Create G-Buffer
-	D3D11_TEXTURE2D_DESC desc;
-	desc.Width				= m_nBackBufferWidth;
-	desc.Height				= m_nBackBufferHeight;
-	desc.ArraySize			= 1;
-	desc.BindFlags			= D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-	desc.CPUAccessFlags		= 0;
-	desc.Format				= DXGI_FORMAT_R16G16B16A16_FLOAT;
-	desc.MipLevels			= 1;
-	desc.MiscFlags			= 1;
-	desc.SampleDesc.Count	= m_nMSCount;
-	desc.SampleDesc.Quality = m_nMSQuality;
-	desc.Usage				= D3D11_USAGE_DEFAULT;
-	JF::Utile::DXCall(m_pDevice->CreateTexture2D(&desc, NULL, &m_pGBufferTexture[0]));
-	JF::Utile::DXCall(m_pDevice->CreateRenderTargetView(m_pGBufferTexture[0], NULL, &m_pGBufferRTView[0]));
-	JF::Utile::DXCall(m_pDevice->CreateShaderResourceView(m_pGBufferTexture[0], NULL, &m_pGBufferSRView[0]));
-
-	JF::Utile::DXCall(m_pDevice->CreateTexture2D(&desc, NULL, &m_pGBufferTexture[1]));
-	JF::Utile::DXCall(m_pDevice->CreateRenderTargetView(m_pGBufferTexture[1], NULL, &m_pGBufferRTView[1]));
-	JF::Utile::DXCall(m_pDevice->CreateShaderResourceView(m_pGBufferTexture[1], NULL, &m_pGBufferSRView[1]));
-
-	JF::Utile::DXCall(m_pDevice->CreateTexture2D(&desc, NULL, &m_pLightBufferTexture));
-	JF::Utile::DXCall(m_pDevice->CreateRenderTargetView(m_pLightBufferTexture, NULL, &m_pLightBufferRTView));
-	JF::Utile::DXCall(m_pDevice->CreateShaderResourceView(m_pLightBufferTexture, NULL, &m_pLightBufferSRView));
-
-	// 4) [임시] 화면을 덮을 상자 메쉬를 생성한다.
+	// 4)
 	{
-		m_BoxMesh = new JF::Component::Mesh();
+		D3D11_TEXTURE2D_DESC desc;
+		desc.Width = m_nBackBufferWidth;
+		desc.Height = m_nBackBufferHeight;
+		desc.ArraySize = 1;
+		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+		desc.CPUAccessFlags = 0;
+		desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+		desc.MipLevels = 1;
+		desc.MiscFlags = 1;
+		desc.SampleDesc.Count = m_nMSCount;
+		desc.SampleDesc.Quality = m_nMSQuality;
+		desc.Usage = D3D11_USAGE_DEFAULT;
 
-		JF::GeometryGenerator::CreateFullscreenQuad(m_BoxMesh->GetVertices(), m_BoxMesh->GetIndices());
-
-		m_BoxMesh->Init();
+		JF::Utile::DXCall(m_pDevice->CreateTexture2D(&desc, NULL, &m_pLightBufferTexture));
+		JF::Utile::DXCall(m_pDevice->CreateRenderTargetView(m_pLightBufferTexture, NULL, &m_pLightBufferRTView));
+		JF::Utile::DXCall(m_pDevice->CreateShaderResourceView(m_pLightBufferTexture, NULL, &m_pLightBufferSRView));
 	}
+	
+	// 3) Create G-Buffer
+	m_pGBuffer->Reset(m_pDevice, m_nBackBufferWidth, m_nBackBufferHeight, m_nMSCount, m_nMSQuality);
+
+	// 4) Create SSAO Buffer
+	if(Camera::g_pMainCamera != nullptr)
+		m_pSSAO->Reset(m_pDevice, m_nBackBufferWidth, m_nBackBufferHeight, Camera::g_pMainCamera->GetFarY(), Camera::g_pMainCamera->GetFarZ());
 
 	// 5) 그림자맵 셋팅을 한다.
 	{
@@ -406,14 +420,16 @@ void JF::JFCDeviceDirectX11::PrepareFullScreenSettings()
 	m_RefreshRate		= closestMatch.RefreshRate;
 }
 
-void JF::JFCDeviceDirectX11::LightPrePassGeometryBufferRender(std::vector<JF::GameObject*>& _objectList)
+void JF::JFCDeviceDirectX11::GBufferRender(std::vector<JF::GameObject*>& _objectList)
 {
 	// 1) Set RanderTarget
-	m_pDeviceContext->OMSetRenderTargets(2, &(m_pGBufferRTView[0].GetInterfacePtr()), m_pAutoDSView.GetInterfacePtr());
+	ID3D11RenderTargetView* renderTargets[3] = { m_pGBuffer->GetWorldNormalRTV(), m_pGBuffer->GetWorldPositionRTV(), m_pGBuffer->GetViewNormalDepthRTV() };
+	m_pDeviceContext->OMSetRenderTargets(3, renderTargets, m_pAutoDSView.GetInterfacePtr());
 
 	// 2) Buffer Clear.
-	m_pDeviceContext->ClearRenderTargetView(m_pGBufferRTView[0].GetInterfacePtr(), reinterpret_cast<const float*>(&JF::Util::Colors::Black));
-	m_pDeviceContext->ClearRenderTargetView(m_pGBufferRTView[1].GetInterfacePtr(), reinterpret_cast<const float*>(&JF::Util::Colors::Black));
+	m_pDeviceContext->ClearRenderTargetView(m_pGBuffer->GetWorldNormalRTV(), reinterpret_cast<const float*>(&JF::Util::Colors::Black));
+	m_pDeviceContext->ClearRenderTargetView(m_pGBuffer->GetWorldPositionRTV(), reinterpret_cast<const float*>(&JF::Util::Colors::Black));
+	m_pDeviceContext->ClearRenderTargetView(m_pGBuffer->GetViewNormalDepthRTV(), reinterpret_cast<const float*>(&JF::Util::Colors::Black));
 
 	// 3) Depth And Stencil View Clear.
 	m_pDeviceContext->ClearDepthStencilView(m_pAutoDSView.GetInterfacePtr(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -427,13 +443,13 @@ void JF::JFCDeviceDirectX11::LightPrePassGeometryBufferRender(std::vector<JF::Ga
 		// Check)
 		CONTINUE_IF(object == nullptr);
 
-		// 1-1) Renderer 객체를 찾는다.
+		// 5-1) Renderer 객체를 찾는다.
 		auto pRenderer = object->GetComponent<JF::Component::Renderer>();
 
 		// Check)
 		CONTINUE_IF(pRenderer == nullptr);
 
-		// 1-2) Rendering 에 필요한 정보를 찾는다.
+		// 5-2) Rendering 에 필요한 정보를 찾는다.
 		auto* pMesh			= object->GetComponent<JF::Component::Mesh>();
 		auto* pMarerial		= pRenderer->GetMaterial();
 		auto* pTransform	= object->GetComponent<JF::Component::Transform>();
@@ -443,11 +459,11 @@ void JF::JFCDeviceDirectX11::LightPrePassGeometryBufferRender(std::vector<JF::Ga
 		CONTINUE_IF(pMarerial == nullptr);
 		CONTINUE_IF(pTransform == nullptr);
 
-		// 1-3) Set Layout And Topology
+		// 5-3) Set Layout And Topology
 		m_pDeviceContext->IASetInputLayout(pMesh->GetInputLayout());
 		m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		// Set VertexBuffer And IndexBuffer
+		// 5-4) Set VertexBuffer And IndexBuffer
 		UINT stride = pMesh->GetStride();
 		UINT offset = 0;
 		ID3D11Buffer* pVB = pMesh->GetVB();
@@ -455,22 +471,30 @@ void JF::JFCDeviceDirectX11::LightPrePassGeometryBufferRender(std::vector<JF::Ga
 		m_pDeviceContext->IASetVertexBuffers(0, 1, &pVB, &stride, &offset);
 		m_pDeviceContext->IASetIndexBuffer(pIB, DXGI_FORMAT_R32_UINT, 0);
 
-		// worldViewProj 행렬을 구한다.
-		XMMATRIX world = XMLoadFloat4x4(&pTransform->GetTransformMatrix());
-		XMMATRIX view = Camera::g_pMainCamera->GetView();
-		XMMATRIX proj = Camera::g_pMainCamera->GetProj();
-		XMMATRIX worldViewProj = world * view * proj;
+		// 5-5) worldViewProj 행렬을 구한다.
+		XMMATRIX world					= XMLoadFloat4x4(&pTransform->GetTransformMatrix());
+		XMMATRIX view					= Camera::g_pMainCamera->GetView();
+		XMMATRIX proj					= Camera::g_pMainCamera->GetProj();
+		XMMATRIX worldView				= world * view;
+		XMMATRIX worldViewProj			= worldView * proj;
+		XMMATRIX worldInvTransposeView	= JF::Util::MathHelper::InverseTranspose(world) * view;
 
-		// 셰이더에 상수값 설정.
-		Effects::LightPrePassGeometyBufferFX->SetWorld(world);
-		Effects::LightPrePassGeometyBufferFX->SetWorldView(view);
-		Effects::LightPrePassGeometyBufferFX->SetWorldViewProj(worldViewProj);
+		// 5-6) 셰이더에 상수값 설정.
+		Effects::GBufferFX->SetWorld(world);
+		Effects::GBufferFX->SetWorldView(worldView);
+		Effects::GBufferFX->SetWorldViewProj(worldViewProj);
+		Effects::GBufferFX->SetWorldInvTransposeView(worldInvTransposeView);
 
-		if (pMarerial->m_BumpTexture != nullptr)
-			Effects::LightPrePassGeometyBufferFX->SetNormalMap(pMarerial->m_BumpTexture->GetTexture());
+		// AlphaClip 옵션 추가시 사용.
+		//if(useAlphaClip && pMarerial->m_MainTexture != nullptr)
+		//	Effects::GBufferFX->SetDiffuseMap(pMarerial->m_MainTexture->GetTexture());
 
 		// 
-		ID3DX11EffectTechnique* tech = pMarerial->m_BumpTexture != nullptr ? Effects::LightPrePassGeometyBufferFX->BasicTech : Effects::LightPrePassGeometyBufferFX->Basic_NoNormal;
+		if (pMarerial->m_BumpTexture != nullptr)
+			Effects::GBufferFX->SetNormalMap(pMarerial->m_BumpTexture->GetTexture());
+
+		// 5-7) Render
+		ID3DX11EffectTechnique* tech = Effects::GBufferFX->GetTech(pMarerial->m_BumpTexture != nullptr, false);
 		D3DX11_TECHNIQUE_DESC techDesc;
 		tech->GetDesc(&techDesc);
 		for (UINT p = 0; p < techDesc.Passes; ++p)
@@ -511,8 +535,8 @@ void JF::JFCDeviceDirectX11::LightPrePassLightBufferRender(std::vector<JF::GameO
 
 	// 7) 셰이더에 고정 상수값 설정.
 	Effects::LightPrePassLightBufferFX->SetCameraPos(Camera::g_pMainCamera->GetEyePos());
-	Effects::LightPrePassLightBufferFX->SetNormalTexture(m_pGBufferSRView[0]);
-	Effects::LightPrePassLightBufferFX->SetPositionTexture(m_pGBufferSRView[1]);
+	Effects::LightPrePassLightBufferFX->SetNormalTexture(m_pGBuffer->GetWorldNormalSRV());
+	Effects::LightPrePassLightBufferFX->SetPositionTexture(m_pGBuffer->GetWorldPositionSRV());
 
 	// 8) All Light Render
 	for each (auto object in _objectList)
@@ -671,6 +695,13 @@ void JF::JFCDeviceDirectX11::ShadowRender(std::vector<JF::GameObject*>& _objectL
 void JF::JFCDeviceDirectX11::GeometryRender(std::vector<JF::GameObject*>& _objectList, JF::GameObject* _mainLights[MAIN_LIGHT_COUNT], JFCGameTimer* _pTimer)
 {
 	// Declear)
+	// Transform NDC space [-1,+1]^2 to texture space [0,1]^2
+	XMMATRIX toTexSpace(
+		0.5f, 0.0f, 0.0f, 0.0f,
+		0.0f, -0.5f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.0f, 1.0f);
+
 	float blendFactors[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	// 1) Set RanderTarget
@@ -741,6 +772,7 @@ void JF::JFCDeviceDirectX11::GeometryRender(std::vector<JF::GameObject*>& _objec
 		pFX->SetWorld(world);
 		pFX->SetEyePosW(Camera::g_pMainCamera->GetEyePos());
 		pFX->SetWorldViewProj(worldViewProj);
+		pFX->SetWorldViewProjTex(worldViewProj * toTexSpace);
 		pFX->SetWorldInvTranspose(worldInvTranspose);
 		pFX->SetTexTransform(XMLoadFloat4x4(&pMesh->GetTexTransform()));
 		pFX->SetShadowTransform(world * XMLoadFloat4x4(&m_ShadowTransform));
@@ -751,6 +783,7 @@ void JF::JFCDeviceDirectX11::GeometryRender(std::vector<JF::GameObject*>& _objec
 			Effects::NormalMapFX->SetNormalMap(pMarerial->m_BumpTexture->GetTexture());
 		pFX->SetLightMap(m_pLightBufferSRView);
 		pFX->SetShadowMap(m_pShadowMapSRView);
+		pFX->SetSSAOMap(m_pSSAO->GetAmbient1SRV());
 
 		int lightIndex = 0;
 		JF::Light::DirectionalLight* dirLights[3];
@@ -811,6 +844,92 @@ void JF::JFCDeviceDirectX11::GeometryRender(std::vector<JF::GameObject*>& _objec
 	}
 }
 
+void JF::JFCDeviceDirectX11::SSAORender()
+{
+	// Bind the ambient map as the render target.  Observe that this pass does not bind 
+	// a depth/stencil buffer--it does not need it, and without one, no depth test is
+	// performed, which is what we want.
+	ID3D11RenderTargetView* renderTargets[1] = { m_pSSAO->GetAmbient1RTV() };
+	m_pDeviceContext->OMSetRenderTargets(1, renderTargets, 0);
+	m_pDeviceContext->ClearRenderTargetView(m_pSSAO->GetAmbient1RTV(), reinterpret_cast<const float*>(&JF::Util::Colors::Black));
+
+	m_pDeviceContext->RSSetViewports(1, &m_pSSAO->GetViewPort());
+
+	// Transform NDC space [-1,+1]^2 to texture space [0,1]^2
+	static const XMMATRIX T(
+		0.5f, 0.0f, 0.0f, 0.0f,
+		0.0f, -0.5f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.0f, 1.0f);
+
+	XMMATRIX P = Camera::g_pMainCamera->GetProj();
+	XMMATRIX PT = XMMatrixMultiply(P, T);
+
+	Effects::SSAOBufferFX->SetViewToTexSpace(PT);
+	Effects::SSAOBufferFX->SetOffsetVectors(m_pSSAO->GetOffsets());
+	Effects::SSAOBufferFX->SetFrustumCorners(m_pSSAO->GetFrustumFarCorner());
+	Effects::SSAOBufferFX->SetNormalDepthVMap(m_pGBuffer->GetViewNormalDepthSRV());
+	Effects::SSAOBufferFX->SetRandomVecMap(m_pSSAO->GetRandomVectorSRV());
+
+	UINT stride = sizeof(Vertex::PosNormalTex);
+	UINT offset = 0;
+	ID3D11Buffer* vb = m_pSSAO->GetScreenQuadVB();
+	ID3D11Buffer* ib = m_pSSAO->GetScreenQuadIB();
+
+	m_pDeviceContext->IASetInputLayout(InputLayouts::PosNormalTex);
+	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	m_pDeviceContext->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
+	m_pDeviceContext->IASetIndexBuffer(ib, DXGI_FORMAT_R16_UINT, 0);
+
+	ID3DX11EffectTechnique* tech = Effects::SSAOBufferFX->GetTech();
+	D3DX11_TECHNIQUE_DESC techDesc;
+
+	tech->GetDesc(&techDesc);
+	for (UINT p = 0; p < techDesc.Passes; ++p)
+	{
+		tech->GetPassByIndex(p)->Apply(0, m_pDeviceContext);
+		m_pDeviceContext->DrawIndexed(6, 0, 0);
+	}
+}
+
+void JF::JFCDeviceDirectX11::SSAOBlurRender(ID3D11ShaderResourceView* _inputSRV, ID3D11RenderTargetView* _outputRTV, bool _horzBlur)
+{
+	// Declear)
+	D3D11_VIEWPORT viewPort = m_pSSAO->GetViewPort();
+
+	m_pDeviceContext->OMSetRenderTargets(1, &_outputRTV, 0);
+	m_pDeviceContext->ClearRenderTargetView(_outputRTV, reinterpret_cast<const float*>(&JF::Util::Colors::Black));
+	m_pDeviceContext->RSSetViewports(1, &viewPort);
+
+	Effects::SSAOBlurFX->SetTexelWidth(1.0f / viewPort.Width);
+	Effects::SSAOBlurFX->SetTexelHeight(1.0f / viewPort.Height);
+	Effects::SSAOBlurFX->SetNormalDepthMap(m_pGBuffer->GetViewNormalDepthSRV());
+	Effects::SSAOBlurFX->SetInputImage(_inputSRV);
+
+	UINT stride = sizeof(Vertex::PosNormalTex);
+	UINT offset = 0;
+	ID3D11Buffer* vb = m_pSSAO->GetScreenQuadVB();
+	ID3D11Buffer* ib = m_pSSAO->GetScreenQuadIB();
+
+	m_pDeviceContext->IASetInputLayout(InputLayouts::PosNormalTex);
+	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	m_pDeviceContext->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
+	m_pDeviceContext->IASetIndexBuffer(ib, DXGI_FORMAT_R16_UINT, 0);
+
+	ID3DX11EffectTechnique* tech = Effects::SSAOBlurFX->GetTech(_horzBlur);
+	D3DX11_TECHNIQUE_DESC techDesc;
+	tech->GetDesc(&techDesc);
+	for (UINT p = 0; p < techDesc.Passes; ++p)
+	{
+		tech->GetPassByIndex(p)->Apply(0, m_pDeviceContext);
+		m_pDeviceContext->DrawIndexed(6, 0, 0);
+
+		// Unbind the input SRV as it is going to be an output in the next blur.
+		Effects::SSAOBlurFX->SetInputImage(0);
+		tech->GetPassByIndex(p)->Apply(0, m_pDeviceContext);
+	}
+}
+
 void JF::JFCDeviceDirectX11::TestRender()
 {
 	// 1) Set Layout And Topology
@@ -839,7 +958,7 @@ void JF::JFCDeviceDirectX11::TestRender()
 
 		// 5)
 		Effects::DebugTextureFX->SetWorldViewProj(world);
-		Effects::DebugTextureFX->SetTexture(m_pGBufferSRView[0]);
+		Effects::DebugTextureFX->SetTexture(m_pGBuffer->GetWorldNormalSRV());
 
 		// 6)
 		ID3DX11EffectTechnique* smapTech = Effects::DebugTextureFX->ViewArgbTech;
@@ -864,7 +983,7 @@ void JF::JFCDeviceDirectX11::TestRender()
 
 		// 5)
 		Effects::DebugTextureFX->SetWorldViewProj(world);
-		Effects::DebugTextureFX->SetTexture(m_pGBufferSRView[1]);
+		Effects::DebugTextureFX->SetTexture(m_pGBuffer->GetWorldPositionSRV());
 
 		// 6)
 		ID3DX11EffectTechnique* smapTech = Effects::DebugTextureFX->ViewArgbTech;
@@ -878,7 +997,7 @@ void JF::JFCDeviceDirectX11::TestRender()
 		}
 	}
 
-	// 4) Debug View 3
+	// 5) Debug View 3
 	{
 		// Scale and shift quad to lower - right corner.
 		XMMATRIX world(
@@ -889,7 +1008,7 @@ void JF::JFCDeviceDirectX11::TestRender()
 
 		// 5)
 		Effects::DebugTextureFX->SetWorldViewProj(world);
-		Effects::DebugTextureFX->SetTexture(m_pLightBufferSRView);
+		Effects::DebugTextureFX->SetTexture(m_pGBuffer->GetViewNormalDepthSRV());
 
 		// 6)
 		ID3DX11EffectTechnique* smapTech = Effects::DebugTextureFX->ViewArgbTech;
@@ -903,7 +1022,7 @@ void JF::JFCDeviceDirectX11::TestRender()
 		}
 	}
 
-	// 4) Debug View 4
+	// 7) Debug View 5
 	{
 		// Scale and shift quad to lower - right corner.
 		XMMATRIX world(
@@ -911,6 +1030,32 @@ void JF::JFCDeviceDirectX11::TestRender()
 			0.0f, 0.2f, 0.0f, 0.0f,
 			0.0f, 0.0f, 1.0f, 0.0f,
 			0.4f, -0.8f, 0.0f, 1.0f);
+
+		// 5)
+		Effects::DebugTextureFX->SetWorldViewProj(world);
+		//Effects::DebugTextureFX->SetTexture(m_pLightBufferSRView
+		Effects::DebugTextureFX->SetTexture(m_pSSAO->GetAmbient1SRV());
+
+		// 6)
+		ID3DX11EffectTechnique* smapTech = Effects::DebugTextureFX->ViewRedTech;
+		D3DX11_TECHNIQUE_DESC techDesc;
+		smapTech->GetDesc(&techDesc);
+		for (UINT p = 0; p < techDesc.Passes; ++p)
+		{
+			smapTech->GetPassByIndex(p)->Apply(0, m_pDeviceContext);
+
+			m_pDeviceContext->DrawIndexed(m_BoxMesh->GetIndexCount(), 0, 0);
+		}
+	}
+
+	// 8) Debug View 6
+	{
+		// Scale and shift quad to lower - right corner.
+		XMMATRIX world(
+			0.2f, 0.0f, 0.0f, 0.0f,
+			0.0f, 0.2f, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.8f, -0.8f, 0.0f, 1.0f);
 
 		// 5)
 		Effects::DebugTextureFX->SetWorldViewProj(world);

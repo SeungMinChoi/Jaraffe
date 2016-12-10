@@ -57,8 +57,9 @@ JF::BasicEffect::BasicEffect(ID3D11Device * device, const std::wstring & filenam
 	Light2TexTech		= mFX->GetTechniqueByName("Light2Tex");
 	Light3TexTech		= mFX->GetTechniqueByName("Light3Tex");
 
-	WorldViewProj		= mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
 	World				= mFX->GetVariableByName("gWorld")->AsMatrix();
+	WorldViewProj		= mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
+	WorldViewProjTex	= mFX->GetVariableByName("gWorldViewProjTex")->AsMatrix();
 	WorldInvTranspose	= mFX->GetVariableByName("gWorldInvTranspose")->AsMatrix();
 	TexTransform		= mFX->GetVariableByName("gTexTransform")->AsMatrix();
 	ShadowTransform		= mFX->GetVariableByName("gShadowTransform")->AsMatrix();
@@ -67,6 +68,7 @@ JF::BasicEffect::BasicEffect(ID3D11Device * device, const std::wstring & filenam
 	DirLights			= mFX->GetVariableByName("gDirLights");
 	Mat					= mFX->GetVariableByName("gMaterial");
 
+	SSAOMap				= mFX->GetVariableByName("gSSAOMap")->AsShaderResource();
 	LightMap			= mFX->GetVariableByName("gLightMap")->AsShaderResource();
 	ShadowMap			= mFX->GetVariableByName("gShadowMap")->AsShaderResource();
 	DiffuseMap			= mFX->GetVariableByName("gDiffuseMap")->AsShaderResource();
@@ -112,21 +114,26 @@ JF::ShadowBufferEffect::~ShadowBufferEffect()
 
 #pragma endregion 
 
-#pragma region LightPrePassGeometyBufferEffect
+#pragma region GBufferEffect
 
-JF::LightPrePassGeometyBufferEffect::LightPrePassGeometyBufferEffect(ID3D11Device * device, const std::wstring & filename)
+JF::GBufferEffect::GBufferEffect(ID3D11Device * device, const std::wstring & filename)
 	: Effect(device, filename)
 {
-	BasicTech		= mFX->GetTechniqueByName("Basic");
-	Basic_NoNormal	= mFX->GetTechniqueByName("Basic_NoNormal");
+	GBufferTech					= mFX->GetTechniqueByName("GBuffer");
+	GBufferNormalTech			= mFX->GetTechniqueByName("GBufferNormal");
+	GBufferAlphaClipTech		= mFX->GetTechniqueByName("GBufferAlphaClip");
+	GBufferNormalAlphaClipTech	= mFX->GetTechniqueByName("GBufferNormalAlphaClip");
 	
-	World			= mFX->GetVariableByName("gWorld")->AsMatrix();
-	WorldView		= mFX->GetVariableByName("gWorldView")->AsMatrix();
-	WorldViewProj	= mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
-	NormalMap		= mFX->GetVariableByName("gNormalMap")->AsShaderResource();
+	World						= mFX->GetVariableByName("gWorld")->AsMatrix();
+	WorldView					= mFX->GetVariableByName("gWorldView")->AsMatrix();
+	WorldViewProj				= mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
+	WorldInvTransposeView		= mFX->GetVariableByName("gWorldInvTransposeView")->AsMatrix();
+
+	NormalMap					= mFX->GetVariableByName("gNormalMap")->AsShaderResource();
+	DiffuseMap					= mFX->GetVariableByName("gDiffuseMap")->AsShaderResource();
 }
 
-JF::LightPrePassGeometyBufferEffect::~LightPrePassGeometyBufferEffect()
+JF::GBufferEffect::~GBufferEffect()
 {
 }
 
@@ -158,6 +165,48 @@ JF::LightPrePassLightBufferEffect::~LightPrePassLightBufferEffect()
 }
 
 #pragma endregion 
+
+#pragma region SSAOBufferEffect
+JF::SSAOBufferEffect::SSAOBufferEffect(ID3D11Device* device, const std::wstring& filename)
+	: Effect(device, filename)
+{
+	SsaoTech			= mFX->GetTechniqueByName("Ssao");
+
+	ViewToTexSpace		= mFX->GetVariableByName("gViewToTexSpace")->AsMatrix();
+	OffsetVectors		= mFX->GetVariableByName("gOffsetVectors")->AsVector();
+	FrustumCorners		= mFX->GetVariableByName("gFrustumCorners")->AsVector();
+	OcclusionRadius		= mFX->GetVariableByName("gOcclusionRadius")->AsScalar();
+	OcclusionFadeStart	= mFX->GetVariableByName("gOcclusionFadeStart")->AsScalar();
+	OcclusionFadeEnd	= mFX->GetVariableByName("gOcclusionFadeEnd")->AsScalar();
+	SurfaceEpsilon		= mFX->GetVariableByName("gSurfaceEpsilon")->AsScalar();
+
+	NormalDepthVMap		= mFX->GetVariableByName("gNormalDepthVMap")->AsShaderResource();
+	RandomVecMap		= mFX->GetVariableByName("gRandomVecMap")->AsShaderResource();
+}
+
+JF::SSAOBufferEffect::~SSAOBufferEffect()
+{
+}
+#pragma endregion
+
+#pragma region SSAOBlurEffect
+JF::SSAOBlurEffect::SSAOBlurEffect(ID3D11Device* device, const std::wstring& filename)
+	: Effect(device, filename)
+{
+	HorzBlurTech = mFX->GetTechniqueByName("HorzBlur");
+	VertBlurTech = mFX->GetTechniqueByName("VertBlur");
+
+	TexelWidth = mFX->GetVariableByName("gTexelWidth")->AsScalar();
+	TexelHeight = mFX->GetVariableByName("gTexelHeight")->AsScalar();
+
+	InputImage = mFX->GetVariableByName("gInputImage")->AsShaderResource();
+	NormalDepthMap = mFX->GetVariableByName("gNormalDepthMap")->AsShaderResource();
+}
+
+JF::SSAOBlurEffect::~SSAOBlurEffect()
+{
+}
+#pragma endregion
 
 #pragma region SkyEffect
 
@@ -208,10 +257,12 @@ JF::NormalMapEffect*					JF::Effects::NormalMapFX = 0;
 
 JF::SkyEffect*							JF::Effects::CubeMapFX = 0;
 
+JF::GBufferEffect*						JF::Effects::GBufferFX = 0;
 JF::ShadowBufferEffect*					JF::Effects::ShadowBufferFX = 0;
-
-JF::LightPrePassGeometyBufferEffect*	JF::Effects::LightPrePassGeometyBufferFX = 0;
 JF::LightPrePassLightBufferEffect*		JF::Effects::LightPrePassLightBufferFX = 0;
+
+JF::SSAOBufferEffect*					JF::Effects::SSAOBufferFX = 0;
+JF::SSAOBlurEffect*						JF::Effects::SSAOBlurFX = 0;
 
 JF::DebugTexEffect*						JF::Effects::DebugTextureFX = 0;
 
@@ -224,10 +275,12 @@ void JF::Effects::InitAll(ID3D11Device * device)
 
 	CubeMapFX					= new SkyEffect(device, L"Source/Shader/ForwardRender/CubeMap.fxo");
 
+	GBufferFX					= new GBufferEffect(device, L"Source/Shader/GBuffer/GBuffer.fxo");
 	ShadowBufferFX				= new ShadowBufferEffect(device, L"Source/Shader/Shadow/ShadowBuffer.fxo");
-
-	LightPrePassGeometyBufferFX = new LightPrePassGeometyBufferEffect(device, L"Source/Shader/LightPrePass/LightPrePassGeometryBuffer.fxo");
 	LightPrePassLightBufferFX	= new LightPrePassLightBufferEffect(device, L"Source/Shader/LightPrePass/LightPrePassLightBuffer.fxo");
+	
+	SSAOBufferFX				= new SSAOBufferEffect(device, L"Source/Shader/SSAO/SSAOBuffer.fxo");
+	SSAOBlurFX					= new SSAOBlurEffect(device, L"Source/Shader/SSAO/SSAOBlur.fxo");
 
 	DebugTextureFX				= new DebugTexEffect(device, L"Source/Shader/Debug/DebugTexture.fxo");
 }
@@ -241,10 +294,12 @@ void JF::Effects::DestroyAll()
 
 	SafeDelete(CubeMapFX);
 
+	SafeDelete(GBufferFX);
 	SafeDelete(ShadowBufferFX);
-
-	SafeDelete(LightPrePassGeometyBufferFX);
 	SafeDelete(LightPrePassLightBufferFX);
+
+	SafeDelete(SSAOBufferFX);
+	SafeDelete(SSAOBlurFX);
 
 	SafeDelete(DebugTextureFX);
 }

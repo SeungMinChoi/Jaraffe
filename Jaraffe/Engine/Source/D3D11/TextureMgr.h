@@ -16,7 +16,7 @@ class TextureMgr
 // Public Functions) 
 //=============================================================================
 public:
-	void Init();
+	void Reset();
 	void Release();
 
 	ID3D11ShaderResourceView* CreateTexture(std::wstring filename);

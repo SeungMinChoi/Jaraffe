@@ -28,7 +28,7 @@ public:
 	// override) 
 	//=============================================================================
 public:
-	virtual void Init();
+	virtual void Reset();
 	virtual void Render();
 
 	void SetMainTexture(JF::Texture* _pTexture) { m_pMainTexture = _pTexture; }

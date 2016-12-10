@@ -89,7 +89,11 @@
 #include "PxPhysicsAPI.h"
 
 //=============================================================================
-// 2) Common
+// 2) Interface
+//=============================================================================
+
+//=============================================================================
+// 3) Common
 //=============================================================================
 #include "Source/Core/Common/GlobalValues.h"
 #include "Source/Core/Common/Exception/JFException.h"
@@ -99,17 +103,17 @@
 #include "Source/Core/Common/ForwardDeclaration.h"
 
 //=============================================================================
-// 3) Manager
+// 4) Manager
 //=============================================================================
 #include "Source/Core/Manager/Input/Input.h"
 
 //=============================================================================
-// 4) Platforms
+// 5) Platforms
 //=============================================================================
 #include "Source/Core/Platform/PlatformWindow/OS/JFPlatformWindows.h"
 
 //=============================================================================
-// 5) Device
+// 6) Device
 //=============================================================================
 
 // DirectX11
@@ -117,12 +121,18 @@
 #include "Source/Core/Device/DirectX11/JFDeviceDirectX11.h"
 
 //=============================================================================
-// 6) PhysX Mapping Classes
+// 7) PhysX Mapping Classes
 //=============================================================================
 #include "Source/Core/PhysX/PhysXDevice.h"
 
 //=============================================================================
-// 7) Utiles
+// 8) RenderMap Classes
+//=============================================================================
+#include "Source/Core/RenderMap/JFSSAO.h"
+#include "Source/Core/RenderMap/JFGBuffer.h"
+
+//=============================================================================
+// 9) Utiles
 //=============================================================================
 #include "Source/D3D11/LightHelper.h"
 #include "Source/D3D11/Effect.h"
@@ -136,27 +146,27 @@
 #include "Source/Utils/MeshLoader.h"
 
 //=============================================================================
-// 8) App
+// 10) App
 //=============================================================================
 #include "App/JFApp.h"
 #include "App/JFWindowsApp.h"
 
 //=============================================================================
-// 9) Object
+// 11) Object
 //=============================================================================
 #include "Source/Core/Object/Object.h"
 #include "Source/Core/Object/Texture.h"
 #include "Source/Core/Object/Material.h"
 
 //=============================================================================
-// 10) Basic Component 
+// 12) Basic Component 
 //=============================================================================
 #include "Source/Core/Object/Component/Interface/CommonComponent.h"
 #include "Source/Core/Object/Component/Interface/BaseComponent.h"
 #include "Source/Core/Object/GameObject/GameObject.h"
 
 //=============================================================================
-// 11) Components
+// 13) Components
 //=============================================================================
 #include "Source/Core/Object/Component/Transform.h"
 #include "Source/Core/Object/Component/Camera.h"
@@ -172,7 +182,7 @@
 #include "Source/Core/Object/Component/JFDirectionalLight.h"
 
 //=============================================================================
-// 12) Scene
+// 14) Scene
 //=============================================================================
 #include "Source/Core/Scene/Scene.h"
 

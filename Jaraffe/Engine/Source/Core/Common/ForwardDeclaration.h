@@ -15,4 +15,10 @@ namespace JF
 		class JFPointLight;
 		class JFDirectionalLight;
 	}
+
+	namespace RenderMap
+	{
+		class JFSSAO;
+		class JFGBuffer;
+	}
 }

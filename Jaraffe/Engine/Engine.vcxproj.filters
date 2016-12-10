@@ -41,6 +41,8 @@
     <ClCompile Include="Source\Core\Object\Component\JFDirectionalLight.cpp" />
     <ClCompile Include="Source\Core\Object\Component\JFPointLight.cpp" />
     <ClCompile Include="Source\Core\Object\Component\JFSpotLight.cpp" />
+    <ClCompile Include="Source\Core\RenderMap\JFSSAO.cpp" />
+    <ClCompile Include="Source\Core\RenderMap\JFGBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -84,6 +86,8 @@
     <ClInclude Include="Source\Core\Object\Component\JFDirectionalLight.h" />
     <ClInclude Include="Source\Core\Object\Component\JFPointLight.h" />
     <ClInclude Include="Source\Core\Object\Component\JFSpotLight.h" />
+    <ClInclude Include="Source\Core\RenderMap\JFSSAO.h" />
+    <ClInclude Include="Source\Core\RenderMap\JFGBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Source\Shader\LightPrePass\LightPrePassGeometryBuffer.fx" />
@@ -94,6 +98,9 @@
     <CustomBuild Include="Source\Shader\Debug\DebugTexture.fx" />
     <CustomBuild Include="Source\Shader\ForwardRender\Color.fx" />
     <CustomBuild Include="Source\Shader\ForwardRender\NormalMap.fx" />
+    <CustomBuild Include="Source\Shader\GBuffer\GBuffer.fx" />
+    <CustomBuild Include="Source\Shader\SSAO\SSAOBuffer.fx" />
+    <CustomBuild Include="Source\Shader\SSAO\SSAOBlur.fx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\LightHelper.fx" />

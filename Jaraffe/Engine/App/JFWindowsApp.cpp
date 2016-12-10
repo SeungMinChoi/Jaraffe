@@ -37,7 +37,7 @@ void JF::JFCWindowsApp::Run()
 		m_pPXDevice->DeviceInit();
 
 		// 5)
-		gTEXTUREMGR->Init();
+		gTEXTUREMGR->Reset();
 
 		// 6)
 		JF::Effects::InitAll(gRENDERER->Device());
@@ -45,9 +45,12 @@ void JF::JFCWindowsApp::Run()
 		JF::InputLayouts::InitAll(gRENDERER->Device());
 
 		// 7) Scene Setting)
-		m_pScene->Init();
+		m_pScene->Reset();
 
-		// 8) Window 메세지를 등록한다.
+		// 8)
+		gRENDERER->AfterReset();
+
+		// 9) Window 메세지를 등록한다.
 		m_pWindow->SetUserMessageFunction(WM_SIZE,			bind(mem_fn(&JFCWindowsApp::WindowResized), this, _1, _2, _3, _4));
 
 		m_pWindow->SetUserMessageFunction(WM_MOUSEMOVE,		bind(mem_fn(&JFCWindowsApp::MouseMove), this, _1, _2, _3, _4));
@@ -167,11 +170,11 @@ LRESULT JF::JFCWindowsApp::WindowResized(HWND _hWnd, UINT _msg, WPARAM _wParam, 
 		{
 			BeforeReset();
 
+			m_pScene->Resize(width, height);
+
 			gRENDERER->SetBackBufferWidth(width);
 			gRENDERER->SetBackBufferHeight(height);
 			gRENDERER->Reset();
-
-			m_pScene->Resize(width, height);
 
 			AfterReset();
 		}

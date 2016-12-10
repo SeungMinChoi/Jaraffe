@@ -156,6 +156,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App\JFWindowsApp.cpp" />
+    <ClCompile Include="Source\Core\RenderMap\JFGBuffer.cpp" />
+    <ClCompile Include="Source\Core\RenderMap\JFSSAO.cpp" />
     <ClCompile Include="Source\Core\Object\Component\JFPointLight.cpp" />
     <ClCompile Include="Source\Core\Object\Component\JFSpotLight.cpp" />
     <ClCompile Include="Source\Core\Object\Component\JFDirectionalLight.cpp" />
@@ -196,6 +198,8 @@
   <ItemGroup>
     <ClInclude Include="App\JFApp.h" />
     <ClInclude Include="App\JFWindowsApp.h" />
+    <ClInclude Include="Source\Core\RenderMap\JFGBuffer.h" />
+    <ClInclude Include="Source\Core\RenderMap\JFSSAO.h" />
     <ClInclude Include="Source\Core\Object\Component\JFPointLight.h" />
     <ClInclude Include="Source\Core\Object\Component\JFSpotLight.h" />
     <ClInclude Include="Source\Core\Object\Component\JFDirectionalLight.h" />
@@ -305,6 +309,30 @@
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Source\Shader\ForwardRender\NormalMap.fx">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc compile for release : %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)\%(FileName).fxo</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Source\Shader\GBuffer\GBuffer.fx">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)\%(FileName).fxo</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc compile for release : %(FullPath)</Message>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Source\Shader\SSAO\SSAOBuffer.fx">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc compile for release : %(FullPath)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)\%(FileName).fxo</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Source\Shader\SSAO\SSAOBlur.fx">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc /Fc /Od /Zi /T fx_5_0 /Fo "%(RelativeDir)\%(Filename).fxo" "%(FullPath)"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fxc compile for release : %(FullPath)</Message>

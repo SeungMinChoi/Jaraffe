@@ -1,5 +1,6 @@
 #include "../LightHelper.fx"
 
+Texture2D gSSAOMap;
 Texture2D gLightMap;
 Texture2D gShadowMap;
 Texture2D gDiffuseMap;
@@ -20,6 +21,7 @@ cbuffer cbPerObject
 {
 	float4x4 gWorld;
 	float4x4 gWorldViewProj;
+	float4x4 gWorldViewProjTex;
 	float4x4 gWorldInvTranspose;
 	float4x4 gTexTransform;
 	float4x4 gShadowTransform;
@@ -41,7 +43,8 @@ struct VertexOut
 	float3 NormalW		: NORMAL;
 	float4 TangentW		: TANGENT;
 	float2 Tex			: TEXCOORD;
-	float4 ShadowPosH	: TEXCOORD1;
+	float4 SSAOPosH		: TEXCOORD1;
+	float4 ShadowPosH	: TEXCOORD2;
 };
 
 SamplerState samAnisotropic
@@ -82,6 +85,9 @@ VertexOut VS(VertexIn vin)
 
 	// Transform to homogeneous clip space.
 	vout.PosH		= mul(float4(vin.PosL, 1.0f), gWorldViewProj);
+
+	// SSAO 맵에서 사용할 투영 텍스쳐 좌표를 생성한다.
+	vout.SSAOPosH = mul(float4(vin.PosL, 1.0f), gWorldViewProjTex);
 
 	// Generate projective tex-coords to project shadow map onto scene.
 	vout.ShadowPosH = mul(float4(vin.PosL, 1.0f), gShadowTransform);
@@ -142,6 +148,10 @@ float4 PS(VertexOut pin, uniform int gLightCount, uniform bool gUseTexure) : SV_
 		float3 shadow = float3(1.0f, 1.0f, 1.0f);
 		shadow[0] = CalcShadowFactor(samShadow, gShadowMap, pin.ShadowPosH);
 
+		// Finish texture projection and sample SSAO map.
+		pin.SSAOPosH /= pin.SSAOPosH.w;
+		float ambientAccess = gSSAOMap.SampleLevel(samLinear, pin.SSAOPosH.xy, 0.0f).r;
+
 		// Sum the light contribution from each light source.  
 		[unroll]
 		for(int i = 0; i < gLightCount; ++i)
@@ -149,7 +159,7 @@ float4 PS(VertexOut pin, uniform int gLightCount, uniform bool gUseTexure) : SV_
 			float4 A, D, S;
 			ComputeDirectionalLight(gMaterial, gDirLights[i], bumpedNormalW, toEye, A, D, S);
 
-			ambient += A;
+			ambient += ambientAccess * A;
 			diffuse += shadow[i] * D;
 			spec	+= shadow[i] * S;
 		}

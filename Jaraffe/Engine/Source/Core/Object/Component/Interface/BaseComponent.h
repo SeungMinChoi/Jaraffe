@@ -32,7 +32,7 @@ public:
 // virtual Public Functions) 
 //=============================================================================
 public:
-	virtual void Init()				{}
+	virtual void Reset()				{}
 	virtual	void Update(float)		{}
 	virtual void Release()			{}
 

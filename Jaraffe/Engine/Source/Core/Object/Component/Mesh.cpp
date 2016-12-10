@@ -14,7 +14,7 @@ JF::Component::Mesh::~Mesh()
 
 }
 
-void JF::Component::Mesh::Init()
+void JF::Component::Mesh::Reset()
 {
 	// 1)
 	m_pInputLayout	= InputLayouts::PosNormalTexTan;
