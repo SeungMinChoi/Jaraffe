@@ -48,14 +48,62 @@ JF::SimpleEffect::~SimpleEffect()
 JF::BasicEffect::BasicEffect(ID3D11Device * device, const std::wstring & filename)
 	: Effect(device, filename)
 {
-	Light1Tech			= mFX->GetTechniqueByName("Light1");
-	Light2Tech			= mFX->GetTechniqueByName("Light2");
-	Light3Tech			= mFX->GetTechniqueByName("Light3");
+	//TechType;
+	mapTech.insert(MAPTech(Light1, mFX->GetTechniqueByName("Light1")));
+	mapTech.insert(MAPTech(Light2, mFX->GetTechniqueByName("Light2")));
+	mapTech.insert(MAPTech(Light3, mFX->GetTechniqueByName("Light3")));
 
-	Light0TexTech		= mFX->GetTechniqueByName("Light0Tex");
-	Light1TexTech		= mFX->GetTechniqueByName("Light1Tex");
-	Light2TexTech		= mFX->GetTechniqueByName("Light2Tex");
-	Light3TexTech		= mFX->GetTechniqueByName("Light3Tex");
+	mapTech.insert(MAPTech(Light0 | Texture, mFX->GetTechniqueByName("Light0Tex")));
+	mapTech.insert(MAPTech(Light1 | Texture, mFX->GetTechniqueByName("Light1Tex")));
+	mapTech.insert(MAPTech(Light2 | Texture, mFX->GetTechniqueByName("Light2Tex")));
+	mapTech.insert(MAPTech(Light3 | Texture, mFX->GetTechniqueByName("Light3Tex")));
+
+	mapTech.insert(MAPTech(Light0 | Texture | AlphaClip, mFX->GetTechniqueByName("Light0TexAlphaClip")));
+	mapTech.insert(MAPTech(Light1 | Texture | AlphaClip, mFX->GetTechniqueByName("Light1TexAlphaClip")));
+	mapTech.insert(MAPTech(Light2 | Texture | AlphaClip, mFX->GetTechniqueByName("Light2TexAlphaClip")));
+	mapTech.insert(MAPTech(Light3 | Texture | AlphaClip, mFX->GetTechniqueByName("Light3TexAlphaClip")));
+
+	mapTech.insert(MAPTech(Light1 | Texture | Fog, mFX->GetTechniqueByName("Light1Fog")));
+	mapTech.insert(MAPTech(Light2 | Texture | Fog, mFX->GetTechniqueByName("Light2Fog")));
+	mapTech.insert(MAPTech(Light3 | Texture | Fog, mFX->GetTechniqueByName("Light3Fog")));
+
+	mapTech.insert(MAPTech(Light0 | Texture | Fog, mFX->GetTechniqueByName("Light0TexFog")));
+	mapTech.insert(MAPTech(Light1 | Texture | Fog, mFX->GetTechniqueByName("Light1TexFog")));
+	mapTech.insert(MAPTech(Light2 | Texture | Fog, mFX->GetTechniqueByName("Light2TexFog")));
+	mapTech.insert(MAPTech(Light3 | Texture | Fog, mFX->GetTechniqueByName("Light3TexFog")));
+
+	mapTech.insert(MAPTech(Light0 | Texture | AlphaClip | Fog, mFX->GetTechniqueByName("Light0TexAlphaClipFog")));
+	mapTech.insert(MAPTech(Light1 | Texture | AlphaClip | Fog, mFX->GetTechniqueByName("Light1TexAlphaClipFog")));
+	mapTech.insert(MAPTech(Light2 | Texture | AlphaClip | Fog, mFX->GetTechniqueByName("Light2TexAlphaClipFog")));
+	mapTech.insert(MAPTech(Light3 | Texture | AlphaClip | Fog, mFX->GetTechniqueByName("Light3TexAlphaClipFog")));
+
+	mapTech.insert(MAPTech(Light1 | Reflect, mFX->GetTechniqueByName("Light1Reflect")));
+	mapTech.insert(MAPTech(Light2 | Reflect, mFX->GetTechniqueByName("Light2Reflect")));
+	mapTech.insert(MAPTech(Light3 | Reflect, mFX->GetTechniqueByName("Light3Reflect")));
+
+	mapTech.insert(MAPTech(Light0 | Texture | Reflect, mFX->GetTechniqueByName("Light0TexReflect")));
+	mapTech.insert(MAPTech(Light1 | Texture | Reflect, mFX->GetTechniqueByName("Light1TexReflect")));
+	mapTech.insert(MAPTech(Light2 | Texture | Reflect, mFX->GetTechniqueByName("Light2TexReflect")));
+	mapTech.insert(MAPTech(Light3 | Texture | Reflect, mFX->GetTechniqueByName("Light3TexReflect")));
+
+	mapTech.insert(MAPTech(Light0 | Texture | AlphaClip | Reflect, mFX->GetTechniqueByName("Light0TexAlphaClipReflect")));
+	mapTech.insert(MAPTech(Light1 | Texture | AlphaClip | Reflect, mFX->GetTechniqueByName("Light1TexAlphaClipReflect")));
+	mapTech.insert(MAPTech(Light2 | Texture | AlphaClip | Reflect, mFX->GetTechniqueByName("Light2TexAlphaClipReflect")));
+	mapTech.insert(MAPTech(Light3 | Texture | AlphaClip | Reflect, mFX->GetTechniqueByName("Light3TexAlphaClipReflect")));
+
+	mapTech.insert(MAPTech(Light1 | Fog | Reflect, mFX->GetTechniqueByName("Light1FogReflect")));
+	mapTech.insert(MAPTech(Light2 | Fog | Reflect, mFX->GetTechniqueByName("Light2FogReflect")));
+	mapTech.insert(MAPTech(Light3 | Fog | Reflect, mFX->GetTechniqueByName("Light3FogReflect")));
+
+	mapTech.insert(MAPTech(Light0 | Texture | Fog | Reflect, mFX->GetTechniqueByName("Light0TexFogReflect")));
+	mapTech.insert(MAPTech(Light1 | Texture | Fog | Reflect, mFX->GetTechniqueByName("Light1TexFogReflect")));
+	mapTech.insert(MAPTech(Light2 | Texture | Fog | Reflect, mFX->GetTechniqueByName("Light2TexFogReflect")));
+	mapTech.insert(MAPTech(Light3 | Texture | Fog | Reflect, mFX->GetTechniqueByName("Light3TexFogReflect")));
+
+	mapTech.insert(MAPTech(Light0 | Texture | AlphaClip | Fog | Reflect, mFX->GetTechniqueByName("Light0TexAlphaClipFogReflect")));
+	mapTech.insert(MAPTech(Light1 | Texture | AlphaClip | Fog | Reflect, mFX->GetTechniqueByName("Light1TexAlphaClipFogReflect")));
+	mapTech.insert(MAPTech(Light2 | Texture | AlphaClip | Fog | Reflect, mFX->GetTechniqueByName("Light2TexAlphaClipFogReflect")));
+	mapTech.insert(MAPTech(Light3 | Texture | AlphaClip | Fog | Reflect, mFX->GetTechniqueByName("Light3TexAlphaClipFogReflect")));
 
 	World				= mFX->GetVariableByName("gWorld")->AsMatrix();
 	WorldViewProj		= mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
@@ -65,6 +113,10 @@ JF::BasicEffect::BasicEffect(ID3D11Device * device, const std::wstring & filenam
 	ShadowTransform		= mFX->GetVariableByName("gShadowTransform")->AsMatrix();
 	EyePosW				= mFX->GetVariableByName("gEyePosW")->AsVector();
 
+	FogColor			= mFX->GetVariableByName("gFogColor")->AsVector();
+	FogStart			= mFX->GetVariableByName("gFogStart")->AsScalar();
+	FogRange			= mFX->GetVariableByName("gFogRange")->AsScalar();
+
 	DirLights			= mFX->GetVariableByName("gDirLights");
 	Mat					= mFX->GetVariableByName("gMaterial");
 
@@ -72,6 +124,7 @@ JF::BasicEffect::BasicEffect(ID3D11Device * device, const std::wstring & filenam
 	LightMap			= mFX->GetVariableByName("gLightMap")->AsShaderResource();
 	ShadowMap			= mFX->GetVariableByName("gShadowMap")->AsShaderResource();
 	DiffuseMap			= mFX->GetVariableByName("gDiffuseMap")->AsShaderResource();
+	CubeMap				= mFX->GetVariableByName("gCubeMap")->AsShaderResource();
 
 	Time				= mFX->GetVariableByName("gTime")->AsScalar();
 }

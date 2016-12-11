@@ -88,6 +88,12 @@
 #include "PxPhysics.h"
 #include "PxPhysicsAPI.h"
 
+// Assimp
+#include <assimp/cimport.h>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 //=============================================================================
 // 2) Interface
 //=============================================================================
@@ -143,7 +149,6 @@
 #include "Source/Utils/D3DUtil.h"
 #include "Source/Utils/MathHelper.h"
 #include "Source/Utils/GeometryGenerator.h"
-#include "Source/Utils/MeshLoader.h"
 
 //=============================================================================
 // 10) App
@@ -185,6 +190,12 @@
 // 14) Scene
 //=============================================================================
 #include "Source/Core/Scene/Scene.h"
+
+//=============================================================================
+// 15) Loader
+//=============================================================================
+#include "Source/Utils/MeshLoader.h"
+#include "Source/Utils/JFMeshLoader.h"
 
 // Debug
 #if defined(DEBUG) || defined(_DEBUG)

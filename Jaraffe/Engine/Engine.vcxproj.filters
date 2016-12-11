@@ -43,6 +43,7 @@
     <ClCompile Include="Source\Core\Object\Component\JFSpotLight.cpp" />
     <ClCompile Include="Source\Core\RenderMap\JFSSAO.cpp" />
     <ClCompile Include="Source\Core\RenderMap\JFGBuffer.cpp" />
+    <ClCompile Include="Source\Utils\JFMeshLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -88,9 +89,9 @@
     <ClInclude Include="Source\Core\Object\Component\JFSpotLight.h" />
     <ClInclude Include="Source\Core\RenderMap\JFSSAO.h" />
     <ClInclude Include="Source\Core\RenderMap\JFGBuffer.h" />
+    <ClInclude Include="Source\Utils\JFMeshLoader.h" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="Source\Shader\LightPrePass\LightPrePassGeometryBuffer.fx" />
     <CustomBuild Include="Source\Shader\LightPrePass\LightPrePassLightBuffer.fx" />
     <CustomBuild Include="Source\Shader\Shadow\ShadowBuffer.fx" />
     <CustomBuild Include="Source\Shader\ForwardRender\Basic.fx" />
@@ -104,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\LightHelper.fx" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\flare.dds" />

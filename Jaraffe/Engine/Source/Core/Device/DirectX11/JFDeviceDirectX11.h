@@ -68,7 +68,7 @@ namespace JF
 		void SSAOBlurRender(ID3D11ShaderResourceView* _inputSRV, ID3D11RenderTargetView* _outputRTV, bool _horzBlur);
 
 		// Test Render
-		void TestRender();
+		void DebugRender(ID3D11ShaderResourceView* _resourceview, XMFLOAT3 _scale, XMFLOAT3 _position, bool _viewOnlyRed);
 
 	//=============================================================================
 	// Protected Members)
@@ -80,6 +80,7 @@ namespace JF
 		IDXGISwapChainPtr				m_pSwapChain;
 		ID3D11Texture2DPtr				m_pBackBufferTexture;
 		ID3D11RenderTargetViewPtr		m_pBackBufferRTView;
+		ID3D11ShaderResourceViewPtr		m_pBackBufferSTView;
 		D3D11_VIEWPORT					m_ScreenViewport;
 
 		// DepthStencil ÅØ½ºÃÄ

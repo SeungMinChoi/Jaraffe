@@ -32,16 +32,6 @@ public:
 //=============================================================================
 public:
 	virtual void Render()	{}
-
-//=============================================================================
-// Public Functions) 
-//=============================================================================
-public:
-	JF::Material* GetMaterial();
-	void SetMaterial(JF::Material* p_pMaterial);
-
-private:
-	JF::Material* m_Material;
 };
 
 }

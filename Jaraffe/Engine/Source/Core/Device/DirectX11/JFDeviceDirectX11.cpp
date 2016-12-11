@@ -51,7 +51,7 @@ void JF::JFCDeviceDirectX11::DeviceInit(HWND _targetWindow)
 	desc.BufferDesc.RefreshRate			= m_RefreshRate;
 	desc.SampleDesc.Count				= m_nMSCount;
 	desc.SampleDesc.Quality				= m_nMSQuality;
-	desc.BufferUsage					= DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	desc.BufferUsage					= DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT;
 	desc.Flags							= DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	desc.SwapEffect						= DXGI_SWAP_EFFECT_DISCARD;
 	desc.OutputWindow					= _targetWindow;
@@ -112,6 +112,7 @@ void JF::JFCDeviceDirectX11::Reset()
 	// Release all references
 	ReleaseCOM_PTR(m_pBackBufferTexture);
 	ReleaseCOM_PTR(m_pBackBufferRTView);
+	ReleaseCOM_PTR(m_pBackBufferSTView);
 	ReleaseCOM_PTR(m_pAutoDSTexture);
 	ReleaseCOM_PTR(m_pAutoDSView);
 	ReleaseCOM_PTR(m_pAutoDSSRView);
@@ -187,8 +188,29 @@ void JF::JFCDeviceDirectX11::AutoRander(std::vector<JF::GameObject*>& _objectLis
 	// 6)
 	GeometryRender(_objectList, _mainLights, _pTimer);
 
-	// 7)
-	TestRender();
+	// 7) Debug
+	if (gINPUT->GetKeyDown('1'))
+	{
+		DebugRender(m_pGBuffer->GetWorldNormalSRV(), XMFLOAT3(0.25f, 0.25f, 1.0f), XMFLOAT3(-0.75f, 0.0f, 0.0f), false);
+		DebugRender(m_pGBuffer->GetWorldPositionSRV(), XMFLOAT3(0.25f, 0.25f, 1.0f), XMFLOAT3(-0.25f, 0.0f, 0.0f), false);
+		DebugRender(m_pGBuffer->GetViewNormalDepthSRV(), XMFLOAT3(0.25f, 0.25f, 1.0f), XMFLOAT3(0.25f, 0.0f, 0.0f), false);
+		DebugRender(m_pGBuffer->GetViewNormalDepthSRV(), XMFLOAT3(0.25f, 0.25f, 1.0f), XMFLOAT3(0.75f, 0.0f, 0.0f), true);
+	}
+
+	if (gINPUT->GetKeyDown('2'))
+	{
+		DebugRender(m_pSSAO->GetAmbient1SRV(), XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), true);
+	}
+
+	if (gINPUT->GetKeyDown('3'))
+	{
+		DebugRender(m_pLightBufferSRView, XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), false);
+	}
+
+	if (gINPUT->GetKeyDown('4'))
+	{
+		DebugRender(m_pShadowMapSRView, XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), true);
+	}
 }
 
 void JF::JFCDeviceDirectX11::CreateVertexBuffer(void* p_pVertices, UINT p_ByteWidth, ID3D11Buffer** p_pVB)
@@ -235,6 +257,7 @@ void JF::JFCDeviceDirectX11::AfterReset()
 	// 1) 랜더타켓을 생성한다.
 	JF::Utile::DXCall(m_pSwapChain->GetBuffer(0, __uuidof(m_pBackBufferTexture), reinterpret_cast<void**>(&m_pBackBufferTexture)));
 	JF::Utile::DXCall(m_pDevice->CreateRenderTargetView(m_pBackBufferTexture, NULL, &m_pBackBufferRTView));
+	JF::Utile::DXCall(m_pDevice->CreateShaderResourceView(m_pBackBufferTexture, NULL, &m_pBackBufferSTView));
 
 	// 2) Create a default DepthStencil buffer
 	if (m_bEnableAutoDS)
@@ -451,12 +474,10 @@ void JF::JFCDeviceDirectX11::GBufferRender(std::vector<JF::GameObject*>& _object
 
 		// 5-2) Rendering 에 필요한 정보를 찾는다.
 		auto* pMesh			= object->GetComponent<JF::Component::Mesh>();
-		auto* pMarerial		= pRenderer->GetMaterial();
 		auto* pTransform	= object->GetComponent<JF::Component::Transform>();
 
 		// Check)
 		CONTINUE_IF(pMesh == nullptr);
-		CONTINUE_IF(pMarerial == nullptr);
 		CONTINUE_IF(pTransform == nullptr);
 
 		// 5-3) Set Layout And Topology
@@ -485,23 +506,27 @@ void JF::JFCDeviceDirectX11::GBufferRender(std::vector<JF::GameObject*>& _object
 		Effects::GBufferFX->SetWorldViewProj(worldViewProj);
 		Effects::GBufferFX->SetWorldInvTransposeView(worldInvTransposeView);
 
-		// AlphaClip 옵션 추가시 사용.
-		//if(useAlphaClip && pMarerial->m_MainTexture != nullptr)
-		//	Effects::GBufferFX->SetDiffuseMap(pMarerial->m_MainTexture->GetTexture());
-
-		// 
-		if (pMarerial->m_BumpTexture != nullptr)
-			Effects::GBufferFX->SetNormalMap(pMarerial->m_BumpTexture->GetTexture());
-
-		// 5-7) Render
-		ID3DX11EffectTechnique* tech = Effects::GBufferFX->GetTech(pMarerial->m_BumpTexture != nullptr, false);
-		D3DX11_TECHNIQUE_DESC techDesc;
-		tech->GetDesc(&techDesc);
-		for (UINT p = 0; p < techDesc.Passes; ++p)
+		// 5-7)
+		for (auto& subset : pMesh->GetSubset())
 		{
-			tech->GetPassByIndex(p)->Apply(0, m_pDeviceContext);
+			// 
+			if (subset.m_Material.m_bAlphaClip && subset.m_Material.m_MainTexture != nullptr)
+				Effects::GBufferFX->SetDiffuseMap(subset.m_Material.m_MainTexture->GetTexture());
 
-			m_pDeviceContext->DrawIndexed(pMesh->GetIndexCount(), 0, 0);
+			// 
+			if (subset.m_Material.m_BumpTexture != nullptr)
+				Effects::GBufferFX->SetNormalMap(subset.m_Material.m_BumpTexture->GetTexture());
+
+			// 5-8) Render
+			ID3DX11EffectTechnique* tech = Effects::GBufferFX->GetTech(subset.m_Material.m_BumpTexture != nullptr, subset.m_Material.m_bAlphaClip);
+			D3DX11_TECHNIQUE_DESC techDesc;
+			tech->GetDesc(&techDesc);
+			for (UINT p = 0; p < techDesc.Passes; ++p)
+			{
+				tech->GetPassByIndex(p)->Apply(0, m_pDeviceContext);
+
+				m_pDeviceContext->DrawIndexed(subset.FaceCount * 3, subset.FaceStart * 3, 0);
+			}
 		}
 	}
 }
@@ -566,7 +591,7 @@ void JF::JFCDeviceDirectX11::LightPrePassLightBufferRender(std::vector<JF::GameO
 			Effects::LightPrePassLightBufferFX->SetLightColor(XMFLOAT3(pSpotLight->GetDiffuse().x, pSpotLight->GetDiffuse().y, pSpotLight->GetDiffuse().z));
 			Effects::LightPrePassLightBufferFX->SetLightRange(pSpotLight->GetRange());
 			Effects::LightPrePassLightBufferFX->SetLightDirection(pSpotLight->GetDirection());
-			Effects::LightPrePassLightBufferFX->SetSpotlightAngles(XMFLOAT2(1.0f, 0.9f));
+			Effects::LightPrePassLightBufferFX->SetSpotlightAngles(XMFLOAT2(pSpotLight->GetAtt().x, pSpotLight->GetAtt().y));
 
 			tech = Effects::LightPrePassLightBufferFX->SpotLightTech;
 		}
@@ -649,12 +674,10 @@ void JF::JFCDeviceDirectX11::ShadowRender(std::vector<JF::GameObject*>& _objectL
 
 		// 10-2) Rendering 에 필요한 정보를 찾는다.
 		auto* pMesh			= object->GetComponent<JF::Component::Mesh>();
-		auto* pMarerial		= pRenderer->GetMaterial();
 		auto* pTransform	= object->GetComponent<JF::Component::Transform>();
 
 		// Check)
 		CONTINUE_IF(pMesh == nullptr);
-		CONTINUE_IF(pMarerial == nullptr);
 		CONTINUE_IF(pTransform == nullptr);
 
 		// 10-3)
@@ -678,16 +701,19 @@ void JF::JFCDeviceDirectX11::ShadowRender(std::vector<JF::GameObject*>& _objectL
 		//
 		Effects::ShadowBufferFX->SetWorldViewProj(worldViewProj);
 
-		//
-		ID3DX11EffectTechnique* smapTech = Effects::ShadowBufferFX->BuildShadowMapTech;
-		D3DX11_TECHNIQUE_DESC techDesc;
-		smapTech->GetDesc(&techDesc);
-		for (UINT p = 0; p < techDesc.Passes; ++p)
+		for (auto& subset : pMesh->GetSubset())
 		{
-			smapTech->GetPassByIndex(p)->Apply(0, m_pDeviceContext);
+			//
+			ID3DX11EffectTechnique* smapTech = subset.m_Material.m_bAlphaClip == true ? Effects::ShadowBufferFX->BuildShadowMapAlphaClipTech : Effects::ShadowBufferFX->BuildShadowMapTech;
+			D3DX11_TECHNIQUE_DESC techDesc;
+			smapTech->GetDesc(&techDesc);
+			for (UINT p = 0; p < techDesc.Passes; ++p)
+			{
+				smapTech->GetPassByIndex(p)->Apply(0, m_pDeviceContext);
 
-			// 색인 36개로 상자를 그린다.
-			m_pDeviceContext->DrawIndexed(pMesh->GetIndexCount(), 0, 0);
+				// 색인 36개로 상자를 그린다.
+				m_pDeviceContext->DrawIndexed(subset.FaceCount * 3, subset.FaceStart * 3, 0);
+			}
 		}
 	}
 }
@@ -722,35 +748,26 @@ void JF::JFCDeviceDirectX11::GeometryRender(std::vector<JF::GameObject*>& _objec
 		// Check)
 		CONTINUE_IF(object == nullptr);
 
-		// 1-1) Renderer 객체를 찾는다.
+		// 6) Renderer 객체를 찾는다.
 		auto pRenderer = object->GetComponent<JF::Component::Renderer>();
 
 		// Check)
 		CONTINUE_IF(pRenderer == nullptr);
 
-		// 1-2) Rendering 에 필요한 정보를 찾는다.
+		// 7) Rendering 에 필요한 정보를 찾는다.
 		auto* pMesh			= object->GetComponent<JF::Component::Mesh>();
-		auto* pMarerial		= pRenderer->GetMaterial();
 		auto* pTransform	= object->GetComponent<JF::Component::Transform>();
+		auto* pSkyBox		= Camera::g_pMainCamera->GetOwner()->GetComponent<JF::Component::SkyBox>();
 
 		// Check)
 		CONTINUE_IF(pMesh == nullptr);
-		CONTINUE_IF(pMarerial == nullptr);
 		CONTINUE_IF(pTransform == nullptr);
 
-		// 1-3) Set Layout And Topology
+		// 8) Set Layout And Topology
 		m_pDeviceContext->IASetInputLayout(pMesh->GetInputLayout());
 		m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		// 1-4) 레스터라이즈 상태를 셋팅한다.
-		if (pMarerial->m_RSState != nullptr)
-			m_pDeviceContext->RSSetState(pMarerial->m_RSState);
-
-		// 1-5) 블렌드 스테이트 상태를 셋팅한다.
-		if (pMarerial->m_BlendState != nullptr)
-			m_pDeviceContext->OMSetBlendState(pMarerial->m_BlendState, blendFactors, 0xffffffff);
-
-		// 1-6) Set VertexBuffer And IndexBuffer
+		// 9) Set VertexBuffer And IndexBuffer
 		UINT stride = pMesh->GetStride();
 		UINT offset = 0;
 		ID3D11Buffer* pVB = pMesh->GetVB();
@@ -758,32 +775,14 @@ void JF::JFCDeviceDirectX11::GeometryRender(std::vector<JF::GameObject*>& _objec
 		m_pDeviceContext->IASetVertexBuffers(0, 1, &pVB, &stride, &offset);
 		m_pDeviceContext->IASetIndexBuffer(pIB, DXGI_FORMAT_R32_UINT, 0);
 
-		// 1-7) worldViewProj 행렬을 구한다.
+		// 10) worldViewProj 행렬을 구한다.
 		XMMATRIX world				= XMLoadFloat4x4(&pTransform->GetTransformMatrix());
 		XMMATRIX view				= Camera::g_pMainCamera->GetView();
 		XMMATRIX proj				= Camera::g_pMainCamera->GetProj();
+		XMMATRIX worldViewProj		= world * view * proj;
+		XMMATRIX worldViewProjTex	= worldViewProj * toTexSpace;
+		XMMATRIX shadowTransform	= world * XMLoadFloat4x4(&m_ShadowTransform);
 		XMMATRIX worldInvTranspose	= JF::Util::MathHelper::InverseTranspose(world);
-		XMMATRIX worldViewProj = world * view * proj;
-
-		// Declear) => TODO : 이펙트 어떻게 관리할지 아이디어 떠오르면 교체예정.
-		BasicEffect* pFX = pMarerial->m_BumpTexture != nullptr ? Effects::NormalMapFX : Effects::BasicFX;
-
-		// 1-8) 셰이더에 상수값 설정.
-		pFX->SetWorld(world);
-		pFX->SetEyePosW(Camera::g_pMainCamera->GetEyePos());
-		pFX->SetWorldViewProj(worldViewProj);
-		pFX->SetWorldViewProjTex(worldViewProj * toTexSpace);
-		pFX->SetWorldInvTranspose(worldInvTranspose);
-		pFX->SetTexTransform(XMLoadFloat4x4(&pMesh->GetTexTransform()));
-		pFX->SetShadowTransform(world * XMLoadFloat4x4(&m_ShadowTransform));
-
-		if(pMarerial->m_MainTexture != nullptr)
-			pFX->SetDiffuseMap(pMarerial->m_MainTexture->GetTexture());
-		if (pMarerial->m_BumpTexture != nullptr)
-			Effects::NormalMapFX->SetNormalMap(pMarerial->m_BumpTexture->GetTexture());
-		pFX->SetLightMap(m_pLightBufferSRView);
-		pFX->SetShadowMap(m_pShadowMapSRView);
-		pFX->SetSSAOMap(m_pSSAO->GetAmbient1SRV());
 
 		int lightIndex = 0;
 		JF::Light::DirectionalLight* dirLights[3];
@@ -795,47 +794,58 @@ void JF::JFCDeviceDirectX11::GeometryRender(std::vector<JF::GameObject*>& _objec
 				dirLights[lightIndex++] = dirLight->GetDirectionalLight();
 		}
 
-		pFX->SetDirLights(dirLights[0]);
-		pFX->SetMaterial(pMarerial->m_Material);
-
-		pFX->SetTime(_pTimer->TotalTime());
-
-		// 1-9) SetTech
-		ID3DX11EffectTechnique* tech;
-		switch (lightIndex)
+		// 13) Render
+		for (auto& subset : pMesh->GetSubset())
 		{
-		case 0:
-			if (pMarerial->m_MainTexture != nullptr)
-				tech = pFX->Light0TexTech;
-			break;
-		case 1:
-			if (pMarerial->m_MainTexture != nullptr)
-				tech = pFX->Light1TexTech;
-			else
-				tech = pFX->Light1Tech;
-			break;
-		case 2:
-			if (pMarerial->m_MainTexture != nullptr)
-				tech = pFX->Light2TexTech;
-			else
-				tech = pFX->Light2Tech;
-			break;
-		case 3:
-			if (pMarerial->m_MainTexture != nullptr)
-				tech = pFX->Light3TexTech;
-			else
-				tech = pFX->Light3Tech;
-			break;
-		}
+			// 14) 레스터라이즈 상태를 셋팅한다.
+			if (subset.m_Material.m_RSState != nullptr)
+				m_pDeviceContext->RSSetState(subset.m_Material.m_RSState);
 
-		// 1-10) Render
-		D3DX11_TECHNIQUE_DESC techDesc;
-		tech->GetDesc(&techDesc);
-		for (UINT p = 0; p < techDesc.Passes; ++p)
-		{
-			tech->GetPassByIndex(p)->Apply(0, m_pDeviceContext);
+			// 15) 블렌드 스테이트 상태를 셋팅한다.
+			if (subset.m_Material.m_BlendState != nullptr)
+				m_pDeviceContext->OMSetBlendState(subset.m_Material.m_BlendState, blendFactors, 0xffffffff);
 
-			m_pDeviceContext->DrawIndexed(pMesh->GetIndexCount(), 0, 0);
+			// 18) 셰이더에 상수값 설정.
+			// TODO : 이펙트 어떻게 관리할지 아이디어 떠오르면 교체예정.
+			BasicEffect* pFX = subset.m_Material.m_BumpTexture != nullptr ? Effects::NormalMapFX : Effects::BasicFX;
+			pFX->SetWorld(world);
+			pFX->SetEyePosW(Camera::g_pMainCamera->GetEyePos());
+			pFX->SetWorldViewProj(worldViewProj);
+			pFX->SetWorldViewProjTex(worldViewProjTex);
+			pFX->SetWorldInvTranspose(worldInvTranspose);
+			pFX->SetTexTransform(XMLoadFloat4x4(&pMesh->GetTexTransform()));
+			pFX->SetShadowTransform(shadowTransform);
+
+			pFX->SetLightMap(m_pLightBufferSRView);
+			pFX->SetShadowMap(m_pShadowMapSRView);
+			pFX->SetSSAOMap(m_pSSAO->GetAmbient1SRV());
+			pFX->SetDirLights(dirLights[0]);
+			pFX->SetTime(_pTimer->TotalTime());
+			pFX->SetMaterial(subset.m_Material.m_Material);
+
+			pFX->SetFogColor(JF::Util::Colors::Silver);
+			pFX->SetFogStart(50.0f);
+			pFX->SetFogRange(400.0f);
+
+			if (subset.m_Material.m_MainTexture != nullptr)
+				pFX->SetDiffuseMap(subset.m_Material.m_MainTexture->GetTexture());
+
+			if (subset.m_Material.m_BumpTexture != nullptr)
+				Effects::NormalMapFX->SetNormalMap(subset.m_Material.m_BumpTexture->GetTexture());
+
+			if (pSkyBox != nullptr)
+				pFX->SetCubeMap(pSkyBox->GetMainTexture()->GetTexture());
+
+			// 19)
+			ID3DX11EffectTechnique* tech = pFX->GetTech(lightIndex, subset.m_Material.m_MainTexture != nullptr, subset.m_Material.m_bAlphaClip, true, pSkyBox != nullptr);
+			D3DX11_TECHNIQUE_DESC techDesc;
+			tech->GetDesc(&techDesc);
+			for (UINT p = 0; p < techDesc.Passes; ++p)
+			{
+				tech->GetPassByIndex(p)->Apply(0, m_pDeviceContext);
+
+				m_pDeviceContext->DrawIndexed(subset.FaceCount * 3, subset.FaceStart * 3, 0);
+			}
 		}
 
 		// 1-11) 기본 랜더상태로 복원한다.
@@ -930,7 +940,7 @@ void JF::JFCDeviceDirectX11::SSAOBlurRender(ID3D11ShaderResourceView* _inputSRV,
 	}
 }
 
-void JF::JFCDeviceDirectX11::TestRender()
+void JF::JFCDeviceDirectX11::DebugRender(ID3D11ShaderResourceView* _resourceview, XMFLOAT3 _scale, XMFLOAT3 _position, bool _viewOnlyRed)
 {
 	// 1) Set Layout And Topology
 	gRENDERER->DeviceContext()->IASetInputLayout(InputLayouts::PosNormalTexTan);
@@ -947,129 +957,25 @@ void JF::JFCDeviceDirectX11::TestRender()
 	m_pDeviceContext->IASetVertexBuffers(0, 1, &pVB, &stride, &offset);
 	m_pDeviceContext->IASetIndexBuffer(pIB, DXGI_FORMAT_R32_UINT, 0);
 
-	// 4) Debug View 1
+	// Scale and shift quad to lower - right corner.
+	XMMATRIX world(
+		_scale.x, 0.0f, 0.0f, 0.0f,
+		0.0f, _scale.y, 0.0f, 0.0f,
+		0.0f, 0.0f, _scale.z, 0.0f,
+		_position.x, _position.y, _position.z, 1.0f);
+
+	// 5)
+	Effects::DebugTextureFX->SetWorldViewProj(world);
+	Effects::DebugTextureFX->SetTexture(_resourceview);
+
+	// 6)
+	ID3DX11EffectTechnique* smapTech = _viewOnlyRed ? Effects::DebugTextureFX->ViewRedTech : Effects::DebugTextureFX->ViewArgbTech;
+	D3DX11_TECHNIQUE_DESC techDesc;
+	smapTech->GetDesc(&techDesc);
+	for (UINT p = 0; p < techDesc.Passes; ++p)
 	{
-		// Scale and shift quad to lower - right corner.
-		XMMATRIX world(
-			0.2f, 0.0f, 0.0f, 0.0f,
-			0.0f, 0.2f, 0.0f, 0.0f,
-			0.0f, 0.0f, 1.0f, 0.0f,
-			-0.8f, -0.8f, 0.0f, 1.0f);
+		smapTech->GetPassByIndex(p)->Apply(0, m_pDeviceContext);
 
-		// 5)
-		Effects::DebugTextureFX->SetWorldViewProj(world);
-		Effects::DebugTextureFX->SetTexture(m_pGBuffer->GetWorldNormalSRV());
-
-		// 6)
-		ID3DX11EffectTechnique* smapTech = Effects::DebugTextureFX->ViewArgbTech;
-		D3DX11_TECHNIQUE_DESC techDesc;
-		smapTech->GetDesc(&techDesc);
-		for (UINT p = 0; p < techDesc.Passes; ++p)
-		{
-			smapTech->GetPassByIndex(p)->Apply(0, m_pDeviceContext);
-
-			m_pDeviceContext->DrawIndexed(m_BoxMesh->GetIndexCount(), 0, 0);
-		}
-	}
-
-	// 4) Debug View 2
-	{
-		// Scale and shift quad to lower - right corner.
-		XMMATRIX world(
-			0.2f, 0.0f, 0.0f, 0.0f,
-			0.0f, 0.2f, 0.0f, 0.0f,
-			0.0f, 0.0f, 1.0f, 0.0f,
-			-0.4f, -0.8f, 0.0f, 1.0f);
-
-		// 5)
-		Effects::DebugTextureFX->SetWorldViewProj(world);
-		Effects::DebugTextureFX->SetTexture(m_pGBuffer->GetWorldPositionSRV());
-
-		// 6)
-		ID3DX11EffectTechnique* smapTech = Effects::DebugTextureFX->ViewArgbTech;
-		D3DX11_TECHNIQUE_DESC techDesc;
-		smapTech->GetDesc(&techDesc);
-		for (UINT p = 0; p < techDesc.Passes; ++p)
-		{
-			smapTech->GetPassByIndex(p)->Apply(0, m_pDeviceContext);
-
-			m_pDeviceContext->DrawIndexed(m_BoxMesh->GetIndexCount(), 0, 0);
-		}
-	}
-
-	// 5) Debug View 3
-	{
-		// Scale and shift quad to lower - right corner.
-		XMMATRIX world(
-			0.2f, 0.0f, 0.0f, 0.0f,
-			0.0f, 0.2f, 0.0f, 0.0f,
-			0.0f, 0.0f, 1.0f, 0.0f,
-			0.0f, -0.8f, 0.0f, 1.0f);
-
-		// 5)
-		Effects::DebugTextureFX->SetWorldViewProj(world);
-		Effects::DebugTextureFX->SetTexture(m_pGBuffer->GetViewNormalDepthSRV());
-
-		// 6)
-		ID3DX11EffectTechnique* smapTech = Effects::DebugTextureFX->ViewArgbTech;
-		D3DX11_TECHNIQUE_DESC techDesc;
-		smapTech->GetDesc(&techDesc);
-		for (UINT p = 0; p < techDesc.Passes; ++p)
-		{
-			smapTech->GetPassByIndex(p)->Apply(0, m_pDeviceContext);
-
-			m_pDeviceContext->DrawIndexed(m_BoxMesh->GetIndexCount(), 0, 0);
-		}
-	}
-
-	// 7) Debug View 5
-	{
-		// Scale and shift quad to lower - right corner.
-		XMMATRIX world(
-			0.2f, 0.0f, 0.0f, 0.0f,
-			0.0f, 0.2f, 0.0f, 0.0f,
-			0.0f, 0.0f, 1.0f, 0.0f,
-			0.4f, -0.8f, 0.0f, 1.0f);
-
-		// 5)
-		Effects::DebugTextureFX->SetWorldViewProj(world);
-		//Effects::DebugTextureFX->SetTexture(m_pLightBufferSRView
-		Effects::DebugTextureFX->SetTexture(m_pSSAO->GetAmbient1SRV());
-
-		// 6)
-		ID3DX11EffectTechnique* smapTech = Effects::DebugTextureFX->ViewRedTech;
-		D3DX11_TECHNIQUE_DESC techDesc;
-		smapTech->GetDesc(&techDesc);
-		for (UINT p = 0; p < techDesc.Passes; ++p)
-		{
-			smapTech->GetPassByIndex(p)->Apply(0, m_pDeviceContext);
-
-			m_pDeviceContext->DrawIndexed(m_BoxMesh->GetIndexCount(), 0, 0);
-		}
-	}
-
-	// 8) Debug View 6
-	{
-		// Scale and shift quad to lower - right corner.
-		XMMATRIX world(
-			0.2f, 0.0f, 0.0f, 0.0f,
-			0.0f, 0.2f, 0.0f, 0.0f,
-			0.0f, 0.0f, 1.0f, 0.0f,
-			0.8f, -0.8f, 0.0f, 1.0f);
-
-		// 5)
-		Effects::DebugTextureFX->SetWorldViewProj(world);
-		Effects::DebugTextureFX->SetTexture(m_pShadowMapSRView);
-
-		// 6)
-		ID3DX11EffectTechnique* smapTech = Effects::DebugTextureFX->ViewRedTech;
-		D3DX11_TECHNIQUE_DESC techDesc;
-		smapTech->GetDesc(&techDesc);
-		for (UINT p = 0; p < techDesc.Passes; ++p)
-		{
-			smapTech->GetPassByIndex(p)->Apply(0, m_pDeviceContext);
-
-			m_pDeviceContext->DrawIndexed(m_BoxMesh->GetIndexCount(), 0, 0);
-		}
+		m_pDeviceContext->DrawIndexed(m_BoxMesh->GetIndexCount(), 0, 0);
 	}
 }

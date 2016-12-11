@@ -55,7 +55,7 @@ void JF::InputLayouts::InitAll(ID3D11Device * device)
 	HR(device->CreateInputLayout(InputLayoutDesc::PosNormalTex, 3,
 		passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &PosNormalTex));
 
-	Effects::NormalMapFX->Light1TexTech->GetPassByIndex(0)->GetDesc(&passDesc);
+	Effects::NormalMapFX->GetTech(1, false, false, false, false)->GetPassByIndex(0)->GetDesc(&passDesc);
 	HR(device->CreateInputLayout(InputLayoutDesc::PosNormalTexTan, 4,
 		passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &PosNormalTexTan));
 }

@@ -59,6 +59,10 @@ public:
 
 	void SetEyePosW				(const XMFLOAT3& v)					{ EyePosW->SetRawValue(&v, 0, sizeof(XMFLOAT3)); }
 
+	void SetFogColor			(const FXMVECTOR v)					{ FogColor->SetFloatVector(reinterpret_cast<const float*>(&v)); }
+	void SetFogStart			(float f)							{ FogStart->SetFloat(f); }
+	void SetFogRange			(float f)							{ FogRange->SetFloat(f); }
+
 	void SetDirLights			(const void* lights)				{ DirLights->SetRawValue(lights, 0, 1 * sizeof(JF::Light::DirectionalLight)); }
 	void SetMaterial			(const JF::Light::Material& mat)	{ Mat->SetRawValue(&mat, 0, sizeof(JF::Light::Material)); }
 
@@ -68,15 +72,50 @@ public:
 	void SetLightMap			(ID3D11ShaderResourceView* tex)		{ LightMap->SetResource(tex); }
 	void SetShadowMap			(ID3D11ShaderResourceView* tex)		{ ShadowMap->SetResource(tex); }
 	void SetDiffuseMap			(ID3D11ShaderResourceView* tex)		{ DiffuseMap->SetResource(tex); }
+	void SetCubeMap				(ID3D11ShaderResourceView* tex)		{ CubeMap->SetResource(tex); }
 
-	ID3DX11EffectTechnique* Light1Tech;
-	ID3DX11EffectTechnique* Light2Tech;
-	ID3DX11EffectTechnique* Light3Tech;
+	ID3DX11EffectTechnique* GetTech(int _nLightIndex, bool _useDiffuse, bool _useAlphaClip, bool _useFog, bool _useReflect)
+	{
+		int techKey = 0;
+		if (_nLightIndex == 0)
+			techKey |= Light0;
+		else if (_nLightIndex == 1)
+			techKey |= Light1;
+		else if (_nLightIndex == 2)
+			techKey |= Light2;
+		else if (_nLightIndex == 3)
+			techKey |= Light3;
 
-	ID3DX11EffectTechnique* Light0TexTech;
-	ID3DX11EffectTechnique* Light1TexTech;
-	ID3DX11EffectTechnique* Light2TexTech;
-	ID3DX11EffectTechnique* Light3TexTech;
+		if(_useDiffuse == true)
+			techKey |= Texture;
+
+		if (_useAlphaClip == true)
+			techKey |= AlphaClip;
+
+		if (_useFog == true)
+			techKey |= Fog;
+
+		if (_useReflect == true)
+			techKey |= Reflect;
+
+		return mapTech[techKey];
+	}
+
+private:
+	enum TechType
+	{
+		Light0		= 1,
+		Light1		= 1 << 1,
+		Light2		= 1 << 2,
+		Light3		= 1 << 3,
+		Texture		= 1 << 4,
+		AlphaClip	= 1 << 5,
+		Fog			= 1 << 6,
+		Reflect		= 1 << 7,
+	};
+	typedef typename std::pair<int, ID3DX11EffectTechnique*> MAPTech;
+
+	std::map<int, ID3DX11EffectTechnique*> mapTech;
 
 	ID3DX11EffectMatrixVariable* World;
 	ID3DX11EffectMatrixVariable* WorldViewProj;
@@ -85,6 +124,9 @@ public:
 	ID3DX11EffectMatrixVariable* TexTransform;
 	ID3DX11EffectMatrixVariable* ShadowTransform;
 	ID3DX11EffectVectorVariable* EyePosW;
+	ID3DX11EffectVectorVariable* FogColor;
+	ID3DX11EffectScalarVariable* FogStart;
+	ID3DX11EffectScalarVariable* FogRange;
 
 	ID3DX11EffectVariable* DirLights;
 	ID3DX11EffectVariable* Mat;
@@ -95,6 +137,7 @@ public:
 	ID3DX11EffectShaderResourceVariable* LightMap;
 	ID3DX11EffectShaderResourceVariable* ShadowMap;
 	ID3DX11EffectShaderResourceVariable* DiffuseMap;
+	ID3DX11EffectShaderResourceVariable* CubeMap;
 };
 
 #pragma endregion

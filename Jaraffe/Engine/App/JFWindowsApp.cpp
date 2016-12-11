@@ -175,6 +175,7 @@ LRESULT JF::JFCWindowsApp::WindowResized(HWND _hWnd, UINT _msg, WPARAM _wParam, 
 			gRENDERER->SetBackBufferWidth(width);
 			gRENDERER->SetBackBufferHeight(height);
 			gRENDERER->Reset();
+			gRENDERER->AfterReset();
 
 			AfterReset();
 		}

@@ -1,7 +1,7 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
 # File Created: 26.07.2011 13:47:43
 
-newmtl floor
+newmtl Grass
 	Ns 10.0000
 	d 1.0000
 	Tr 0.0000

@@ -24,17 +24,7 @@ public:
 	ID3D11RasterizerState*		m_RSState		= nullptr;
 	ID3D11BlendState*			m_BlendState	= nullptr;
 
-//=============================================================================
-// static Public Functions)
-//=============================================================================
-public:
-	static Material* GetDefalutMaterial();
-
-//=============================================================================
-// static private Members)
-//=============================================================================
-private:
-	static Material m_pDefalutMaterial;
+	bool						m_bAlphaClip	= false;
 };
 
 }

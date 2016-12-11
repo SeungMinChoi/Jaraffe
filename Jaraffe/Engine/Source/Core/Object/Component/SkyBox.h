@@ -31,12 +31,13 @@ public:
 	virtual void Reset();
 	virtual void Render();
 
-	void SetMainTexture(JF::Texture* _pTexture) { m_pMainTexture = _pTexture; }
+	JF::Texture*		GetMainTexture()						{ return m_pMainTexture; }
+	void				SetMainTexture(JF::Texture* _pTexture)	{ m_pMainTexture = _pTexture; }
 
 private:
 	float			m_SkySphereRadius;
 
-	JF::Texture* m_pMainTexture;
+	JF::Texture*	m_pMainTexture;
 };
 
 }

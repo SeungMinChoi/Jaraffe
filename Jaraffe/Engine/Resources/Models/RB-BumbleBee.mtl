@@ -11,6 +11,6 @@ newmtl _RB_BumbleBeeRB_Bumblebee_MATINST
 	Ka 0.6000 0.6000 0.6000
 	Kd 0.4000 0.4000 0.4000
 	Ks 0.2000 0.2000 0.2000
-	Ke 0.0000 0.0000 0.0000
-	map_Ka RB_Bumblebee_TEXTSET_Color_NormX.png
+	Ke 0.1000 0.0000 0.0000
 	map_Kd RB_Bumblebee_TEXTSET_Color_NormX.png
+	map_Kn RB_Bumblebee_TEXTSET_Color_NormX_Normal.png

@@ -8,11 +8,10 @@ newmtl _VH_BumbleBeeVH_BumblebeeEngineCasters_MATIN
 	Tr 0.0000
 	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0000 0.0000 0.0000
+	Ka 0.2000 0.2000 0.2000
 	Kd 1.0000 1.0000 1.0000
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.2000 0.2000 0.2000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka VH_BumblebeeEngineCasters_TEXTSET_Color_NormX.png
 	map_Kd VH_BumblebeeEngineCasters_TEXTSET_Color_NormX.png
 
 newmtl _VH_BumbleBeeVH_Bumblebee_MATINST
@@ -22,9 +21,9 @@ newmtl _VH_BumbleBeeVH_Bumblebee_MATINST
 	Tr 0.0000
 	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0000 0.0000 0.0000
+	Ka 0.2000 0.2000 0.2000
 	Kd 1.0000 1.0000 1.0000
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.2000 0.2000 0.2000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka VH_BumblebeeNew_TEXTSET_Color_NormX.png
 	map_Kd VH_BumblebeeNew_TEXTSET_Color_NormX.png
+	map_Kn VH_BumblebeeNew_TEXTSET_Color_NormX_Normal.png
