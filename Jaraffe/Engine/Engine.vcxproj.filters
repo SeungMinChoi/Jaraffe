@@ -96,12 +96,12 @@
     <CustomBuild Include="Source\Shader\Shadow\ShadowBuffer.fx" />
     <CustomBuild Include="Source\Shader\ForwardRender\Basic.fx" />
     <CustomBuild Include="Source\Shader\ForwardRender\CubeMap.fx" />
-    <CustomBuild Include="Source\Shader\Debug\DebugTexture.fx" />
     <CustomBuild Include="Source\Shader\ForwardRender\Color.fx" />
     <CustomBuild Include="Source\Shader\ForwardRender\NormalMap.fx" />
     <CustomBuild Include="Source\Shader\GBuffer\GBuffer.fx" />
     <CustomBuild Include="Source\Shader\SSAO\SSAOBuffer.fx" />
     <CustomBuild Include="Source\Shader\SSAO\SSAOBlur.fx" />
+    <CustomBuild Include="Source\Shader\DebugRender\DebugTexture.fx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

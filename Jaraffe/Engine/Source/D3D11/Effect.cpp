@@ -335,7 +335,7 @@ void JF::Effects::InitAll(ID3D11Device * device)
 	SSAOBufferFX				= new SSAOBufferEffect(device, L"Source/Shader/SSAO/SSAOBuffer.fxo");
 	SSAOBlurFX					= new SSAOBlurEffect(device, L"Source/Shader/SSAO/SSAOBlur.fxo");
 
-	DebugTextureFX				= new DebugTexEffect(device, L"Source/Shader/Debug/DebugTexture.fxo");
+	DebugTextureFX				= new DebugTexEffect(device, L"Source/Shader/DebugRender/DebugTexture.fxo");
 }
 
 void JF::Effects::DestroyAll()
