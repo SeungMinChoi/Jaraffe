@@ -106,7 +106,7 @@ fxgroup
                 dcl_output o2.xy
                 dcl_temps 3
                 
-                #line 54 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\SSAO\SSAOBuffer.fx"
+                #line 54 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\SSAO\SSAOBuffer.fx"
                 mov r0.xyz, v0.xyzx  // vout<0,1,2>
                 mov r0.w, l(1.000000)  // vout<3: 1f>
                 
@@ -188,7 +188,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 7
                 
-                #line 108 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\SSAO\SSAOBuffer.fx"
+                #line 108 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\SSAO\SSAOBuffer.fx"
                 sample_l_indexable(texture2d)(float,float,float,float) r0.xyzw, v2.xyxx, t1.xyzw, s0, l(0.000000)  // normalDepth<0:Inf,1:Inf,2:Inf,3:Inf>
                 mov r0.xyz, r0.xyzx  // n<0:Inf,1:Inf,2:Inf>
                 mov r0.w, r0.w  // pz<0:Inf>

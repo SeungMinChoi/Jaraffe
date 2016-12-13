@@ -59,7 +59,7 @@ fxgroup
                 dcl_input v0.xyz
                 dcl_output_siv o0.xyzw, position
                 
-                #line 76 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
+                #line 76 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
                 mov o0.xyz, v0.xyzx  // VS<0,1,2>
                 mov o0.w, l(1.000000)  // VS<3: 1f>
                 ret 
@@ -127,7 +127,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 4
                 
-                #line 86 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
+                #line 86 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
                 nop 
                 mov r0.xy, v0.xyxx  // screenPos<0,1>
                 
@@ -217,7 +217,7 @@ fxgroup
                 dcl_input v0.xyz
                 dcl_output_siv o0.xyzw, position
                 
-                #line 76 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
+                #line 76 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
                 mov o0.xyz, v0.xyzx  // VS<0,1,2>
                 mov o0.w, l(1.000000)  // VS<3: 1f>
                 ret 
@@ -285,7 +285,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 4
                 
-                #line 86 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
+                #line 86 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
                 nop 
                 mov r0.xy, v0.xyxx  // screenPos<0,1>
                 
@@ -384,7 +384,7 @@ fxgroup
                 dcl_input v0.xyz
                 dcl_output_siv o0.xyzw, position
                 
-                #line 76 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
+                #line 76 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
                 mov o0.xyz, v0.xyzx  // VS<0,1,2>
                 mov o0.w, l(1.000000)  // VS<3: 1f>
                 ret 
@@ -452,7 +452,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 5
                 
-                #line 86 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
+                #line 86 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\LightPrePass\LightPrePassLightBuffer.fx"
                 nop 
                 mov r0.xy, v0.xyxx  // screenPos<0,1>
                 

@@ -104,8 +104,8 @@
     <CustomBuild Include="Source\Shader\SSAO\SSAOBlur.fx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Source\Shader\LightHelper.fx" />
     <None Include="packages.config" />
+    <None Include="Source\Shader\LightHelper.fx" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\flare.dds" />

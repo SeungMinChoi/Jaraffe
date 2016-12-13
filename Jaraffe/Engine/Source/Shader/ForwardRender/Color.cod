@@ -67,7 +67,7 @@ fxgroup
                 dcl_output o1.xyzw
                 dcl_temps 2
                 
-                #line 22 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\ForwardRender\Color.fx"
+                #line 22 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\ForwardRender\Color.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<0:NaN:Inf>
@@ -106,7 +106,7 @@ fxgroup
                 dcl_input_ps linear v1.xyzw
                 dcl_output o0.xyzw
                 
-                #line 31 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\ForwardRender\Color.fx"
+                #line 31 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\ForwardRender\Color.fx"
                 mov o0.xyzw, v1.xyzw  // PS<0,1,2,3>
                 ret 
                 // Approximately 2 instruction slots used

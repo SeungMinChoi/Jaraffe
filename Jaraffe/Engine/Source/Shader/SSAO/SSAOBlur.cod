@@ -74,7 +74,7 @@ fxgroup
                 dcl_output o1.xy
                 dcl_temps 2
                 
-                #line 57 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\SSAO\SSAOBlur.fx"
+                #line 57 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\SSAO\SSAOBlur.fx"
                 mov r0.xyz, v0.xyzx  // vout<0,1,2>
                 mov r0.w, l(1.000000)  // vout<3: 1f>
                 
@@ -160,7 +160,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 7
                 
-                #line 70 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\SSAO\SSAOBlur.fx"
+                #line 70 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\SSAO\SSAOBlur.fx"
                 mov r0.x, cb0[0].x  // texOffset<0>
                 mov r0.y, l(0)  // texOffset<1: 0f>
                 
@@ -264,7 +264,7 @@ fxgroup
                 dcl_output o1.xy
                 dcl_temps 2
                 
-                #line 57 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\SSAO\SSAOBlur.fx"
+                #line 57 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\SSAO\SSAOBlur.fx"
                 mov r0.xyz, v0.xyzx  // vout<0,1,2>
                 mov r0.w, l(1.000000)  // vout<3: 1f>
                 
@@ -350,7 +350,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 7
                 
-                #line 74 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\SSAO\SSAOBlur.fx"
+                #line 74 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\SSAO\SSAOBlur.fx"
                 mov r0.x, l(0)  // texOffset<0: 0f>
                 mov r0.y, cb0[0].y  // texOffset<1>
                 

@@ -195,3 +195,7 @@ FakesAssemblies/
 # Visual Studio 6 workspace options file
 *.opt
 UAEngineBase/UAEngineBase/DreamCoastDX11Ex/DreamCoastDX11Ex.vcxproj
+
+# Shader Effect 
+*.fxo
+*.cod

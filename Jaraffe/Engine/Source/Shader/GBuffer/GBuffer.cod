@@ -112,7 +112,7 @@ fxgroup
                 dcl_output o9.xy
                 dcl_temps 10
                 
-                #line 62 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\GBuffer\GBuffer.fx"
+                #line 62 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\GBuffer\GBuffer.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[4].xyzw  // vout<7:NaN:Inf>
@@ -229,7 +229,7 @@ fxgroup
                 dcl_output o2.xyzw
                 dcl_temps 3
                 
-                #line 121 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\GBuffer\GBuffer.fx"
+                #line 121 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\GBuffer\GBuffer.fx"
                 dp3 r0.x, v3.xyzx, v3.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v3.xyzx  // normalW<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -329,7 +329,7 @@ fxgroup
                 dcl_output o9.xy
                 dcl_temps 10
                 
-                #line 62 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\GBuffer\GBuffer.fx"
+                #line 62 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\GBuffer\GBuffer.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[4].xyzw  // vout<7:NaN:Inf>
@@ -461,7 +461,7 @@ fxgroup
                 dcl_output o2.xyzw
                 dcl_temps 7
                 
-                #line 103 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\GBuffer\GBuffer.fx"
+                #line 103 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\GBuffer\GBuffer.fx"
                 dp3 r0.x, v5.xyzx, v5.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v5.xyzx  // tangentFrameW<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -596,7 +596,7 @@ fxgroup
                 dcl_output o9.xy
                 dcl_temps 10
                 
-                #line 62 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\GBuffer\GBuffer.fx"
+                #line 62 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\GBuffer\GBuffer.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[4].xyzw  // vout<7:NaN:Inf>
@@ -724,7 +724,7 @@ fxgroup
                 dcl_output o2.xyzw
                 dcl_temps 3
                 
-                #line 91 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\GBuffer\GBuffer.fx"
+                #line 91 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\GBuffer\GBuffer.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.x, v9.xyxx, t0.wxyz, s0
                 mov r0.x, r0.x  // texColor<3:Inf>
                 add r0.x, r0.x, l(-0.100000)
@@ -832,7 +832,7 @@ fxgroup
                 dcl_output o9.xy
                 dcl_temps 10
                 
-                #line 62 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\GBuffer\GBuffer.fx"
+                #line 62 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\GBuffer\GBuffer.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[4].xyzw  // vout<7:NaN:Inf>
@@ -968,7 +968,7 @@ fxgroup
                 dcl_output o2.xyzw
                 dcl_temps 7
                 
-                #line 91 "C:\Users\ccm13\Desktop\MyProjects\Git\Jaraffe\Jaraffe\Engine\Source\Shader\GBuffer\GBuffer.fx"
+                #line 91 "D:\Jaraffe\Jaraffe\Engine\Source\Shader\GBuffer\GBuffer.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.x, v9.xyxx, t1.wxyz, s1
                 mov r0.x, r0.x  // texColor<3:Inf>
                 add r0.x, r0.x, l(-0.100000)
